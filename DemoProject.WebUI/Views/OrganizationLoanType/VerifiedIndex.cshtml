@@ -1,0 +1,111 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.Enterprise.Establishment.OrganizationLoanTypeViewModel>
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("OLTIND");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>OrganizationLoanType - VerifiedIndex</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">VerifiedIndex</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card-body">
+                                            <table id="example" class="display table table-striped table-hover dt-responsive  cell-border">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th>SR.</th>
+                                                        <th>AccountClass</th>
+                                                        <th>MaximumLoanTenure</th>
+                                                        <th>MinimumDownPaymentPercentage</th>
+                                                        <th>SequenceNumber</th>
+                                                        <th>SequenceNumberText</th>
+                                                        <th>TransSequenceNumberText</th>
+                                                        <th>ActivationDate</th>
+                                                        <th>EntryDate</th>
+                                                        <th>UserName</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="text-center">
+                                                    @{
+                                                        foreach (var item in Model)
+                                                        {
+                                                            <tr>
+                                                                <td></td>
+                                                                <td>@item.NameOfAccountClass</td>
+                                                                <td>@item.MaximumLoanTenure</td>
+                                                                <td>@item.MinimumDownPaymentPercentage</td>
+                                                                <td>@item.SequenceNumber</td>
+                                                                <td>@item.SequenceNumberText</td>
+                                                                <td>@item.TransSequenceNumberText</td>
+                                                                <td>@item.ActivationDate</td>
+                                                                <td>@item.EntryDateTime</td>
+                                                                <td>@item.NameOfUser</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-center mb-2">
+                                    <button type="button" class="btn btn-success ml-3" onclick="window.location.href='@Url.Action("Default", "Home")'"><h5><u>Exit</u></h5></button>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

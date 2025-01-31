@@ -1,0 +1,61 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.Security.UserRoles.RoleProfileIndexViewModel>
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("RPFVIN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>RoleProfile- Verified List</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+
+        <div class="card">
+            <div class="card-body no-footer">
+                <table id="example" class="display table table-striped table-hover dt-responsive nowrap cell-border">
+                    <thead>
+                        <tr>
+                            <th>SR.</th>
+                            <th>Name Of Role Profile</th>
+                            <th>Entry Date</th>
+                            <th>User Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model)
+                            {
+                                <tr class="hoverlightblue">
+                                    <td></td>
+                                    <td>@item.NameOfRoleProfile</td>
+                                    <td>@item.EntryDateTime</td>
+                                    <td>@item.NameOfUser</td>
+                                    <td>
+                                        <button class="btn btn-link" onclick="location.href='@Url.Action("ViewEntry","RoleProfile",new {@item.RoleProfileId })'">ViewEntry</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @Html.OperationFooter("None", "Exit", "Home", "None")
+        </div>
+    </div>
+</body>
+</html>
+

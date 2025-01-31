@@ -1,0 +1,199 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonBankDetailViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.Constants
+
+@{
+    
+    PersonBankDetailViewModel model = new PersonBankDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PBDAUT");
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Bank Detail - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - Mandatory Mark =======*@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Page Title, Translation =======*@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card d-block mb-3">
+                   
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                @*Page Title- Verify*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*MakerRemark*@
+                                <div class="form-group mt-5 ml-5 mr-5">
+                                    @Html.CustomLabel("Maker Remark")
+                                    @Html.TextBoxFor(m => m.MakerRemark, new { @id = "maker-remark", @class = "form-control mandatory-mark read-only" })
+                                    @Html.ValidationMessageFor(m => m.MakerRemark)
+                                </div>
+
+                                @*======= Second Row - Data Entry Page =======*@
+                                @*Two Columns For Default Application Language (i.e. English) And Other For Regional Language Translation With Equal Length*@
+                                <div class="row ml-2">
+                                    <div class="col-12">
+
+                                        @*Accordian 1 - Bank Details*@
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="card-body">
+                                                        <table id="tbl-bank-detail" class="table compact table-striped table-bordered" width="100">
+                                                            <thead class="text-center read-only">
+                                                                <tr>
+                                                                    <th><input type="checkbox" name="check_all" id="select-all-bank-detail" /></th>
+                                                                    <th class="d-none">BankID</th>
+                                                                    <th>Bank</th>
+                                                                    <th class="d-none">BankBranchId</th>
+                                                                    <th>Branch</th>
+                                                                    <th>AccountNumber</th>
+                                                                    <th>OpeningDate</th>
+                                                                    <th>CloseDate </th>
+                                                                    <th>IsDefaultBankForTransaction</th>
+                                                                    <th>Photopath</th>
+                                                                    <th>Photo</th>
+                                                                    <th>FileCaption</th>
+                                                                    <th>Note</th>
+                                                                    <th class="d-none">ReasonForModification</th>
+                                                                    <th class="d-none">FileName</th>
+                                                                    <th class="d-none">PersonBankDocument</th>
+                                                                    <th class="d-none">LocalStoragePath</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody class="text-center read-only">
+                                                                @{
+                                                                    IEnumerable<PersonBankDetailViewModel> viewBankList = (IEnumerable<PersonBankDetailViewModel>)HttpContext.Current.Session["BankDetail"];
+                                                                    if (viewBankList != null)
+                                                                    {
+                                                                        foreach (PersonBankDetailViewModel viewModel in viewBankList)
+                                                                        {
+                                                                            counter += 1;
+                                                                            photoId = "photo-id" + counter.ToString();
+                                                                            fileUploaderId = "data-table-bank-file-uploader" + counter.ToString();
+                                                                            <tr>
+                                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                <td class="d-none">@viewModel.BankId</td>
+                                                                                <td>@viewModel.NameOfBank</td>
+                                                                                <td class="d-none">@viewModel.BankBranchId</td>
+                                                                                <td>@viewModel.NameOfBankBranch</td>
+                                                                                <td>@viewModel.AccountNumber</td>
+                                                                                <td>@viewModel.OpeningDate.ToString("yyyy-MM-dd")</td>
+                                                                                <td>@(viewModel.CloseDate == null ? "" : Convert.ToDateTime(viewModel.CloseDate).ToString("yyyy-MM-dd"))</td>
+                                                                                <td>@viewModel.IsDefaultBankForTransaction</td>
+                                                                                <td>
+                                                                                    <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if (viewModel.EnableBankStatementDocumentUploadInLocalStorage == true)
+                                                                                    {
+                                                                                        <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.BankStatementDocumentLocalStoragePath + viewModel.PhotoPathBank.FileName)" width="50" height="50" />
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                                        var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                                        <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                                        string filename = Path.GetFileName(imgsrc);
+                                                                                    }
+                                                                                </td>
+                                                                                <td>@viewModel.FileCaption</td>
+                                                                                <td>@viewModel.Note</td>
+                                                                                <td>@viewModel.ReasonForModification</td>
+                                                                                <td class="d-none">@viewModel.NameOfFile</td>
+                                                                                <td class="d-none">@viewModel.PersonBankDetailDocumentPrmKey</td>
+                                                                                <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*NameOfUser*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of User")
+                                            @Html.TextBoxFor(m => m.NameOfUser, new { @class = "form-control" })
+                                        </div>
+
+                                        @*EntryDateTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Entry Date Time")
+                                            @Html.TextBoxFor(m => m.EntryDateTime, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For PrmKey*@
+                                @Html.HiddenFor(m => m.PrmKey)
+
+                                @*Hiddent Field For PersonPrmKey*@
+                                @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                @*Hiddent Field For CenterOccupationPrmKey*@
+                                @Html.HiddenFor(m => m.PersonBankDetailPrmKey)
+
+                                @*Hiddent Field For PersonAddressTranslationPrmKey*@
+                                @Html.HiddenFor(m => m.PersonId)
+                            </div>
+
+                            @Html.OperationFooter("Verify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+</script>
+<script src="~/Scripts/Custom/PersonBankDetail.js"></script>

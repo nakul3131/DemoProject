@@ -1,0 +1,61 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.PersonInformation.PersonIndexViewModel>
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+@{
+    // Make Proper Menu Parameter
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PRSRIN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Master - Rejected Index </title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+
+        <div class="card">
+            <div class="card-body no-footer">
+                <table id="example" class="display table table-striped table-hover dt-responsive nowrap cell-border">
+                    <thead>
+                        <tr>
+                            <th>SR.</th>
+                            <th>Full Name</th>
+                            <th>Entry Date</th>
+                            <th>User Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model)
+                            {
+                                <tr class="hoverlightblue">
+                                    <td></td>
+                                    <td>@item.FullName</td>
+                                    <td>@item.EntryDateTime</td>
+                                    <td>@item.NameOfUser</td>
+                                    <td>
+                                        <button class="btn btn-link" onclick="location.href='@Url.Action("Amend","PersonMaster",new {@item.PersonId })'">Amend </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @Html.OperationFooter("None", "Exit", "Home", "None")
+        </div>
+    </div>
+</body>
+</html>
+

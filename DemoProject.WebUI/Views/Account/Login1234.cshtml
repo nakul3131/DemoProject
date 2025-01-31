@@ -1,0 +1,166 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.LoginViewModel
+@using DemoProject.Services.ViewModel.Configuration
+
+@using DemoProject.Services.HtmlHelpers;
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    EmergencyScreenViewModel viewModel = new EmergencyScreenViewModel();
+}
+<!doctype html>
+
+<html lang="en">
+<head>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    <script>
+
+        debugger;
+
+        $(document).ready(function () {
+            debugger;
+            $('#myModal').modal('show');
+        });
+
+
+    </script>
+    <style>
+        .modal.fade .modal-dialog.modal-dialog-zoom {
+            -webkit-transform: translate(0,0)scale(.5);
+            transform: translate(0,0)scale(.5);
+        }
+
+        .modal.show .modal-dialog.modal-dialog-zoom {
+            -webkit-transform: translate(0,0)scale(1);
+            transform: translate(0,0)scale(1);
+        }
+    </style>
+
+</head>
+
+<body id="background">
+    <div class="container-fluid">
+        @*Emergency Screen*@
+        @if (viewModel.BodyText != "None")
+        {
+            <div class="modal fade" id="myModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom">
+                    <div class="modal-content">
+                        @*Modal header*@
+                        <div class="modal-header">
+                            <h5 class="modal-title  float-left">@viewModel.HeaderText</h5>
+                            <button type="button" class="close" data-dismiss="modal" style="outline:none;">&times;</button>
+                        </div>
+                        @*Modal body*@
+                        <div class="modal-body">
+                            <p class="text text-center mt-2">@viewModel.BodyText</p>
+                        </div>
+                        @*Modal footer*@
+                        <div class="modal-footer justify-content-between">
+                            <h5 class="modal-title  float-left">@viewModel.FooterText</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        @*Start Login Page*@
+        <div class="row">
+            @*Make Center Of Page*@
+            <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                @*First Row For - Company Name*@
+                <div class="row pt-5 bg-white">
+                    <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                        <h4 class="pt-3 text-center"><b>SCS-PathPranali</b></h4>
+                    </div>
+                </div>
+
+                @*Second Row For Form*@
+                <div class="row pb-lg-2 bg-white">
+                    <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                        <div class="card bg-transparent d-block">
+                            <div class="card-body">
+                                <h5 class="card-title text-left">Log In</h5>
+                                @using (Html.BeginForm())
+                                {
+                                    @Html.AntiForgeryToken()
+                                    {
+                                        @Html.ValidationMessage("InvalidAttempt")
+
+                                        //User Name
+                                        <div class="form-group pt-3">
+                                            <i class="fas fa-user"></i>
+                                            <label class="font-weight-bold">User Name</label>
+                                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Enter User Name", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.UserName)
+                                        </div>
+
+                                        //Password
+                                        <div class="form-group pt-2">
+                                            @*Clearfix used for set alignment*@
+                                            <div class="clearfix">
+                                                <div class="float-left"><i class="fas fa-key"></i></div>
+                                                <label class="float-left font-weight-bold ml-1">Password</label>
+                                                <div class="d-none d-md-block">
+                                                    <div class="float-right">
+                                                        @Html.CustomActionLink("Forgot Password?", "AccountRecoveryViaMobileOTP", "Account", (bool?)TempData["IsUserVAlid"])
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter Password" })
+                                            @Html.ValidationMessageFor(m => m.Password)
+                                        </div>
+
+                                        // Biometric Authentication Link
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="d-none d-md-block">
+                                                    <div class="pt-3">
+                                                        <hr class="style17" />
+                                                        <div class="row pt-4">
+                                                            <div class="col-2 offset-5">
+                                                                <a class="bioImg" href="#">
+                                                                    <img src="~/Icons/BiometricLogin.jpg" alt="Biometric Login" style="width:100%;" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        // Login Button
+                                        <div class="form-group pt-4">
+                                            <button id="submit" type="submit" class="btn btn-sm btn-block btn-primary"><h5><b>Login</b></h5></button>
+                                        </div>
+
+                                        // Need Help Link
+                                        <div class="d-block d-md-none">
+                                            <div class="clearfix">
+                                                <button type="button" class="btn btn-link float-left">Need Help?</button>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
+
+
+
+
+

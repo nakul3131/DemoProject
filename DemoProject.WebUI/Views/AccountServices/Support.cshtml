@@ -1,0 +1,126 @@
+﻿@using DemoProject.Services.Utility.SmsSender;
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/Custom.css" rel="stylesheet" />
+    <title>Support</title>
+    <!-- Change Previous Next Icon Colour -->
+    <!--Replace the fff in the fill='%23fff' parts with the hex code of the desired color.
+    Here's a working code snippet where fill='%23fff' has been replaced with fill='%23f00' for red instead of white: -->
+    <style>
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23088' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+        }
+
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23088' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
+    <div class="container-fluid">
+        <!-- First Row (<- Back Arrow and Title) -->
+        <div class="row bg-skyblue d-flex align-items-center">
+            <div class="col-1">
+                <a class="text-center" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Login", "Account")'">
+                    <i class='fas fa-arrow-left btn-lg text-white'></i>
+                </a>
+            </div>
+            <div class="col-9">
+                <h1 class="text-white"><strong>Look Forward To Assisting</strong></h1>
+            </div>
+            <div class="col-2 text-center">
+                <figure>
+                    <img alt="support image" class="img-fluid float-right mt-2" src="~/Icons/Login/Support/VirtualAssistantSingle.png" />
+                </figure>
+            </div>
+        </div>
+        <!-- Page Body (<- Page Header) -->
+        <div id="sliderImages" class="carousel slide" data-ride="carousel" data-interval="4000">
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="carousel-inner row w-100 mx-auto flex-nowrap" role="listbox">
+                        <div class="carousel-item active col-md-3">
+                            <img class="d-block img-fluid mx-auto" src="~/Icons/Login/Support/SelfHelp.png" alt="Help Image">
+                            <div class="text-dark text-center">
+                                <h6>Self Help</h6>
+                            </div>
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="d-block img-fluid mx-auto" src="~/Icons/Login/Support/Contact.png" alt="Contact Image">
+                            <div class="text-center text-dark">
+                                <h6>Contact</h6>
+                            </div>
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="d-block img-fluid mx-auto" src="~/Icons/Login/Support/Chat.png" alt="Chat Image">
+                            <div class="text-center text-dark">
+                                <h6>Chat with Us</h6>
+                            </div>
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="d-block img-fluid mx-auto" src="~/Icons/Login/Support/Email.png" alt="Email Image">
+                            <div class="text-center text-dark">
+                                <h6>Email us</h6>
+                            </div>
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="d-block img-fluid mx-auto" src="~/Icons/Login/Support/Headphone.png" alt="Phone Image">
+                            <div class="text-center text-dark">
+                                <h6>Call Back</h6>
+                            </div>
+                        </div>
+                        <div class="carousel-item col-md-3">
+                            <img class="d-block img-fluid mx-auto" src="~/Icons/Login/Support/Application.png" alt="slide 5">
+                            <div class="text-center text-dark">
+                                <h6>App</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#sliderImages" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#sliderImages" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $('#sliderImages').on('slide.bs.carousel', function (e) {
+
+        var $e = $(e.relatedTarget);
+        var idx = $e.index();
+        var itemsPerSlide = 4;
+        var totalItems = $('.carousel-item').length;
+
+        if (idx >= totalItems - (itemsPerSlide - 1)) {
+            var it = itemsPerSlide - (totalItems - idx);
+            for (var i = 0; i < it; i++) {
+                // append slides to end
+                if (e.direction == "left") {
+                    $('.carousel-item').eq(i).appendTo('.carousel-inner');
+                }
+                else {
+                    $('.carousel-item').eq(0).appendTo('.carousel-inner');
+                }
+            }
+        }
+    });
+</script>

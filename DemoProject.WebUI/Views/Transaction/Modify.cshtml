@@ -1,0 +1,194 @@
+﻿@model DemoProject.Services.ViewModel.Account.Layout.SchemeNumberOfTransactionLimitViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Layout
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+
+    SchemeNumberOfTransactionLimitViewModel model = new SchemeNumberOfTransactionLimitViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("SNOMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>SchemeNumberOfTransactionLimit - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        <div class="modal fade" id="add-number-of-transaction-limit" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg " role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+
+                                                        <h4 class="modal-title  text-center" id="text">Add</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @*TransactionType*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Transaction Type")
+                                                            @Html.DropDownListFor(m => m.TransactionTypeId, new SelectList(model.TransactionTypeDropdownList, "Value", "Text", 0), "Select Transaction Type", new { @id = "transaction-type-id", @class = "form-control mandatory-mark", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.TransactionTypeId)
+                                                        </div>
+
+                                                        @*MinimumNumberOfTransaction*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Minimum Number Of Transaction")
+                                                            @Html.TextBoxFor(m => m.MinimumNumberOfTransaction, new { @id = "minimum-number-of-transaction", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Number Of Transaction", @type = "number" })
+                                                            @Html.ValidationMessageFor(m => m.MinimumNumberOfTransaction)
+                                                        </div>
+
+                                                        @*MaximumNumberOfTransaction*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Maximum Number Of Transaction")
+                                                            @Html.TextBoxFor(m => m.MaximumNumberOfTransaction, new { @id = "maximum-number-of-transaction", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Number Of Transaction", @type = "number" })
+                                                            @Html.ValidationMessageFor(m => m.MaximumNumberOfTransaction)
+                                                        </div>
+
+                                                        @*TransactionLimitPeriodUnit*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Transaction Limit Period Unit")
+                                                            <div class="mt-1 unit">
+                                                                <div class="form-check form-check-inline">
+                                                                    @Html.RadioButtonFor(m => m.TransactionLimitPeriodUnit, "D", new { @name = "TransactionLimitPeriodUnit", @class = "transaction-limit-period-unit" })
+                                                                    <label class="form-check-label pl-2">Day</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    @Html.RadioButtonFor(m => m.TransactionLimitPeriodUnit, "W", new { @name = "TransactionLimitPeriodUnit", @class = "transaction-limit-period-unit" })
+                                                                    <label class="form-check-label pl-2">Week</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    @Html.RadioButtonFor(m => m.TransactionLimitPeriodUnit, "M", new { @name = "TransactionLimitPeriodUnit", @class = "transaction-limit-period-unit" })
+                                                                    <label class="form-check-label pl-2">Month</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    @Html.RadioButtonFor(m => m.TransactionLimitPeriodUnit, "Q", new { @name = "TransactionLimitPeriodUnit", @class = "transaction-limit-period-unit" })
+                                                                    <label class="form-check-label pl-2">Quarter</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    @Html.RadioButtonFor(m => m.TransactionLimitPeriodUnit, "H", new { @name = "TransactionLimitPeriodUnit", @class = "transaction-limit-period-unit" })
+                                                                    <label class="form-check-label pl-2">Half Year</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    @Html.RadioButtonFor(m => m.TransactionLimitPeriodUnit, "Y", new { @name = "TransactionLimitPeriodUnit", @class = "transaction-limit-period-unit" })
+                                                                    <label class="form-check-label pl-2">Year</label>
+                                                                </div>
+                                                            </div>
+                                                            @Html.ValidationMessageFor(m => m.TransactionLimitPeriodUnit)
+                                                        </div>
+
+                                                        @*Note*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Note")
+                                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control text-capitalize default-none", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.Note)
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" id="btn-add-number-of-transaction-limit" class="btn btn-success ">Add</button>
+                                                        <button type="button" id="btn-update-number-of-transaction-limit" class="btn btn-primary ">Update</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <table id="tbl-number-of-transaction-limit" class="table compact table-striped table-bordered" width="100">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th><input type="checkbox" name="check_all" id="selectAll" /></th>
+                                                        <th style=" display:none;">TransactionTypeId</th>
+                                                        <th>Transaction Type</th>
+                                                        <th>Minimum Number Of Transaction</th>
+                                                        <th>Maximum Number Of Transaction</th>
+                                                        <th>Transaction Limit Period Unit</th>
+                                                        <th>Note</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="text-center">
+                                                    @{
+                                                        IEnumerable<SchemeNumberOfTransactionLimitViewModel> viewContactList = (IEnumerable<SchemeNumberOfTransactionLimitViewModel>)HttpContext.Current.Session["SchemeNumberOfTransactionLimit"];
+
+                                                        foreach (SchemeNumberOfTransactionLimitViewModel viewModel in viewContactList)
+                                                        {
+                                                            <tr class="text-center">
+                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                <td class="d-none">@viewModel.TransactionTypeId</td>
+                                                                <td>@viewModel.NameOfTransactionType</td>
+                                                                <td>@viewModel.MinimumNumberOfTransaction</td>
+                                                                <td>@viewModel.MaximumNumberOfTransaction</td>
+                                                                <td>@viewModel.TransactionLimitPeriodUnit</td>
+                                                                <td>@viewModel.Note</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        @*Hiddent Field For SchemePrmKey*@
+                                        @Html.HiddenFor(m => m.SchemePrmKey)
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            @Html.OperationFooter("Modify", "SaveDataTables", "SchemeNumberOfTransactionLimit", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var url = "@Url.Action("SaveDataTables", "SchemeNumberOfTransactionLimit")";
+    </script>
+    <script src="~/Scripts/Custom/SchemeNumberOfTransactionLimit.js"></script>
+</body>
+</html>

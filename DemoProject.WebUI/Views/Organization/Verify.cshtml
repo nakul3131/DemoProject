@@ -1,0 +1,804 @@
+﻿@model DemoProject.Services.ViewModel.Enterprise.Establishment.OrganizationViewModel
+
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Enterprise.Establishment
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    OrganizationDetailViewModel organizationDetailViewModel = new OrganizationDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("ORGVRF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Organization - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+                        @*======= First  Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title=======*@
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Verify</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @*======= Third Row - Data Entry Page =======*@
+                        <div class="row read-only">
+                            <div class="col-12">
+                                @*Effective Date*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Effective Date")
+                                    @Html.TextBoxFor(m => m.EffectiveDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark activation-date deny-past-date deny-next-financial-year-date", @placeholder = "Enter Effective Date", @type = "date", required = "required", onclick = "DenyFutureDate()" })
+                                    @Html.ValidationMessageFor(m => m.EffectiveDate)
+                                </div>
+
+                                @*Organization Type*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Organization Type")
+                                    @Html.DropDownListFor(m => m.OrganizationTypeId, new SelectList(organizationDetailViewModel.FinancialOrganizationTypeDropdownList, "Value", "Text"), "--- Select Organization Type --", new { @id = "financial-organization-types", @class = "form-control mandatory-mark", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.OrganizationTypeId)
+                                </div>
+
+                                @*Name Of Organization*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Name Of Organization")
+                                    @Html.TextBoxFor(m => m.NameOfOrganization, new { @id = "organization-name", @class = "form-control mandatory-mark alpha-numeric", @placeholder = "Enter Name Of Organization", required = "required", @minlength = 10, @maxlength = 100, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                    @Html.ValidationMessageFor(m => m.NameOfOrganization)
+                                </div>
+
+                                @*Trans Name Of Organization*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(organizationDetailViewModel.NameOfOrganizationInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransNameOfOrganization, null, new { @id = "trans-organization-name", @class = "form-control mandatory-mark deny-multiple-space", @placeholder = organizationDetailViewModel.NameOfOrganizationPlaceHolderInRegionalLanguage, required = "required", @maxlength = 100 })
+                                    @Html.ValidationMessageFor(m => m.TransNameOfOrganization)
+                                </div>
+
+                                @*Short Name*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Short Name")
+                                    @Html.TextBoxFor(m => m.ShortName, new { @id = "short-name", @class = "form-control mandatory-mark alpha-numeric", @placeholder = "Enter Short Name", required = "required", @minlength = 5, @maxlength = 50, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                    @Html.ValidationMessageFor(m => m.ShortName)
+                                </div>
+
+                                @*Trans Short Name*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(organizationDetailViewModel.ShortNameInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransShortName, null, new { @id = "trans-short-name", @class = "form-control mandatory-mark deny-multiple-space", @placeholder = organizationDetailViewModel.ShortNamePlaceHolderInRegionalLanguage, required = "required", @minlength = 5, @maxlength = 50 })
+                                    @Html.ValidationMessageFor(m => m.TransShortName)
+                                </div>
+
+                                @*Motto*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Motto")
+                                    @Html.TextBoxFor(m => m.Motto, new { @id = "motto", @class = "form-control alpha-numeric", @placeholder = "Enter Motto", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Motto)
+                                </div>
+
+                                @*Trans Motto*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(organizationDetailViewModel.MottoInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransMotto, null, new { @id = "trans-motto", @class = "form-control deny-multiple-space", @placeholder = organizationDetailViewModel.MottoPlaceHolderInRegionalLanguage, @maxlength = 1500, required = "required" })
+                                    @Html.ValidationMessageFor(m => m.TransMotto)
+                                </div>
+
+                                @*Vision*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Vision")
+                                    @Html.TextBoxFor(m => m.Vision, new { @id = "vision", @class = "form-control alpha-numeric", @placeholder = "Enter Vision", @maxlength = 2500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Vision)
+                                </div>
+
+                                @*Trans Vision*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(organizationDetailViewModel.VisionInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransVision, new { @id = "trans-vision", @class = "form-control deny-multiple-space", @placeholder = organizationDetailViewModel.VisionPlaceHolderInRegionalLanguage, @maxlength = 2500, required = "required" })
+                                    @Html.ValidationMessageFor(m => m.TransVision)
+                                </div>
+
+                                @*Mission*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Mission")
+                                    @Html.TextBoxFor(m => m.Mission, new { @id = "mission", @class = "form-control alpha-numeric", @placeholder = "Enter Mission", @maxlength = "2500", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Mission)
+                                </div>
+
+                                @*Trans Mission*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(organizationDetailViewModel.MissionInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransMission, new { @id = "trans-mission", @class = "form-control deny-multiple-space", @placeholder = organizationDetailViewModel.MissionPlaceHolderInRegionalLanguage, @maxlength = 2500, required = "required" })
+                                    @Html.ValidationMessageFor(m => m.TransMission)
+                                </div>
+
+                                @*Standards*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Standards")
+                                    @Html.TextBoxFor(m => m.Standards, new { @id = "standards", @class = "form-control alpha-numeric", @placeholder = "Enter Standards", @maxlength = 2500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Standards)
+                                </div>
+
+                                @*Trans Standards*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(organizationDetailViewModel.StandardsInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransStandards, new { @id = "trans-standards", @class = "form-control deny-multiple-space", @placeholder = organizationDetailViewModel.StandardsPlaceHolderInRegionalLanguage, @maxlength = 2500, required = "required" })
+                                    @Html.ValidationMessageFor(m => m.TransStandards)
+                                </div>
+
+                                @*Organization Code*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Organization Code")
+                                    @Html.TextBoxFor(m => m.OrganizationCode, new { @id = "organization-code", @class = "form-control mandatory-mark alpha-numeric", @placeholder = "Enter Organization Code", @maxlength = 50, onkeyup = "ToTextCapitalize()", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.OrganizationCode)
+                                </div>
+
+                                @*Registration Address Details*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Address Details")
+                                    @Html.TextAreaFor(m => m.RegistrationAddressDetails, new { @id = "registration-address-details", @class = "form-control mandatory-mark", @placeholder = "Enter Address Details", @minlength = 10, @maxlength = 500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.RegistrationAddressDetails)
+                                </div>
+
+                                @*Trans Registration Address Details*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(organizationDetailViewModel.RegistrationAddressDetailsInRegionalLanguage)
+                                    @Html.TextAreaFor(m => m.TransRegistrationAddressDetails, new { @id = "trans-registration-address-details", @class = "form-control mandatory-mark deny-multiple-space", @placeholder = organizationDetailViewModel.RegistrationAddressDetailsPlaceHolderInRegionalLanguage, @minlength = 10, @maxlength = 500, required = "required" })
+                                    @Html.ValidationMessageFor(m => m.TransRegistrationAddressDetails)
+                                </div>
+
+                                @*City*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("City")
+                                    @Html.DropDownListFor(m => m.CenterId, new SelectList(organizationDetailViewModel.VillageTownCityDropdownList, "Value", "Text"), "--- Select City ---", new { @id = "center", @class = "form-control mandatory-mark", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.CenterId)
+                                </div>
+
+                                @*Area Of Operation Prm Key*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Area Of Operation")
+                                    @Html.DropDownListFor(m => m.AreaOfOperationId, new SelectList(organizationDetailViewModel.AreaOfOperationDropdownList, "Value", "Text"), "--- Select Area Of Operations ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.AreaOfOperationId)
+                                </div>
+
+                                @*Language Of Book Prm Key*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Language Of Book")
+                                    @Html.DropDownListFor(m => m.LanguageId, new SelectList(organizationDetailViewModel.LanguageDropdownList, "Value", "Text"), "--- Select Language Of Book --", new { @class = "form-control mandatory-mark", @placeholder = "Enter Language Of Book" })
+                                    @Html.ValidationMessageFor(m => m.LanguageId)
+                                </div>
+
+                                @*PAN Number*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("PAN Number")
+                                    &nbsp;&nbsp;<span class="text-c-blue"><i class="fa fa-info-circle">&nbsp;&nbsp;PanNumber are required For GST Registration Detail</i></span>
+                                    @Html.TextBoxFor(m => m.PANNumber, "", new { @id = "pan-number", @class = "form-control", @placeholder = "Enter Pan Number", @maxlength = 10 })
+                                    @Html.ValidationMessageFor(m => m.PANNumber, "", new { @class = "error" })
+                                    <span id="pan-number-error" class="error modal-input-error d-none"> Please Enter Valid WebSite.</span>
+                                </div>
+
+                                @*Official Web Site*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Official WebSite")
+                                    @Html.TextBoxFor(m => m.OfficialWebSite, new { @id = "official-website", @class = "form-control", @placeholder = "Enter Official WebSite", @maxlength = 150 })
+                                    @Html.ValidationMessageFor(m => m.OfficialWebSite)
+                                    <span id="official-website-error" class="error modal-input-error d-none"> Please Enter Valid WebSite.</span>
+                                </div>
+
+                                @*Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Note")
+                                    @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control deny-multiple-space", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                    @Html.ValidationMessageFor(m => m.Note)
+                                </div>
+
+                                @*Trans Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(organizationDetailViewModel.NoteInRegionalLanguage)
+                                    @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control deny-multiple-space", @placeholder = organizationDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                    @Html.ValidationMessageFor(m => m.TransNote)
+                                </div>
+                            </div>
+                        </div>
+
+                        @*======= Fourth Row - Accordians =======*@
+                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+                            @*Accordian 1 - Cooperative Registration*@
+                            <div id="heading-coop-registration" class="card mt-3 @(Model.IsRegisterUnderCooperative ? "" : "d-none" )">
+                                <div class="card-header " id="coop-registration-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-coop-registration" data-target="#collapse-coop-registration">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <a class="card-title" href="#">
+                                                <b>Cooperative Registration</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span id="coop-registration-error" class="error d-none">Cooperative Registration Required Data, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-coop-registration" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-coop-registration" data-target="#collapse-coop-registration">
+                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-coop-registration" class="collapse" aria-labelledby="heading-coop-registration" data-parent="#accordion">
+                                    <div class="card-body read-only">
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                @*Coop Registration Date*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Registration Date")
+                                                    @Html.TextBoxFor(m => m.CoopRegistrationDate, "{0:yyyy-MM-dd}", new { id = "registration-date-coop-registration", @class = "form-control mandatory-mark activation-date deny-future-date deny-next-financial-year-date coop-registration-input", @placeholder = "Enter Registration Date", @type = "date", required = "required", onclick = "DenyFutureDate()" })
+                                                    @Html.ValidationMessageFor(m => m.CoopRegistrationDate)
+                                                </div>
+
+                                                @*Coop Registration Number*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Registration Number")
+                                                    @Html.TextBoxFor(m => m.CoopRegistrationNumber, new { @id = "coop-registration-number", @class = "form-control mandatory-mark alpha-numeric coop-registration-input", @minlength = 5, @maxlength = 150, @placeholder = "Enter Registration Number", required = "required", onkeydown = "Maketranslation()" })
+                                                    @Html.ValidationMessageFor(m => m.CoopRegistrationNumber)
+                                                </div>
+
+                                                @*Trans Coop Registration Number*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel(organizationDetailViewModel.CoopRegistrationNumberInRegionalLanguage)
+                                                    @Html.TextBoxFor(m => m.TransCoopRegistrationNumber, new { @id = "trans-coop-registration-number", @class = "form-control mandatory-mark alpha-numeric coop-registration-input", @minlength = 5, @maxlength = 150, required = "required", @placeholder = organizationDetailViewModel.CoopRegistrationNumberPlaceHolderInRegionalLanguage })
+                                                    @Html.ValidationMessageFor(m => m.TransCoopRegistrationNumber)
+                                                </div>
+
+                                                @*Coop Classification*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Classification")
+                                                    @Html.DropDownListFor(m => m.CoopClassificationId, new SelectList(organizationDetailViewModel.MLCoopSocietyClassDropdownList, "Value", "Text"), "--- Select Classification --", new { @id = "coop-classification", @class = "form-control mandatory-mark coop-registration-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.CoopClassificationId)
+                                                </div>
+
+                                                @*Coop Sub Classification*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Sub Classification")
+                                                    @Html.DropDownListFor(m => m.CoopSubClassificationId, new SelectList(organizationDetailViewModel.MLCoopSocietySubClassDropdownList, "Value", "Text"), "--- Select Sub Classification --", new { @id = "coop-sub-classification", @class = "form-control mandatory-mark coop-registration-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.CoopSubClassificationId)
+                                                </div>
+
+                                                @*Coop Reference Number*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Reference Number")
+                                                    @Html.TextBoxFor(m => m.CoopReferenceNumber, new { @id = "coop-reference-number", @class = "form-control alpha-numeric coop-registration-input", @placeholder = "Enter Reference Number", @minlength = 5, @maxlength = 150, onkeydown = "Maketranslation()", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.CoopReferenceNumber)
+                                                </div>
+
+                                                @*Trans Coop Reference Number*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel(organizationDetailViewModel.CoopReferenceNumberInRegionalLanguage)
+                                                    @Html.TextBoxFor(m => m.TransCoopReferenceNumber, new { @id = "trans-coop-reference-number", @class = "form-control alpha-numeric coop-registration-input", @minlength = 5, @maxlength = 150, @placeholder = organizationDetailViewModel.CoopReferenceNumberPlaceHolderInRegionalLanguage, required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.TransCoopReferenceNumber)
+                                                </div>
+
+                                                @*Coop Date Of Classification Advice*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Date Of Classification Advice")
+                                                    @Html.TextBoxFor(m => m.CoopDateOfClassificationAdvice, "{0:yyyy-MM-dd}", new { @id = "coop-date-of-classification-advice", @class = "form-control mandatory-mark deny-past-date coop-registration-input", @placeholder = "Enter Date Of Classification Advice", @type = "date", required = "required", onclick = "deny-past-date-from-reference-date('registration-date-coop-registration')" })
+                                                    @Html.ValidationMessageFor(m => m.CoopDateOfClassificationAdvice)
+                                                </div>
+
+                                                @*Last Election Date*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Last Election Date")
+                                                    @Html.TextBoxFor(m => m.LastElectionDate, "{0:yyyy-MM-dd}", new { @id = "last-election-date", @class = "form-control mandatory-mark deny-past-date coop-registration-input", @placeholder = "Enter Last Election Date", @type = "date", required = "required", onclick = "deny-past-date-from-reference-date('registration-date-coop-registration')" })
+                                                    @Html.ValidationMessageFor(m => m.LastElectionDate)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Accordian 2 - RBI Registration*@
+                            <div id="heading-rbi-registration" class="card mt-3 @(Model.IsRegisterUnderRBI ? "d-block" : "d-none")">
+                                <a class="card-header p-3" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-rbi-registration" href="#collapse-rbi-registration">
+                                    <b>RBI Registration</b>
+                                </a>
+                                <div id="collapse-rbi-registration" class="collapse" aria-labelledby="heading-rbi-registration" data-parent="#accordion">
+                                    <div class="card-body read-only">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                @*RBIRegistrationDate*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("RBI Registration Date")
+                                                    @Html.TextBoxFor(m => m.RBIRegistrationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark deny-future-date", @placeholder = "Enter RBI Registration Date", @type = "date", required = "required", onclick = "DenyFutureDate()" })
+                                                    @Html.ValidationMessageFor(m => m.RBIRegistrationDate)
+                                                </div>
+
+                                                @*RBIRegistrationNumber*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("RBI Registration Number")
+                                                    @Html.TextBoxFor(m => m.RBIRegistrationNumber, "{0:yyyy-MM-dd}", new { @id = "rbi-registration-number", @class = "form-control mandatory-mark", @placeholder = "Enter RBI Registration Number", @minlength = 5, @maxlength = 150, required = "required", onkeydown = "Maketranslation()" })
+                                                    @Html.ValidationMessageFor(m => m.RBIRegistrationNumber)
+                                                </div>
+
+                                                @*TransRBIRegistrationNumber*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel(organizationDetailViewModel.RBIRegistrationNumberInRegionalLanguage)
+                                                    @Html.TextBoxFor(m => m.TransRBIRegistrationNumber, new { @id = "trans-rbi-registration-number", @class = "form-control mandatory-mark", @minlength = 5, @maxlength = 150, @placeholder = organizationDetailViewModel.RBIRegistrationNumberPlaceHolderInRegionalLanguage })
+                                                    @Html.ValidationMessageFor(m => m.TransRBIRegistrationNumber)
+                                                </div>
+
+                                                @*RBIClassification*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("RBI Classification")
+                                                    @Html.DropDownListFor(m => m.RBIClassificationId, new SelectList(organizationDetailViewModel.MLCoopSocietyClassDropdownList, "Value", "Text"), new { @class = "form-control mandatory-mark", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.RBIClassificationId)
+                                                </div>
+
+                                                @*RBISubClassification*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("RBI SubClassification")
+                                                    @Html.DropDownListFor(m => m.RBISubClassificationId, new SelectList(organizationDetailViewModel.MLCoopSocietySubClassDropdownList, "Value", "Text"), new { @class = "form-control mandatory-mark", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.RBISubClassificationId)
+                                                </div>
+
+                                                @*RBIReferenceNumber*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("RBI Reference Number")
+                                                    @Html.TextBoxFor(m => m.RBIReferenceNumber, new { @id = "rbi-reference-number", @class = "form-control", @placeholder = "Enter RBI Reference Number", @minlength = 5, @maxlength = 150, onkeydown = "Maketranslation()" })
+                                                    @Html.ValidationMessageFor(m => m.RBIReferenceNumber)
+                                                </div>
+
+                                                @*TransRBIReferenceNumber*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel(organizationDetailViewModel.RBIReferenceNumberInRegionalLanguage)
+                                                    @Html.TextBoxFor(m => m.TransRBIReferenceNumber, new { @id = "trans-rbi-reference-number", @class = "form-control", @minlength = 5, @maxlength = 150, @placeholder = organizationDetailViewModel.RBIReferenceNumberPlaceHolderInRegionalLanguage })
+                                                    @Html.ValidationMessageFor(m => m.TransRBIReferenceNumber)
+                                                </div>
+
+                                                @*RBIDateOfClassificationAdvice*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("RBI Date Of Classification Advice")
+                                                    @Html.TextBoxFor(m => m.RBIDateOfClassificationAdvice, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark deny-future-date", @placeholder = "Enter RBI Date Of Classification Advice", @type = "date", required = "required", onclick = "DenyFutureDate()" })
+                                                    @Html.ValidationMessageFor(m => m.RBIDateOfClassificationAdvice)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Accordian 3 - Authorized Shares Capital*@
+                            <div id="heading-authorized-shares-capital" class="card mt-3">
+                                <div class="card-header" id="authorized-shares-capital-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-authorized-shares-capital" data-target="#collapse-authorized-shares-capital">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <a class="card-title" href="#">
+                                                <b>Authorized Shares Capital</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span id="authorized-shares-capital-error" class="error d-none">Authorized Shares Capital, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-authorized-shares-capital" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-authorized-shares-capital" data-target="#collapse-authorized-shares-capital">
+                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-authorized-shares-capital" class="collapse" aria-labelledby="heading-authorized-shares-capital" data-parent="#accordion">
+                                    <div class="card-body read-only">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    @*Effective Date*@
+                                                    @Html.CustomLabel("Effective Date")
+                                                    @Html.TextBoxFor(m => m.AuthorizedSharesCapitalViewModel.EffectiveDate, "{0:yyyy-MM-dd}", new { @id = "effective-date", @class = "form-control mandatory-mark activation-date deny-past-date deny-next-financial-year-date authorized-input", @placeholder = "Enter Effective Date", @type = "date", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.AuthorizedSharesCapitalViewModel.EffectiveDate)
+                                                </div>
+
+                                                @*Authorized Date*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Authorized Date")
+                                                    @Html.TextBoxFor(m => m.AuthorizedSharesCapitalViewModel.AuthorizedDate, "{0:yyyy-MM-dd}", new { @id = "authorized-date", @class = "form-control mandatory-mark deny-past-date authorized-input", @placeholder = "Enter Authorized Date Date", @type = "date", required = "required", onclick = "deny-past-date-from-reference-date('registration-date-coop-registration')" })
+                                                    @Html.ValidationMessageFor(m => m.AuthorizedSharesCapitalViewModel.AuthorizedDate)
+                                                </div>
+
+                                                @*Authorized Shares Capital Amount*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Authorized Shares Capital Amount")
+                                                    @Html.TextBoxFor(m => m.AuthorizedSharesCapitalViewModel.AuthorizedSharesCapitalAmount, new { @id = "authorized-shares-capital-amount", @class = "form-control mandatory-mark authorized-input", @placeholder = "Enter Authorized Shres Capital Amount", @type = "number", required = "required", @min = 1000, @max = 999999999 })
+                                                    @Html.ValidationMessageFor(m => m.AuthorizedSharesCapitalViewModel.AuthorizedSharesCapitalAmount)<span id="words"></span>
+                                                </div>
+
+                                                @*Reference Number*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Reference Number")
+                                                    @Html.TextBoxFor(m => m.AuthorizedSharesCapitalViewModel.ReferenceNumber, new { @id = "reference-number", @class = "form-control mandatory-mark authorized-input", @placeholder = "Enter Reference Number", @minlength = 4, @maxlength = 50, required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.AuthorizedSharesCapitalViewModel.ReferenceNumber)
+                                                </div>
+
+                                                @*Note*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Note")
+                                                    @Html.TextAreaFor(m => m.AuthorizedSharesCapitalViewModel.Note, new { @id = "note", @class = "form-control deny-multiple-space", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                    @Html.ValidationMessageFor(m => m.AuthorizedSharesCapitalViewModel.Note)
+                                                </div>
+
+                                                @*ReasonForModification*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Reason For Modification")
+                                                    @Html.TextAreaFor(m => m.AuthorizedSharesCapitalViewModel.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                    @Html.ValidationMessageFor(m => m.AuthorizedSharesCapitalViewModel.ReasonForModification)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Accordian 4 - ContactDetails*@
+                            <div id="heading-contact-detail" class="card mt-3">
+                                <div class="card-header " id="contact-detail-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-contact-detail" data-target="#collapse-contact-detail">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <a class="card-title" href="#">
+                                                <b>Contact Details</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span id="contact-error" class="error d-none">Person Contact Detail Required Data, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-contact-detail" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-contact-detail" data-target="#collapse-contact-detail">
+                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-contact-detail" class="collapse" aria-labelledby="heading-contact-detail" data-parent="#accordion">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card-body">
+                                                <div class="table-responsive" style="min-height:200px;">
+                                                    <table id="tbl-contact" class="table compact  table-striped table-bordered" width="100">
+                                                        <thead class="text-center read-only">
+                                                            <tr>
+                                                                <th><input type="checkbox" name="check-all" id="select-all-contact" /></th>
+                                                                <th class="d-none">ContactTypeId</th>
+                                                                <th>ContactType</th>
+                                                                <th>Detail</th>
+                                                                <th class="d-none">ContactGroupId</th>
+                                                                <th>ContactGroup</th>
+                                                                <th>IsOpen</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody class="text-center read-only">
+                                                            @{
+                                                                IEnumerable<OrganizationContactDetailViewModel> viewModelList = (IEnumerable<OrganizationContactDetailViewModel>)HttpContext.Current.Session["OrganizationContactDetail"];
+                                                                if (viewModelList != null)
+                                                                {
+                                                                    foreach (OrganizationContactDetailViewModel viewModel in viewModelList)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="check-all" class="checks" /></td>
+                                                                            <td class="d-none">@viewModel.ContactTypeId</td>
+                                                                            <td>@viewModel.NameOfContactType</td>
+                                                                            <td>@viewModel.FieldValue</td>
+                                                                            <td class="d-none">@viewModel.ContactGroupId</td>
+                                                                            <td>@viewModel.NameOfContactGroup</td>
+                                                                            <td>@viewModel.IsOpen</td>
+
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Accordian 5 - Fund*@
+                            <div id="heading-organization-fund" class="card mt-3">
+                                <div class="card-header " id="organization-fund-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-organization-fund" data-target="#collapse-organization-fund">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <a class="card-title" href="#">
+                                                <b>Fund</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span id="fund-data-table-error" class="error d-none"> Fund Data Table Required Data, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-organization-fund" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-organization-fund" data-target="#collapse-organization-fund">
+                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-organization-fund" class="collapse" aria-labelledby="heading-organization-fund" data-parent="#accordion">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card-body">
+                                                <table id="tbl-fund" class="table compact table-striped table-bordered " width="100">
+                                                    <thead class="text-center read-only">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check-all" id="select-all-fund" /></th>
+                                                            <th class="d-none">FundId</th>
+                                                            <th>FundCategory</th>
+                                                            <th>SequenceNumber</th>
+                                                            <th>SequenceNumberText</th>
+                                                            <th>TransSequenceNumberText</th>
+                                                            <th>ActivationDate</th>
+                                                            <th>ExpiryDate</th>
+                                                            <th class="d-none">CloseDate</th>
+                                                            <th>Note</th>
+                                                            <th>TransNote</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="text-center read-only">
+                                                        @{
+                                                            IEnumerable<OrganizationFundViewModel> fundViewModelList = (IEnumerable<OrganizationFundViewModel>)HttpContext.Current.Session["OrganizationFund"];
+                                                            if (fundViewModelList != null)
+                                                            {
+                                                                foreach (OrganizationFundViewModel viewModel in fundViewModelList)
+                                                                {
+                                                                    <tr>
+                                                                        <td><input type="checkbox" name="check-all" class="checks" /></td>
+                                                                        <td class="d-none">@viewModel.FundId</td>
+                                                                        <td>@viewModel.NameOfFund</td>
+                                                                        <td>@viewModel.SequenceNumber</td>
+                                                                        <td>@viewModel.SequenceNumberText</td>
+                                                                        <td>@viewModel.TransSequenceNumberText</td>
+                                                                        <td>@viewModel.ActivationDate</td>
+                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.TransNote</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Accordian 6 -LoanType*@
+                            <div id="heading-organization-loan-type" class="card mt-3">
+                                <div class="card-header " id="organization-loan-type-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-organization-loan-type" data-target="#collapse-organization-loan-type">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <a class="card-title" href="#">
+                                                <b>Loan Type</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span id="loan-type-data-table-error" class="error d-none"> Loan Type Data Table Required Data, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-organization-loan-type" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-organization-loan-type" data-target="#collapse-organization-loan-type">
+                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-organization-loan-type" class="collapse" aria-labelledby="heading-organization-loan-type" data-parent="#accordion">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card-body">
+                                                <table id="tbl-loan-type" class="table compact table-striped table-bordered" width="100">
+                                                    <thead class="text-center read-only">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check-all" id="select-all-loan-type" /></th>
+                                                            <th class="d-none">LoanTypeId</th>
+                                                            <th>LoanType</th>
+                                                            <th>MaximumLoanTenure</th>
+                                                            <th>MinimumDownPaymentPercentage</th>
+                                                            <th>SequenceNumber</th>
+                                                            <th>SequenceNumberText</th>
+                                                            <th>TransSequenceNumberText</th>
+                                                            <th>ActivationDate</th>
+                                                            <th>ExpiryDate</th>
+                                                            <th class="d-none">CloseDate</th>
+                                                            <th>Note</th>
+                                                            <th>TransNote</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="text-center read-only">
+                                                        @{
+                                                            IEnumerable<OrganizationLoanTypeViewModel> loanTypeViewModelList = (IEnumerable<OrganizationLoanTypeViewModel>)HttpContext.Current.Session["OrganizationLoanType"];
+                                                            if (loanTypeViewModelList != null)
+                                                            {
+                                                                foreach (OrganizationLoanTypeViewModel viewModel in loanTypeViewModelList)
+                                                                {
+                                                                    <tr class="hoverlightblue">
+                                                                        <td><input type="checkbox" name="check-all" class="checks" /></td>
+                                                                        <td class="d-none">@viewModel.LoanTypeId</td>
+                                                                        <td>@viewModel.NameOfLoanType</td>
+                                                                        <td>@viewModel.MaximumLoanTenure</td>
+                                                                        <td>@viewModel.MinimumDownPaymentPercentage</td>
+                                                                        <td>@viewModel.SequenceNumber</td>
+                                                                        <td>@viewModel.SequenceNumberText</td>
+                                                                        <td>@viewModel.TransSequenceNumberText</td>
+                                                                        <td>@viewModel.ActivationDate</td>
+                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.TransNote</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Accordian 7 - GSTRegistrationDetail*@
+                            <div id="heading-gst-registration" class="card gsthide mt-3">
+                                <div class="card-header " id="gst-registration-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-gst-registration" data-target="#collapse-gst-registration">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <a class="card-title" href="#">
+                                                <b>GST Registration Detail</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span class="text-c-blue text-danger text-right"><i class="fa fa-info-circle">&nbsp;&nbsp;PanNumber are required For GST Registration Detail</i></span>
+                                            <span id="gst-registration-error" class="error d-none"> Loan Type Data Table Required Data, Please Add Valid Data.</span>
+                                        </div>
+
+                                        <div class="col-2">
+                                            <a href="#collapse-gst-registration" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-gst-registration" data-target="#collapse-gst-registration">
+                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-gst-registration" class="collapse" aria-labelledby="heading-gst-registration" data-parent="#accordion">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card-body">
+                                                <div class="table-responsive" style="min-height:200px;">
+                                                    <table id="tbl-gst-registration" class="table compact table-striped table-bordered" width="100">
+                                                        <thead class="text-center read-only">
+                                                            <tr>
+                                                                <th><input type="checkbox" name="check-all" id="select-all-gst-registration" /></th>
+                                                                <th class="d-none">StateId</th>
+                                                                <th>State</th>
+                                                                <th class="d-none">GSTRegistrationTypeId</th>
+                                                                <th>GSTRegistrationType</th>
+                                                                <th>ApplicableFrom</th>
+                                                                <th class="d-none">GSTReturnPeriodicityId</th>
+                                                                <th>GSTReturnPeriodicity</th>
+                                                                <th>IsApplicableEWayBill</th>
+                                                                <th>ThresholdLimit</th>
+                                                                <th>GSTRegistrationNumber</th>
+                                                                <th>RegistrationDate</th>
+                                                                <th @*class="d-none"*@>CloseDate</th>
+                                                                <th>Note</th>
+                                                                <th>ReasonForModification</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody class="text-center read-only">
+                                                            @{
+                                                                IEnumerable<OrganizationGSTRegistrationDetailViewModel> viewModelgstList = (IEnumerable<OrganizationGSTRegistrationDetailViewModel>)HttpContext.Current.Session["OrganizationGSTRegistrationDetail"];
+                                                                if (viewModelgstList != null)
+                                                                {
+                                                                    foreach (OrganizationGSTRegistrationDetailViewModel viewModel in viewModelgstList)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="check-all" class="checks" /></td>
+                                                                            <td class="d-none">@viewModel.StateId</td>
+                                                                            <td>@viewModel.NameOfState</td>
+                                                                            <td class="d-none">@viewModel.GSTRegistrationTypeId</td>
+                                                                            <td>@viewModel.NameOfGSTRegistrationType</td>
+                                                                            <td>@viewModel.ApplicableFrom</td>
+                                                                            <td class="d-none">@viewModel.GSTReturnPeriodicityId</td>
+                                                                            <td>@viewModel.NameOfGSTReturnPeriodicity</td>
+                                                                            <td>@viewModel.IsApplicableEWayBill</td>
+                                                                            <td>@viewModel.ThresholdLimit</td>
+                                                                            <td>@viewModel.GSTRegistrationNumber</td>
+                                                                            <td>@viewModel.RegistrationDate</td>
+                                                                            <td @*class="d-none"*@>@viewModel.CloseDate</td>
+                                                                            <td>@viewModel.Note</td>
+                                                                            <td>@viewModel.ReasonForModification</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*======= Fifth Row - Reason For Modification =======*@
+                        <div class="row mt-4">
+                            <div class="col-12 read-only">
+                                @*NameOfUser*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Name Of User")
+                                    @Html.TextBoxFor(m => m.NameOfUser, new { @class = "form-control" })
+                                </div>
+
+                                @*EntryDateTime*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Entry Date Time")
+                                    @Html.TextBoxFor(m => m.EntryDateTime, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                            @*Hiddent Field For AuthorizedSharesCapitalPrmKey*@
+                            @Html.HiddenFor(m => m.AuthorizedSharesCapitalViewModel.AuthorizedSharesCapitalPrmKey)
+
+                            @*Hiddent Field For OrganizationPrmKey*@
+                            @Html.HiddenFor(m => m.OrganizationPrmKey)
+
+                            @*Hiddent Field For OrganizationPrmKey*@
+                            @Html.HiddenFor(m => m.OrganizationTranslationPrmKey)
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Verify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var url = "@Url.Action("SaveDataTables", "Organization")";
+    </script>
+    <script src="~/Scripts/Custom/Organization.js"></script>
+</body>
+</html>

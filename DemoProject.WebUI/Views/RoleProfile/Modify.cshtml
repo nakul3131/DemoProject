@@ -1,0 +1,1017 @@
+﻿@model DemoProject.Services.ViewModel.Security.UserRoles.RoleProfileViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Security.UserRoles
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    RoleProfileDetailViewModel detailViewModel = new RoleProfileDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("RPFMOD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Role Profile - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title If Screen Large Then Column - 12 Otherwise Col - 6 For Modify And Remaining For Translation*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*RoleProfileCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Role Profile Code")
+                                            @Html.TextBoxFor(m => m.RoleProfileCode, new { @id = "role-profile-code", @class = "form-control mandatory-mark ", @placeholder = "Enter Role Profile Code", required = "required", @maxlength = "20", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.RoleProfileCode)
+                                        </div>
+
+                                        @*NameOfRoleProfile*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of Role Profile")
+                                            @Html.TextBoxFor(m => m.NameOfRoleProfile, new { @id = "name-of-role-profile", @class = "form-control mandatory-mark ", @placeholder = "Enter Name Of Role Profile", required = "required", @maxlength = "50", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfRoleProfile)
+                                        </div>
+
+                                        @*NameOfRoleProfile*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOfRoleProfileInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOfRoleProfile, null, new { @id = "trans-name-of-role-profile", @class = "form-control mandatory-mark", @placeholder = detailViewModel.NameOfRoleProfilePlaceHolderInRegionalLanguage, required = "required", @autocomplete = "off", @maxlength = "50" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfRoleProfile)
+                                        </div>
+
+                                        @*AliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control", @placeholder = "Enter Alias Name", @maxlength = "10", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*Alias Name*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, null, new { @id = "trans-alias-name", @class = "form-control", @placeholder = detailViewModel.AliasNamePlaceHolderInRegionalLanguage, @maxlength = "10", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Name On Report ")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control", @placeholder = "Enter Name On Report", @maxlength = "100", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*Name On Report*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, null, new { @id = "trans-name-on-report", @class = "form-control", @placeholder = detailViewModel.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = "100", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*IsFixedRole*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("IsFixedRole")
+                                            </div>
+                                            <div class="text-right">
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.IsFixedRole, new { @id = "IsFixedRole", @class = "form-control switch-input", required = "required" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @*IsCentralizeRole*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("IsCentralizeRole")
+                                            </div>
+                                            <div class="text-right">
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.IsCentralizeRole, new { @id = "IsCentralizeRole", @class = "form-control switch-input", required = "required" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @*GeneralLedgerAccessType*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("General Ledger Access Type")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="col-5 mt-1 d-flex justify-content-between">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.GeneralLedgerAccessType, "A", new { @name = "AGeneralLedgerAccessType" })
+                                                            <label class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.GeneralLedgerAccessType, "D", new { @name = "DGeneralLedgerAccessType" })
+                                                            <label class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*BusinessOfficeAccessType*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Business Office Access Type")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="col-5 mt-1 d-flex justify-content-between">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.BusinessOfficeAccessType, "A", new { @name = "ABusinessOfficeAccessType" })
+                                                            <label class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.BusinessOfficeAccessType, "D", new { @name = "DBusinessOfficeAccessType" })
+                                                            <label class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*IsAllowAllAccessForBusinessOffice*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("IsAllowAllAccessForBusinessOffice")
+                                            </div>
+                                            <div class="text-right">
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.IsAllowAllAccessForBusinessOffice, new { @id = "enable-is-allow-all-access-for-business-office", @class = "form-control switch-input hide-block", required = "required" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @*IsAllowAllAccessForGeneralLedger*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("IsAllowAllAccessForGeneralLedger")
+                                            </div>
+                                            <div class="text-right">
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.IsAllowAllAccessForGeneralLedger, new { @id = "enable-is-allow-all-access-for-general-ledger", @class = "form-control switch-input hide-block", required = "required" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @*IsAllowAllAccessForMenu*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("IsAllowAllAccessForMenu")
+                                            </div>
+                                            <div class="text-right">
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.IsAllowAllAccessForMenu, new { @id = "enable-is-allow-all-access-for-menu", @class = "form-control switch-input hide-block", required = "required" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @*IsAllowAllAccessForSpecialPermission*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("IsAllowAllAccessForSpecialPermission")
+                                            </div>
+                                            <div class="text-right">
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.IsAllowAllAccessForSpecialPermission, new { @id = "enable-is-allow-all-access-for-special-permission", @class = "form-control switch-input hide-block", required = "required" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @*IsAllowAllTransactions*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("IsAllowAllTransactions")
+                                            </div>
+                                            <div class="text-right">
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.IsAllowAllTransactions, new { @id = "enable-is-allow-all-access-for-transactions", @class = "form-control switch-input hide-block", required = "required" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark deny-past-date", @placeholder = "Enter Activation Date", required = "required", @Type = "date", @autocomplete = "off", onclick = "DenyPastDate()" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*ExpiryDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Expiry Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control mandatory-mark", @placeholder = "Enter Note", @maxlength = "4000", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control mandatory-mark", @placeholder = detailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = "4000", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                        @*ReasonForModification*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("ReasonForModification")
+                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                        </div>
+
+                                        @*TransReasonForModification*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.ReasonForModificationInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransReasonForModification, new { @id = "trans-reason-for-modification", @class = "form-control", @placeholder = detailViewModel.ReasonForModificationPlaceHolderInRegionalLanguage, @maxlength = "1500", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransReasonForModification)
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+
+                                            @*Accordian 1 - General Ledger *@
+                                            <div id="is-allow-all-access-for-general-ledger-block" class="card mt-3">
+                                                <a class="card-header p-3" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-general-ledger" href="#collapse-general-ledger">
+                                                    <b>@Html.TextWithRegionalLanguage("General Ledger")</b>
+                                                </a>
+                                                <div id="collapse-general-ledger" class="collapse" aria-labelledby="heading-general-ledger" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+
+                                                                <div class="modal fade" id="add-modal-general-ledger" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title  text-center" id="general-ledger-modal-title">Add</h4>
+                                                                                <button type="button" id="close-general-ledger" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                @*General Ledger*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("General Ledger")
+                                                                                    @Html.ListBoxFor(m => m.RoleProfileGeneralLedgerViewModel.MultiGeneralLedgerId, new MultiSelectList(detailViewModel.GeneralLedgerDropdownList, "Value", "Text"), new { @id = "general-ledger-id", @class = "form-control js-example-basic-multiple", name = "GeneralLedgerAccessId", @multiple = "multiple" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileGeneralLedgerViewModel.MultiGeneralLedgerId)
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileGeneralLedgerViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-general-ledger", @class = "form-control mandatory-mark deny-past-date", @placeholder = "Enter Activation Date", required = "required", @Type = "date", @autocomplete = "off", onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileGeneralLedgerViewModel.ActivationDate)
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileGeneralLedgerViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-general-ledger", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Expiry Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-general-ledger')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileGeneralLedgerViewModel.ExpiryDate)
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileGeneralLedgerViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-general-ledger", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Close Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-general-ledger')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileGeneralLedgerViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.RoleProfileGeneralLedgerViewModel.Note, new { @id = "note-general-ledger", @class = "form-control", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileGeneralLedgerViewModel.Note)
+                                                                                </div>
+
+                                                                                @*ReasonForModification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("ReasonForModification")
+                                                                                    @Html.TextAreaFor(m => m.RoleProfileGeneralLedgerViewModel.ReasonForModification, new { @id = "reason-for-modification-general-ledger", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileGeneralLedgerViewModel.ReasonForModification)
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-general-ledger-modal" class="btn btn-success">Add</button>
+                                                                                <button type="button" id="btn-update-general-ledger-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="card-body">
+                                                                    <table id="general-ledger-data-table" class="table compact table-striped table-bordered" cellspacing="0" width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="check_all" id="general-ledger-select-all-chkbox" /></th>
+                                                                                <th class="d-none">GeneralLedgerID</th>
+                                                                                <th>GeneralLedger</th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th>CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th>Reason For Modification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<RoleProfileGeneralLedgerViewModel> viewModelList1 = (IEnumerable<RoleProfileGeneralLedgerViewModel>)HttpContext.Current.Session["RoleProfileGeneralLedger"];
+
+                                                                                foreach (RoleProfileGeneralLedgerViewModel viewModel in viewModelList1)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                        <td class="d-none">@viewModel.GeneralLedgerId</td>
+                                                                                        <td>@viewModel.NameOfGL</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td>@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*UserProfile BusinessOffice*@
+                                            <div id="is-allow-all-access-for-business-office-block" class="card mt-3">
+                                                <a class="card-header p-3" data-toggle="collapse" href="#collapse-business-office" aria-expanded="false" aria-controls="collapse-business-office">
+                                                    <b>BusinessOffice</b>
+                                                </a>
+                                                <div id="collapse-business-office" class="collapse" aria-labelledby="heading-business-office" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="modal fade" id="add-modal-business-office" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title  text-center" id="business-office-modal-title">Add</h4>
+                                                                                <button type="button" id="close-business-office" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                @*Business Office*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Business Office")
+                                                                                    @Html.ListBoxFor(m => m.RoleProfileBusinessOfficeViewModel.MultiBusinessOfficeId, new MultiSelectList(detailViewModel.BusinessOfficeDropdownList, "Value", "Text"), new { @id = "business-office-id", @class = "form-control js-example-basic-multiple", name = "BusinessOfficeAccessId", @multiple = "multiple" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileBusinessOfficeViewModel.MultiBusinessOfficeId)
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileBusinessOfficeViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-business-office", @class = "form-control mandatory-mark deny-past-date", @placeholder = "Enter Activation Date", required = "required", @Type = "date", @autocomplete = "off", onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileBusinessOfficeViewModel.ActivationDate)
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileBusinessOfficeViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-business-office", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Expiry Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-business-office')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileBusinessOfficeViewModel.ExpiryDate)
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileBusinessOfficeViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-business-office", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Close Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-business-office')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileBusinessOfficeViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.RoleProfileBusinessOfficeViewModel.Note, new { @id = "note-business-office", @class = "form-control", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileBusinessOfficeViewModel.Note)
+                                                                                </div>
+
+                                                                                @*ReasonForModification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("ReasonForModification")
+                                                                                    @Html.TextAreaFor(m => m.RoleProfileBusinessOfficeViewModel.ReasonForModification, new { @id = "reason-for-modification-business-office", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileBusinessOfficeViewModel.ReasonForModification)
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-business-office-modal" class="btn btn-success">Add</button>
+                                                                                <button type="button" id="btn-update-business-office-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="card-body">
+                                                                    <table id="business-office-data-table" class="table compact table-striped table-bordered" cellspacing="0" width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="check_all" id="business-office-select-all-chkbox" /></th>
+                                                                                <th class="d-none">BusinessOfficeID</th>
+                                                                                <th>Business Office</th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th>CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th>Reason For Modification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<RoleProfileBusinessOfficeViewModel> businessOfficeViewModels = (IEnumerable<RoleProfileBusinessOfficeViewModel>)HttpContext.Current.Session["RoleProfileBusinessOffice"];
+
+                                                                                foreach (RoleProfileBusinessOfficeViewModel viewModel in businessOfficeViewModels)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                        <td class="d-none">@viewModel.BusinessOfficeId</td>
+                                                                                        <td>@viewModel.NameOfBusinessOffice</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td>@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 2 - Transaction Limit*@
+                                            <div id="is-allow-all-access-for-transactions-block" class="card mt-3">
+                                                <a class="card-header p-3" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-transaction-limit" href="#collapse-transaction-limit">
+                                                    <b>@Html.TextWithRegionalLanguage("TransactionLimit")</b>
+                                                </a>
+                                                <div id="collapse-transaction-limit" class="collapse" aria-labelledby="heading-transaction-limit" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="modal fade" id="transaction-limit-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title  text-center" id="transaction-limit-modal-title">Add</h4>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+
+                                                                                @*GeneralLedger*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("General Ledger")
+                                                                                    @Html.DropDownListFor(m => m.RoleProfileTransactionLimitViewModel.GeneralLedgerId, new SelectList(detailViewModel.GeneralLedgerDropdownList, "Value", "Text", 0), "Please Select General Ledger", new { @id = "transaction-limit-general-ledger-id", @class = "form-control mandatory-mark" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.GeneralLedgerId)
+                                                                                </div>
+
+                                                                                @*TransactionType*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Transaction Type")
+                                                                                    @Html.DropDownListFor(m => m.RoleProfileTransactionLimitViewModel.MultiTransactionTypeId, new SelectList(detailViewModel.TransactionTypeDropdownList, "Value", "Text", 0), new { @id = "transaction-type-id", @class = "form-control mandatory-mark" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MultiTransactionTypeId)
+                                                                                </div>
+
+                                                                                @*Currency Name*@
+                                                                                <div class="form-group @(detailViewModel.HasMultiCurrency ? "" : "d-none")">
+                                                                                    @Html.CustomLabel("Currency")
+                                                                                    @Html.DropDownListFor(m => m.RoleProfileTransactionLimitViewModel.CurrencyId, new SelectList(detailViewModel.CurrencyDropdownList, "Value", "Text", 0), "--- Select Currency ---", new { @id = "currency-id", @class = "form-control mandatory-mark", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.CurrencyId)
+                                                                                </div>
+
+                                                                                @*MinimumAmountLimitForTransaction*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Minimum Amount Limit For Transaction")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.MinimumAmountLimitForTransaction, new { @id = "minimum-amount-limit-for-transaction", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Amount Limit For Transaction", @type = "number", @autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MinimumAmountLimitForTransaction)
+                                                                                </div>
+
+                                                                                @*MaximumAmountLimitForTransaction*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Amount Limit For Transaction")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.MaximumAmountLimitForTransaction, new { @id = "maximum-amount-limit-for-transaction", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Amount Limit For Transaction", @type = "number", @min = 1, @autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MaximumAmountLimitForTransaction)
+                                                                                </div>
+
+                                                                                @*MaximumNumberOfBackDaysForTransaction*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Number Of Back Days For Transaction")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForTransaction, new { @id = "maximum-number-of-back-days-for-transaction", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Number Of Back Days For Transaction", @type = "number", @min = 1, @max = 365, @autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForTransaction)
+                                                                                </div>
+
+                                                                                @*MinimumAmountLimitForVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Minimum Amount Limit For Verification")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.MinimumAmountLimitForVerification, new { @id = "minimum-amount-limit-for-verification", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Amount Limit For Verification", @type = "number", @min = 1, @autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MinimumAmountLimitForVerification)
+                                                                                </div>
+
+                                                                                @*MaximumAmountLimitForVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Amount Limit For Verification")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.MaximumAmountLimitForVerification, new { @id = "maximum-amount-limit-for-verification", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Amount Limit For Verification", @type = "number", @min = 1, @autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MaximumAmountLimitForVerification)
+                                                                                </div>
+
+                                                                                @*MaximumNumberOfBackDaysForVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Number Of Back Days For Verification")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForVerification, new { @id = "maximum-number-of-back-days-for-verification", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Number Of Back Days For Verification", @type = "number", @min = 1, @max = 365, @autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForVerification)
+                                                                                </div>
+
+                                                                                @*MinimumAmountLimitForAutoVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Minimum Amount Limit For Auto Verification")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.MinimumAmountLimitForAutoVerification, new { @id = "minimum-amount-limit-for-auto-verification", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Amount Limit For Auto Verification", @type = "number", @min = 1, @autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MinimumAmountLimitForAutoVerification)
+                                                                                </div>
+
+                                                                                @*MaximumAmountLimitForAutoVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Amount Limit For Auto Verification")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.MaximumAmountLimitForAutoVerification, new { @id = "maximum-amount-limit-for-auto-verification", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Amount Limit For Auto Verification", @type = "number", @min = 1, @autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MaximumAmountLimitForAutoVerification)
+                                                                                </div>
+
+                                                                                @*MaximumNumberOfBackDaysForAutoVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Number Of Back Days For Auto Verification")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForAutoVerification, new { @id = "maximum-number-of-back-days-for-auto-verification", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Number Of Back Days For Auto Verification", @type = "number", @min = 1, @max = 365, @autocomplete = "off" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForAutoVerification)
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-transaction-limit", @class = "form-control mandatory-mark deny-past-date", @placeholder = "Enter Activation Date", required = "required", @Type = "date", @autocomplete = "off", onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.ActivationDate)
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-transaction-limit", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Activation Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-transaction-limit')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.ExpiryDate)
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileTransactionLimitViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-transaction-limit", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Close Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-transaction-limit')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.RoleProfileTransactionLimitViewModel.Note, new { @id = "note-transaction-limit", @class = "form-control", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.Note)
+                                                                                </div>
+
+                                                                                @*ReasonForModification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("ReasonForModification")
+                                                                                    @Html.TextAreaFor(m => m.RoleProfileTransactionLimitViewModel.ReasonForModification, new { @id = "reason-for-modification-transaction-limit", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileTransactionLimitViewModel.ReasonForModification)
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-transaction-limit-modal" class="btn btn-success ">Add</button>
+                                                                                <button type="button" id="btn-update-transaction-limit-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="card-body">
+                                                                    <table id="transaction-limit-data-table" class="table compact table-striped table-bordered" width="100">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select_all" id="transaction-limit-select-all-chkbox" /></th>
+                                                                                <th class="d-none">GeneralLedgerID</th>
+                                                                                <th>GeneralLedger</th>
+                                                                                <th class="d-none">TransactionTypeID</th>
+                                                                                <th>TransactionType</th>
+                                                                                <th class="d-none">CurrencyID</th>
+                                                                                <th>Currency</th>
+                                                                                <th>MinimumAmountLimitForTransaction</th>
+                                                                                <th>MaximumAmountLimitForTransaction</th>
+                                                                                <th>MaximumNumberOfBackDaysForTransaction</th>
+                                                                                <th>MinimumAmountLimitForVerification</th>
+                                                                                <th>MaximumAmountLimitForVerification</th>
+                                                                                <th>MaximumNumberOfBackDaysForVerification</th>
+                                                                                <th>MinimumAmountLimitForAutoVerification</th>
+                                                                                <th>MaximumAmountLimitForAutoVerification</th>
+                                                                                <th>MaximumNumberOfBackDaysForAutoVerification</th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th>CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th>Reason For Modification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<RoleProfileTransactionLimitViewModel> viewModelList = (IEnumerable<RoleProfileTransactionLimitViewModel>)HttpContext.Current.Session["RoleProfileTransactionLimit"];
+
+                                                                                foreach (RoleProfileTransactionLimitViewModel viewModel in viewModelList)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                        <td class="d-none">@viewModel.GeneralLedgerId</td>
+                                                                                        <td>@viewModel.NameOfGL</td>
+                                                                                        <td class="d-none">@viewModel.TransactionTypeId</td>
+                                                                                        <td>@viewModel.NameOfTransactionType</td>
+                                                                                        <td class="d-none">@viewModel.CurrencyId</td>
+                                                                                        <td>@viewModel.NameOfCurrency</td>
+                                                                                        <td>@viewModel.MinimumAmountLimitForTransaction</td>
+                                                                                        <td>@viewModel.MaximumAmountLimitForTransaction</td>
+                                                                                        <td>@viewModel.MaximumNumberOfBackDaysForTransaction</td>
+                                                                                        <td>@viewModel.MinimumAmountLimitForVerification</td>
+                                                                                        <td>@viewModel.MaximumAmountLimitForVerification</td>
+                                                                                        <td>@viewModel.MaximumNumberOfBackDaysForVerification</td>
+                                                                                        <td>@viewModel.MinimumAmountLimitForAutoVerification</td>
+                                                                                        <td>@viewModel.MaximumAmountLimitForAutoVerification</td>
+                                                                                        <td>@viewModel.MaximumNumberOfBackDaysForAutoVerification</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td>@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 3 - Role Profile Menu*@
+                                            <div id="is-allow-all-access-for-menu-block" class="card mt-3">
+                                                <a class="card-header p-3" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-menu" href="#collapse-menu">
+                                                    <b>@Html.TextWithRegionalLanguage("Menu")</b>
+                                                </a>
+                                                <div id="collapse-menu" class="collapse" aria-labelledby="heading-menu" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="modal fade" id="menu-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title  text-center" id="menu-modal-title">Add</h4>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Model Menu")
+                                                                                    @Html.DropDownListFor(m => m.RoleProfileMenuViewModel.ModelMenuId, new SelectList(detailViewModel.ModelmenuDropdownList, "Value", "Text", 0), new { @id = "model-menu-id", @class = "form-control mandatory-mark" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileMenuViewModel.ModelMenuId)
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Main Menu")
+                                                                                    @Html.DropDownListFor(m => m.RoleProfileMenuViewModel.MainMenuId, new List<SelectListItem>(), new { @id = "main-menu-id", @class = "form-control mandatory-mark" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileMenuViewModel.MainMenuId)
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Sub Menu")
+                                                                                    @Html.DropDownListFor(m => m.RoleProfileMenuViewModel.MultiSubMenuId, new List<SelectListItem>(), new { @id = "sub-menu-id", @class = "form-control mandatory-mark" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileMenuViewModel.MultiSubMenuId)
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileMenuViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-menu", @class = "form-control mandatory-mark deny-past-date", @placeholder = "Enter Activation Date", required = "required", @Type = "date", @autocomplete = "off", onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileMenuViewModel.ActivationDate)
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileMenuViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-menu", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Expiry Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-menu')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileMenuViewModel.ExpiryDate)
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileMenuViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-menu", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Expiry Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-menu')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileMenuViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.RoleProfileMenuViewModel.Note, new { @id = "note-menu", @class = "form-control", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileMenuViewModel.Note)
+                                                                                </div>
+
+                                                                                @*ReasonForModification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("ReasonForModification")
+                                                                                    @Html.TextAreaFor(m => m.RoleProfileMenuViewModel.ReasonForModification, new { @id = "reason-for-modification-menu", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileMenuViewModel.ReasonForModification)
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-menu-modal" class="btn btn-success ">Add</button>
+                                                                                <button type="button" id="btn-update-menu-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <table id="menu-data-table" class="table compact  table-striped table-bordered" cellspacing="0" width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select_all" id="menu-select-all-chkbox" /></th>
+                                                                                <th class="d-none">ModelMenuId</th>
+                                                                                <th>NameOfModelMenu</th>
+                                                                                <th class="d-none">MainMenuId</th>
+                                                                                <th>NameOfMainMenu</th>
+                                                                                <th class="d-none">SubMenuId</th>
+                                                                                <th>NameOfSubMenu</th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th>CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th>ReasonForModification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<RoleProfileMenuViewModel> menuViewModels = (IEnumerable<RoleProfileMenuViewModel>)HttpContext.Current.Session["RoleProfileMenu"];
+
+                                                                                foreach (RoleProfileMenuViewModel viewModel in menuViewModels)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                        <td class="d-none">@viewModel.ModelMenuId</td>
+                                                                                        <td>@viewModel.NameOfModelMenu</td>
+                                                                                        <td class="d-none">@viewModel.MainMenuId</td>
+                                                                                        <td>@viewModel.NameOfMainMenu</td>
+                                                                                        <td class="d-none">@viewModel.SubMenuId</td>
+                                                                                        <td>@viewModel.NameOfSubMenu</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td>@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 4 - Role Profile Special Permission*@
+                                            <div id="is-allow-all-access-for-special-permission-block" class="card mt-3">
+                                                <a class="card-header p-3" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-special-permission" href="#collapse-special-permission">
+                                                    <b>@Html.TextWithRegionalLanguage("Special Permission")</b>
+                                                </a>
+                                                <div id="collapse-special-permission" class="collapse" aria-labelledby="heading-special-permission" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="modal fade" id="special-permission-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title  text-center" id="special-permission-modal-title">Add</h4>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Special Permission")
+                                                                                    @Html.DropDownListFor(m => m.RoleProfileSpecialPermissionViewModel.MultiSpecialPermissionId, new SelectList(detailViewModel.SpecialPermissionDropdownList, "Value", "Text", 0), "Please Select List ", new { @id = "special-permission-id", @class = "form-control mandatory-mark" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileSpecialPermissionViewModel.MultiSpecialPermissionId)
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileSpecialPermissionViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-special-permission", @class = "form-control mandatory-mark deny-past-date", @placeholder = "Enter Activation Date", required = "required", @Type = "date", @autocomplete = "off", onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileSpecialPermissionViewModel.ActivationDate)
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileSpecialPermissionViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-special-permission", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Expiry Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-special-permission')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileSpecialPermissionViewModel.ExpiryDate)
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileSpecialPermissionViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-special-permission", @class = "form-control deny-past-date-from-reference-date", @placeholder = "Enter Close Date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-special-permission')" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileSpecialPermissionViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextBoxFor(m => m.RoleProfileSpecialPermissionViewModel.Note, new { @id = "note-special-permission", @class = "form-control mandatory-mark ", @maxlength = "4000" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileSpecialPermissionViewModel.Note)
+                                                                                </div>
+
+                                                                                @*ReasonForModification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("ReasonForModification")
+                                                                                    @Html.TextAreaFor(m => m.RoleProfileSpecialPermissionViewModel.ReasonForModification, new { @id = "reason-for-modification-special-permission", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.RoleProfileSpecialPermissionViewModel.ReasonForModification)
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-special-permission-modal" class="btn btn-success ">Add</button>
+                                                                                <button type="button" id="btn-update-special-permission-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <table id="special-permission-data-table" class="table compact table-striped table-bordered " cellspacing="0" width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select_all" id="special-permission-select-all-chkbox" /></th>
+                                                                                <th class="d-none">SpecialPermissionId</th>
+                                                                                <th>NameOfSpecialPermission </th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th>CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th>ReasonForModification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<RoleProfileSpecialPermissionViewModel> viewModelList2 = (IEnumerable<RoleProfileSpecialPermissionViewModel>)HttpContext.Current.Session["RoleProfileSpecialPermission"];
+
+                                                                                foreach (RoleProfileSpecialPermissionViewModel viewModel in viewModelList2)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                        <td class="d-none">@viewModel.SpecialPermissionId</td>
+                                                                                        <td>@viewModel.NameOfSpecialPermission</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td>@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Hiddent Field For RoleProfilePrmKey*@
+                            @Html.HiddenFor(m => m.RoleProfilePrmKey)
+
+                            @*Hiddent Field For RoleProfileModificationPrmKey
+                            @Html.HiddenFor(m => m.RoleProfileModificationPrmKey)
+
+                            @*Hiddent Field For RoleProfileTranslationPrmKey
+                            @Html.HiddenFor(m => m.RoleProfileTranslationPrmKey)*@
+
+                            @*Save/Submit Button *@
+                            @Html.OperationFooter("Modify", "Exit", "Home", Model.Remark)
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <link href="~/Content/css/jquery.multiselect.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+</body>
+</html>
+<script>
+    debugger;
+    //for multiselect
+    $('#business-office-id, #general-ledger-id').multiselect({
+        columns: 1,
+        placeholder: 'Select Correct Name',
+        search: true,
+        selectAll: true,
+        reload: true
+    });
+    var saveDataTableUrl = "@Url.Action("SaveDataTables", "RoleProfile")";
+
+    var Modelmenuurl = "@Url.Action("GetModel", "RoleProfile")";
+
+    var uniqueNameOfRoleProfile = "@Url.Action("GetUniqueRoleProfileName", "RoleProfile")";
+</script>
+<script src="~/Scripts/Custom/RoleProfile.js"></script>

@@ -1,0 +1,169 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.MFAViewModel
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/Custom.css" rel="stylesheet" />
+
+    <title>Unlock User Via Mobile</title>
+</head>
+
+<body id="background">
+    <div class="container-fluid">
+        @*Center Of Page*@
+        <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+            <div class="row heightresponsive">
+
+            </div>
+
+            @*Second Row For User Profile Photo*@
+            <div class="row">
+                <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                    <div class="text-center">
+                        <img class="rounded-circle" width="90" height="90" src="@Url.Action("GetUserProfilePhoto", "Account")" alt="User Photo" />
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-link sans-serif-family float-right" id="way">Try Another Way?</button>
+                    </div>
+                </div>
+            </div>
+
+            @*Third Row For Unlock User Page*@
+            <div class="row pt-0 pt-lg-2 pb-lg-2 bg-white" id="login">
+                <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                    <div class="card bg-transparent d-block">
+                        @*Progress bar*@
+                        <div class="progress" style="height: 3px; ">
+                            <div class="progress-bar " id="myprogressBar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        @*Card body - Page*@
+                        <div class="card-body">
+                            <h4 class="card-title text-center">Account Recovery</h4>
+                            <h6 class="card-text text-muted text-center"><small>This helps show that this account really belongs to you</small></h6>
+                            @using (Html.BeginForm("UnlockUserViaToken", "Account", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                {
+                                    // Mobile Image
+                                    <div class="text-center pt-2">
+                                        <img src="~/Icons/MobileNotification.png" alt="Mobile Notification Image" style="width:40%;" />
+                                    </div>
+
+                                    @Html.ValidationMessage("InvalidAttempt")
+
+                                    @CustomHtmlHelper.Token((string)TempData["DeliveryChannel"], (string)TempData["smsResponseResult"]);
+
+
+                                    @*// Header Text / Title
+                <div class="pt-3">
+                    <h6> <small> Please Enter the OTP sent to your registered mobile number </small></h6>
+                </div>
+
+                // Token Input and Resend Link
+                <div class="form-group pt-3">
+                    <div class="clearfix">
+                        <div class="float-left"><i class="fas fa-mobile-alt"></i></div>
+                        <label class="float-left font-weight-bold ml-1">Mobile OTP</label>
+                        <div class="d-none d-md-block">
+                            <button type="button" class="btn btn-link float-right"><b>Resend?</b></button>
+                        </div>
+                    </div>
+                    @Html.TextBoxFor(m => m.MobileOTP, new { @class = "form-control", @placeholder = "Enter Mobile OTP", @autocomplete = "off" })
+                    @Html.ValidationMessageFor(m => m.MobileOTP)
+                </div>*@
+
+                                    @Html.ValidationMessage("InvalidToken")
+
+                                    <div class="form-group pt-4">
+                                        <button type="submit" class="btn btn-sm btn-block btn-primary" name="Command" value="UserLocked"><h5><b>Continue</b></h5></button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        //Document Ready Function For Try another way link
+        $(document).ready(function ()
+        {
+            $(".link").fadeOut('slow').delay(30000).fadeIn("slow");
+
+            // Resend Link
+            $("#close").click(function ()
+            {
+                $(".link").fadeOut('slow').delay(30000).fadeIn('slow');
+                $("#myToast").toast('show');
+            });
+
+            // Another Method For Login
+            $("#way").click(function ()
+            {
+                var url = '/AccountServices/_PhoneRecovery';
+
+                $.ajax(
+                {
+                    url: url,
+                    dataType: 'html',
+                    timeout: 10000,
+                    success: function (data)
+                    {
+                        $('.progress-bar').animate({ width: "100%" }, 20);
+                        setTimeout(function () { $('.progress-bar').css({ width: "100%" }); setTimeout(function () { $('#login').html(data); }, 20); }, 500);
+                    },
+                });
+            });
+            return false;
+        });
+
+        function ResendSMS()
+        {         
+            $.ajax(
+            {
+                url: '@Url.Action("ReSendUserAuthenticationToken", "SMS")',
+                type: "GET",
+                dataType:"JSON",
+                success: function (data)
+                {
+                    if (data == "Success")
+                    {
+                        location.reload();
+                    }
+                },
+                error: function ()
+                {
+                    //alert("An error has occured!!!");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,258 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonIncomeTaxDetailViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PITAMN");
+
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Income Tax Detail - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark"> &nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+
+                                @{
+                                    <h5 class="ml-5 mt-5 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+
+                                @*CheckerRemark*@
+                                <div class="ml-5 mt-5 mr-5 form-group read-only">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+
+
+                                <div id="heading-income-tax" class="ml-2 card-body">
+                                    <div class="mt-5 row">
+                                        <div class="col-12">
+                                            <div class="modal fade" id="income-tax-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title  text-center" id="asset-text">Add</h4>
+                                                            <button type="button" class="close-income-tax-modal" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @*AssessmentYear*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Assessment Year")
+                                                                @Html.TextBoxFor(m => m.AssessmentYear, new { @id = "assessments-year-income-tax", @class = "form-control real-number mandatory-mark modal-input", @placeholder = "Enter Assessment Year", @min = DateTime.Now.Year - 20, @max = DateTime.Now.Year, @type = "number", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.AssessmentYear)
+                                                                <span id="assessments-year-income-tax-error" class="error modal-input-error d-none">Please Enter Valid Assessment Year.</span>
+                                                            </div>
+
+                                                            @*TaxAmount*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Tax Amount")
+                                                                @Html.TextBoxFor(m => m.TaxAmount, new { @id = "tax-amounts", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Tax Amount", @type = "number", @min = 0, @max = 999999999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.TaxAmount)
+                                                                <span id="tax-amounts-error" class="error modal-input-error d-none">Please Enter Tax Amount. </span>
+                                                            </div>
+
+                                                            <div class="@((ViewBag.PersonInformationParameter.IncomeTaxDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Photo")
+                                                                    <span id="income-tax-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Photo.</span>
+                                                                    @Html.TextBoxFor(m => m.PhotoPathTax, new { @id = "income-tax-file-uploader", @class = "form-control modal-input doc-upload", type = "file",name = "PhotoPath", @placeholder = "Enter Photo" })
+                                                                    @Html.ValidationMessageFor(m => m.PhotoPathTax)
+                                                                </div>
+
+                                                                <hr />
+                                                                <div><img id="income-tax-file-uploader-image-preview" class="modal-input-img-preview" src="" width="200" height="200" /></div>
+                                                                <hr />
+
+                                                                @*FileCaption*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("File Caption")
+                                                                    @Html.TextBoxFor(m => m.FileCaption, new { @id = "file-caption-tax", @class = "form-control mandatory-mark deny-multiple-space title-case default-none modal-input", @placeholder = "Enter File Caption", @maxlength = 400 })
+                                                                    @Html.ValidationMessageFor(m => m.FileCaption)
+                                                                    <span id="file-caption-tax-error" class="error modal-input-error d-none">Please Enter FileCaption. </span>
+                                                                </div>
+
+                                                                @*Hiddent Field For MovableAssetDocumentUpload*@
+                                                                @Html.HiddenFor(m => personInformationParameterViewModel.IncomeTaxDocumentUpload, new { @id = "income-tax-detail-upload" })
+
+                                                                @*Hiddent Field For EnableMovableAssetDocumentUploadInLocalStorage*@
+                                                                @Html.HiddenFor(m => personInformationParameterViewModel.EnableIncomeTaxDocumentUploadInLocalStorage, new { @id = "enable-income-tax-detail-upload" })
+                                                            </div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Note")
+                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-income-tax-detail", @class = "form-control deny-multiple-space default-none modal-input", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                            </div>
+
+                                                            @*ReasonForModification*@
+                                                            <div id="income-tax-div" class="form-group">
+                                                                @Html.CustomLabel("Reason For Modification")
+                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-tax-detail", @class = "form-control deny-multiple-space default-none modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" id="btn-add-income-tax-modal" class="btn btn-success ">Add</button>
+                                                            <button type="button" id="btn-update-income-tax-modal" class="btn btn-primary ">Update</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <table id="tbl-income-tax" class="table compact table-striped table-bordered" width="100">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check_all" id="select-all-income-tax" /></th>
+                                                            <th>AssessmentYear</th>
+                                                            <th>TaxAmount</th>
+                                                            <th>Photopath</th>
+                                                            <th>Photo</th>
+                                                            <th>FileCaption</th>
+                                                            <th>Note</th>
+                                                            <th>ReasonForModification</th>
+                                                            <th class="d-none">fileName</th>
+                                                            <th class="d-none">PersonIncomeTaxDetail</th>
+                                                            <th class="d-none">LocalStoragePath</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable<PersonIncomeTaxDetailViewModel> personIncomeTaxDetailViewModelModels = (IEnumerable<PersonIncomeTaxDetailViewModel>)HttpContext.Current.Session["IncomeTaxDetail"];
+                                                            if (personIncomeTaxDetailViewModelModels != null)
+                                                            {
+                                                                foreach (PersonIncomeTaxDetailViewModel viewModel in personIncomeTaxDetailViewModelModels)
+                                                                {
+                                                                    counter += 1;
+                                                                    photoId = "photo-id" + counter.ToString();
+                                                                    fileUploaderId = "data-table-income-tax-file-uploader" + counter.ToString();
+                                                                    <tr>
+                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                        <td>@viewModel.AssessmentYear</td>
+                                                                        <td>@viewModel.TaxAmount</td>
+                                                                        <td>
+                                                                            <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                        </td>
+                                                                        <td>
+                                                                            @if (viewModel.EnableIncomeTaxDocumentUploadInLocalStorage == true)
+                                                                            {
+                                                                                <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.IncomeTaxDocumentLocalStoragePath + viewModel.PhotoPathTax.FileName)" width="50" height="50" />
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                                var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                                <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                                string filename = Path.GetFileName(imgsrc);
+                                                                            }
+                                                                        </td>
+                                                                        <td>@viewModel.FileCaption</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                        <td class="d-none">@viewModel.NameOfFile</td>
+                                                                        <td class="d-none">@viewModel.PersonIncomeTaxDetailDocumentPrmKey</td>
+                                                                        <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    @*Hiddent Field For PrmKey*@
+                                    @Html.HiddenFor(m => m.PrmKey)
+
+                                    @*Hiddent Field For PersonPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                    @*Hiddent Field For PersonId*@
+                                    @Html.HiddenFor(m => m.PersonId)
+
+                                    @*Hiddent Field For PersonMachineryAssetPrmKey*@
+                                    @Html.HiddenFor(m => Model.PersonIncomeTaxDetailPrmKey)
+
+                                    @Html.HiddenFor(m => Model.CustomerAccountPrmKey)
+                                </div>
+                                @*Save/Submit Button*@
+                                @Html.OperationFooter("Amend", "Exit", "Home", "None")
+                            </div>
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var saveDataTableURL = "@Url.Action("SaveIncomeTaxDataTables", "PersonIncomeTaxDetail")";
+</script>
+<script src="~/Scripts/Custom/PersonIncomeTaxDetails.js"></script>

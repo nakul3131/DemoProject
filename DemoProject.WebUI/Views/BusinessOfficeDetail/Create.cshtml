@@ -1,0 +1,175 @@
+﻿@model DemoProject.Services.ViewModel.Enterprise.Office.BusinessOfficeDetailViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Enterprise.Office
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    OfficeDetailViewModel officeDetailViewModel = new OfficeDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("BUOCRT");
+}
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+
+    <title>Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-6">
+                                        <h5 class="font-weight-bold mt-1">Create</h5>
+                                        <hr />
+                                    </div>
+
+                                    @*Page Title Translation For Large Screen*@
+                                    <div class="col-6">
+                                        <div class="d-none d-lg-block">
+                                            <h5 class="mt-1"><b>Translation : @HttpContext.Current.Session["RegionalLanguage"]</b></h5>
+                                            <hr />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                @*Two Columns For Default Application Language (i.e. English) And Other For Regional Language Translation With Equal Length*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*CenterPrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Center")
+                                            @Html.DropDownListFor(m => m.CenterId, new SelectList(officeDetailViewModel.Centers, "Value", "Text"), "--- Select Center ---", new { @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.CenterId)
+                                        </div>
+
+                                        @*LocalCurrencyPrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Local Currency")
+                                            @Html.DropDownListFor(m => m.LocalCurrencyId, new SelectList(officeDetailViewModel.CurrencyDropdownList, "Value", "Text"), "--- Select Local Currency ---", new { @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.LocalCurrencyId)
+                                        </div>
+
+                                        @*OfficeSchedulePrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Office Schedule")
+                                            @Html.DropDownListFor(m => m.OfficeScheduleId, new SelectList(officeDetailViewModel.OfficeSchedules, "Value", "Text"), "--- Select Office Schedule ---", new { @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.OfficeScheduleId)
+                                        </div>
+
+                                        @*BusinessOfficeTypePrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Business Office Type")
+                                            @Html.DropDownListFor(m => m.BusinessOfficeTypeId, new SelectList(officeDetailViewModel.BusinessOfficeTypes, "Value", "Text"), "--- Select Business Office Type ---", new { @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.BusinessOfficeTypeId)
+                                        </div>
+
+                                        @*BusinessNaturePrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Business Nature")
+                                            @Html.DropDownListFor(m => m.BusinessNatureId, new SelectList(officeDetailViewModel.BusinessNatureDropdownList, "Value", "Text"), "--- Select Business Nature ---", new { @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.BusinessNatureId)
+                                        </div>
+
+                                        @*RegionalLanguage*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Regional Language")
+                                            @Html.DropDownListFor(m => m.RegionalLanguageId, new SelectList(officeDetailViewModel.Languages, "Value", "Text"), "--- Select Regional Language ---", new { @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.RegionalLanguageId)
+                                        </div>
+
+                                        @*CommandAreaRadius*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Command Area Radius")
+                                            @Html.TextBoxFor(m => m.CommandAreaRadius, new { @class = "form-control mandatory-mark", rel = "txt-tooltip", data_toggle = "tooltip", data_placement = "top", title = "Area In Kilometre KM", @type = "number", @min = 1, @max = 999, @autocomplete = "off", @placeholder = "Enter Command Area Radius", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.CommandAreaRadius)
+                                        </div>
+
+                                        @*PopulationOfTheCommandArea*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Population Of The Command Area")
+                                            @Html.TextBoxFor(m => m.PopulationOfTheCommandArea, new { @class = "form-control mandatory-mark", @type = "number", @min = 99, @max = 999999999, @autocomplete = "off", @placeholder = "Enter Population Of The Command Area", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.PopulationOfTheCommandArea)
+                                        </div>
+
+                                        @*GeneralLedgerPrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("General Ledger")
+                                            @Html.DropDownListFor(m => m.GeneralLedgerId, new SelectList(officeDetailViewModel.BusinessOfficeGeneralLedgerDropdownList, "Value", "Text"), "--- Select General Ledger ---", new { @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.GeneralLedgerId)
+                                        </div>
+
+                                        @*EnableAutoAuthorization*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Auto Authorization")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableAutoAuthorization, new { @id = "enable-auto-authorization", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*GeneralLedgerGroupCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("General Ledger Group Code")
+                                            @Html.TextBoxFor(m => m.GeneralLedgerGroupCode, new { @class = "form-control mandatory-mark", @placeholder = "Enter General Ledger Group Code", @maxlength = 3, @autocomplete = "off", onkeyup = "ToTextCapitalize()", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.GeneralLedgerGroupCode)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @class = "form-control default-none", @placeholder = "Enter Note", @maxlength = 1500, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @Html.OperationFooter("Create", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

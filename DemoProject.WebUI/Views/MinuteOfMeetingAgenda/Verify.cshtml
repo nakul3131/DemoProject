@@ -1,0 +1,240 @@
+﻿@model DemoProject.Services.ViewModel.Management.Conference.MinuteOfMeetingAgendaViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Management.Conference
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+
+    MinuteOfMeetingAgendaViewModel model = new MinuteOfMeetingAgendaViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("MUAVRF");
+}
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>MinuteOfMeetingAgenda - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Verify", "MinuteOfMeetingAgenda", FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row read-only">
+                                    <div class="col-12">
+                                        @*AgendaStartTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Agenda Start Time")
+                                            @Html.TextBoxFor(m => m.AgendaStartTime, new { @class = "form-control mandatory-mark", @placeholder = "Enter Agenda Start Time", required = "required", @Type = "time" })
+                                            @Html.ValidationMessageFor(m => m.AgendaStartTime)
+                                        </div>
+
+                                        @*AgendaEndTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Agenda End Time")
+                                            @Html.TextBoxFor(m => m.AgendaEndTime, new { @class = "form-control mandatory-mark", @placeholder = "Enter Agenda End Time", required = "required", @Type = "time" })
+                                            @Html.ValidationMessageFor(m => m.AgendaEndTime)
+                                        </div>
+
+                                        @*Vote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Vote")
+                                            <div class="vote-section">
+                                                <div class="row mt-2">
+                                                    <div class="col-3">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.Vote, "UNA", new { @id = "vote-una", @name = "Unanimous Approval", @class = "vote", required = "required" })
+                                                            <label for="vote-una" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Unanimous Approval")</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.Vote, "MJA", new { @id = "vote-mja", @name = "Majority Approval", @class = "vote", required = "required" })
+                                                            <label for="vote-mja" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Majority Approval")</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.Vote, "MDA", new { @id = "vote-mda", @name = "Majority Disapproval", @class = "vote", required = "required" })
+                                                            <label for="vote-mda" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Majority Disapproval")</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.Vote, "NNN", new { @id = "vote-nnn", @name = "None", @class = "vote", required = "required" })
+                                                            <label for="vote-nnn" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("None")</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.Vote)
+                                        </div>
+
+
+                                        @*Resolution*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Resolution")
+                                            @Html.TextAreaFor(m => m.Resolution, new { @class = "form-control alpha-numeric default-none", @placeholder = "Enter Resolution", @maxlength = 3500, onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Resolution)
+                                        </div>
+
+                                        @*ResolutionNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Resolution Number")
+                                            @Html.TextAreaFor(m => m.ResolutionNumber, new { @class = "form-control alpha-numeric", @placeholder = "Enter Resolution", @maxlength = 50, onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ResolutionNumber)
+                                        </div>
+
+                                        @*NameOfUser*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of User")
+                                            @Html.TextBoxFor(m => m.NameOfUser, new { @class = "form-control" })
+                                        </div>
+
+                                        @*EntryDateTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Entry Date Time")
+                                            @Html.TextBoxFor(m => m.EntryDateTime, new { @class = "form-control" })
+                                        </div>
+
+                                        @*Hiddent Field For MinuteOfMeetingAgendaPrmKey*@
+                                        @Html.HiddenFor(m => m.MinuteOfMeetingAgendaPrmKey)
+
+                                        @*Hiddent Field For MinuteOfMeetingAgendaSpokespersonPrmKey*@
+                                        @Html.HiddenFor(m => m.MinuteOfMeetingAgendaSpokespersonPrmKey)
+
+                                        @*Hiddent Field For MeetingAgendaPrmKey*@
+                                        @Html.HiddenFor(m => m.MeetingAgendaPrmKey)
+
+                                    </div>
+                                </div>
+
+                                @*======= Forth Row - Accordians =======*@
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                            @*Accordian 1-Spokes Person*@
+                                            <div id="heading-spokes-person" class="card mt-3">
+                                                <div class="card-header p-3" id="collapse-spokes-person-validations" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-spokes-person" data-target="#collapse-spokes-person">
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Spokes Person")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <span id="spokes-person-data-table-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-spokes-person" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-spokes-person" data-target="#collapse-spokes-person">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-spokes-person" class="collapse" aria-labelledby="heading-spokes-person" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="card-body">
+                                                                <table id="tbl-spokes-person" class="table compact  table-striped table-bordered" cellspacing="0" width="100">
+                                                                    <thead class="text-center read-only">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="select-all" id="select-all-spokes-person" /></th>
+                                                                            <th class="d-none">BoardOfDirectorId</th>
+                                                                            <th>NameOfSpokperson</th>
+                                                                            <th>SpeakingStartTime</th>
+                                                                            <th>SpeakingEndTime</th>
+                                                                            <th>Speech</th>
+                                                                            <th>TranslationSpeech</th>
+                                                                            <th>Note</th>
+                                                                            <th>TranslationNote</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="text-center read-only">
+                                                                        @{
+                                                                            IEnumerable<MinuteOfMeetingAgendaSpokespersonViewModel> minuteOfMeetingAgendaSpokespersonViewModelList = (IEnumerable<MinuteOfMeetingAgendaSpokespersonViewModel>)HttpContext.Current.Session["MinuteOfMeetingAgendaSpokesperson"];
+
+                                                                            foreach (MinuteOfMeetingAgendaSpokespersonViewModel viewModel in minuteOfMeetingAgendaSpokespersonViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.BoardOfDirectorId</td>
+                                                                                    <td>@viewModel.NameOfBoardOfDirector</td>
+                                                                                    <td>@viewModel.SpeakingStartTime</td>
+                                                                                    <td>@viewModel.SpeakingEndTime</td>
+                                                                                    <td>@viewModel.Speech</td>
+                                                                                    <td>@viewModel.TransSpeech</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                    <td>@viewModel.TransNote</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Note*@
+                                <div class="form-group read-only">
+                                    @Html.CustomLabel("Note")
+                                    @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Note)
+                                </div>
+                            </div>
+
+                            @*Footer*@
+                            @Html.OperationFooter("Verify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/Custom/MinuteOfMeetingAgendaSpokesperson.js"></script>
+<script>
+    var saveDataTableUrl = "@Url.Action("SaveDataTables", "MinuteOfMeetingAgenda")";
+</script>

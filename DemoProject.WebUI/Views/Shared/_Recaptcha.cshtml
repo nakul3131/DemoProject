@@ -1,0 +1,51 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src='https://www.google.com/recaptcha/api.js' type="text/javascript"></script>
+
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/Custom.css" rel="stylesheet" />
+    <title>Recaptcha</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="pt-5">
+            @using (Html.BeginForm("SubmitRecaptcha", "Account", FormMethod.Post))
+            {
+
+                @Html.ValidationSummary(true)
+
+
+
+                @* Place Google Re-Captcha Here *@
+                <div class="editor-label">
+                    <h5><b>Human Verification</b></h5>
+                </div>
+                <div class="g-recaptcha" data-sitekey="6LfHpI4UAAAAAMgz5rJ1RFCxUgt2vqIEbHP6sC8F"></div>
+                <br />
+
+                <input type="submit" value="Submit" />
+            }
+
+        </div>
+
+        @if (ViewBag.Notify != null)
+        {
+            <span style="display:inline-block; font-size:20px;margin:20px 0;padding:20px;border:1px solid #D3D3D3">
+                @ViewBag.Notify
+            </span>
+        }
+    </div>
+</body>
+</html>

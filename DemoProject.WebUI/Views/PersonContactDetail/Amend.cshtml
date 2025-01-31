@@ -1,0 +1,220 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonContactDetailViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+ @using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.Constants
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonContactDetailViewModel model = new PersonContactDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PCDAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Contact Detail - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @* ======= First Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*CheckerRemark*@
+                                <div class="form-group mt-5 ml-5 mr-5">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark read-only" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row ml-2">
+                                    <div class="col-12">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="modal fade" id="contact-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title text-center" id="text">Add</h4>
+                                                                    <button type="button" class="close-contact-modal" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div id="contact-detail-new">
+                                                                        @*ContactType*@
+                                                                        <div class="form-group contact-type">
+                                                                            @Html.CustomLabel("Contact Type")
+                                                                            @Html.DropDownListFor(m => m.ContactTypeId, new SelectList(personDetailViewModel.ContactTypeDropdownList, "Value", "Text", 0), "--- Select Contact Type ---", new { @id = "contact-type", @class = "form-control mandatory-mark contact-detail-new modal-input", required = "required" })
+                                                                            @Html.ValidationMessageFor(m => m.ContactTypeId)
+                                                                            <span id="contact-type-error" class="error  modal-input-error d-none">Please Select Contact Type </span>
+                                                                        </div>
+
+                                                                        @*FieldValue*@
+                                                                        <div class="form-group">
+                                                                            @Html.CustomLabel("Field Value")
+                                                                            <button id="send-code" class="btn btn-link sans-serif-family float-right" type="button">Send Code</button>
+                                                                            @Html.TextBoxFor(m => m.FieldValue, new { @id = "field-value", @class = "form-control deny-multiple-space contact-detail-new mandatory-mark modal-input", @placeholder = "Enter Field Value" })
+                                                                            @Html.ValidationMessageFor(m => m.FieldValue)
+                                                                            <span id="field-value-error" class="error modal-input-error d-none">Please Enter Valid Field Value</span>
+                                                                            <span id="field-value-mobile-error" class="error modal-input-error d-none">Mobile Number Length Must Be 10. Please Enter Valid Mobile Number</span>
+                                                                            <span id="field-value-duplicate-error" class="error modal-input-error d-none">Inputed Value Is Already Exists</span>
+                                                                        </div>
+                                                                        <br />
+
+                                                                        @*IsVerified*@
+                                                                        <div class="row form-group is-verified-field">
+                                                                            <div class="col-8">
+                                                                                @Html.CustomLabel("Is Verified")
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="text-right">
+                                                                                    <label class="switch switch-left-right">
+                                                                                        @Html.CheckBoxFor(m => m.IsVerified, new { @class = "form-control switch-input contact-detail-new modal-switch-input", @id = "is-verified" })
+                                                                                        <span class="slider round">
+                                                                                            <span class="on"><b>Yes</b></span><span class="off"><b class="mr-3">No</b></span>
+                                                                                        </span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div id="code" class="form-group verification-code">
+                                                                            @CustomHtmlHelper.MobileVerificationToken(StringLiteralValue.Mobile, (string)TempData["SmsResponseResult"])
+                                                                            <span id="verification-token-error" class="error d-none">Please Enter Valid Mobile OTP.</span>
+                                                                         </div>
+
+                                                                        @*Note*@
+                                                                        <div class="form-group mt-2">
+                                                                            @Html.CustomLabel("Note")
+                                                                            @Html.TextAreaFor(m => m.Note, new { @id = "note-contact-detail", @class = "form-control contact-detail-new deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                            @Html.ValidationMessageFor(m => m.Note)
+                                                                        </div>
+
+                                                                        @*ReasonForModification*@
+                                                                        <div id="contact-div" class="form-group">
+                                                                            @Html.CustomLabel("Reason For Modification")
+                                                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-contact", @class = "form-control modal-input default-none deny-multiple-space default-none", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" id="btn-add-contact-modal" class="btn btn-success ">Add</button>
+                                                                    <button type="button" id="btn-update-contact-modal" class="btn btn-primary ">Update</button>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="table-responsive" style="min-height:200px;">
+                                                            <table id="tbl-contact" class="table compact  table-striped table-bordered" width="100">
+                                                                <thead class="text-center">
+                                                                    <tr>
+                                                                        <th><input type="checkbox" name="check_all" id="select-all-contact" /></th>
+                                                                        <th class="d-none">ContactTypeId</th>
+                                                                        <th>ContactType</th>
+                                                                        <th>FieldValue</th>
+                                                                        <th>IsVerified</th>
+                                                                        <th>VerificationCode</th>
+                                                                        <th>Note</th>
+                                                                        <th>ReasonForModification</th>
+                                                                        <th class="d-none">ContactDetailPrmKey</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="text-center">
+                                                                    @{
+                                                                        IEnumerable<PersonContactDetailViewModel> personContactDetailViewModelsList = (IEnumerable<PersonContactDetailViewModel>)HttpContext.Current.Session["ContactDetail"];
+
+                                                                        foreach (PersonContactDetailViewModel viewModel in personContactDetailViewModelsList)
+                                                                        {
+                                                                            <tr>
+                                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                <td class="d-none">@viewModel.ContactTypeId</td>
+                                                                                <td>@viewModel.NameOfContactType</td>
+                                                                                <td>@viewModel.FieldValue</td>
+                                                                                <td>@viewModel.IsVerified</td>
+                                                                                <td>@viewModel.VerificationCode</td>
+                                                                                <td>@viewModel.Note</td>
+                                                                                <td>@viewModel.ReasonForModification</td>
+                                                                                <td class="d-none">@viewModel.PersonContactDetailPrmKey</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*Hiddent Field For PrmKey*@
+                                        @Html.HiddenFor(m => m.PrmKey)
+
+                                        @*Hiddent Field For PersonPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                        @*Hiddent Field For ContactTypePrmKey*@
+                                        @Html.HiddenFor(m => m.ContactTypePrmKey)
+
+                                        @*Hiddent Field For PersonId*@
+                                        @Html.HiddenFor(m => m.PersonId)
+                                    </div>
+                                </div>
+                            </div>
+
+                            @Html.OperationFooter("Amend", "Exit", "Home", "None")
+
+                            <br />
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var saveContactDetailDataTable = "@Url.Action("SaveContactDetailDataTable", "PersonContactDetail")";
+</script>
+<script src="~/Scripts/Custom/PersonContactDetail.js"></script>

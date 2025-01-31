@@ -1,0 +1,1499 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{80AE8599-58C7-4C37-8044-BBFEFFD356B0}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DemoProject.WebUI</RootNamespace>
+    <AssemblyName>DemoProject.WebUI</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.CodeParser.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Drawing.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.DataAccess.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.ExpressApp.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Office.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Pdf.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Persistent.Base.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.PivotGrid.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v24.2.Export, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Sparkline.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Web.ASPxThemes.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Web.Mvc5.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Web.Resources.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Web.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Xpo.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraCharts.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGauges.v24.2.Core, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v24.2, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v24.2.Web, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraReports.v24.2.Web.WebForms, Version=24.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevTrends.MvcDonutCaching, Version=1.3.0.0, Culture=neutral, PublicKeyToken=73c58d802958a09f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcDonutCaching.1.3.0\lib\net40\DevTrends.MvcDonutCaching.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Moq, Version=4.1.1309.1617, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.1.1309.1617\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.MVC3.3.0.0.6\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivator, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivator.1.5\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountChildActionController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccountServicesController.cs" />
+    <Compile Include="Controllers\AgendaController.cs" />
+    <Compile Include="Controllers\AgendaMeetingTypeController.cs" />
+    <Compile Include="Controllers\AuthorizedSharesCapitalController.cs" />
+    <Compile Include="Controllers\BeneficiaryDetailController.cs" />
+    <Compile Include="Controllers\BoardOfDirectorController.cs" />
+    <Compile Include="Controllers\BoardOfDirectorParameterController.cs" />
+    <Compile Include="Controllers\BoardOfDirectorPowerAndFunctionController.cs" />
+    <Compile Include="Controllers\BusinessOfficeController.cs" />
+    <Compile Include="Controllers\BusinessOfficeCoopRegistrationController.cs" />
+    <Compile Include="Controllers\BusinessOfficeDetailController.cs" />
+    <Compile Include="Controllers\BusinessOfficePasswordPolicyController.cs" />
+    <Compile Include="Controllers\BusinessOfficeRBIRegistrationController.cs" />
+    <Compile Include="Controllers\ByLawsLoanScheduleParameterController.cs" />
+    <Compile Include="Controllers\CenterDemographicDetailController.cs" />
+    <Compile Include="Controllers\CenterOccupationController.cs" />
+    <Compile Include="Controllers\CenterTradingEntityDetailController.cs" />
+    <Compile Include="Controllers\ChequeBookMasterController.cs" />
+    <Compile Include="Controllers\ContentItemController.cs" />
+    <Compile Include="Controllers\ContinentController.cs" />
+    <Compile Include="Controllers\CountryAdditionalDetailController.cs" />
+    <Compile Include="Controllers\CountryController.cs" />
+    <Compile Include="Controllers\CustomerAccountController.cs" />
+    <Compile Include="Controllers\CustomerDepositAccountController.cs" />
+    <Compile Include="Controllers\CustomerSharesCapitalAccountController.cs" />
+    <Compile Include="Controllers\DashBoardController.cs" />
+    <Compile Include="Controllers\DepartmentController.cs" />
+    <Compile Include="Controllers\DepositSchemeController.cs" />
+    <Compile Include="Controllers\DepositSchemeParameterController.cs" />
+    <Compile Include="Controllers\DesignationController.cs" />
+    <Compile Include="Controllers\DistrictController.cs" />
+    <Compile Include="Controllers\DividendController.cs" />
+    <Compile Include="Controllers\DivisionController.cs" />
+    <Compile Include="Controllers\DynamicDropdownListController.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="Controllers\EnterpriseChildActionController.cs" />
+    <Compile Include="Controllers\EvaluationSectionController.cs" />
+    <Compile Include="Controllers\EvaluationSectorContentItemController.cs" />
+    <Compile Include="Controllers\EventMasterController.cs" />
+    <Compile Include="Controllers\FinancialCycleController.cs" />
+    <Compile Include="Controllers\FinancialStatementsReportController.cs" />
+    <Compile Include="Controllers\FixedAssetItemController.cs" />
+    <Compile Include="Controllers\GeneralLedgerBusinessOfficeController.cs" />
+    <Compile Include="Controllers\GeneralLedgerController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HomeJQController.cs" />
+    <Compile Include="Controllers\CustomerLoanAccountController.cs" />
+    <Compile Include="Controllers\LoanSchemeController.cs" />
+    <Compile Include="Controllers\LoanSchemeParameterController.cs" />
+    <Compile Include="Controllers\MeetingAllowanceController.cs" />
+    <Compile Include="Controllers\MeetingController.cs" />
+    <Compile Include="Controllers\MinuteOfMeetingAgendaController.cs" />
+    <Compile Include="Controllers\NoticeScheduleController.cs" />
+    <Compile Include="Controllers\OfficeScheduleController.cs" />
+    <Compile Include="Controllers\OpeningBalanceController.cs" />
+    <Compile Include="Controllers\OrganizationController.cs" />
+    <Compile Include="Controllers\OrganizationFundController.cs" />
+    <Compile Include="Controllers\OrganizationLoanTypeController.cs" />
+    <Compile Include="Controllers\PasswordPolicyController.cs" />
+    <Compile Include="Controllers\PersonAdditionalIncomeDetailController.cs" />
+    <Compile Include="Controllers\PersonAgricultureAssetController.cs" />
+    <Compile Include="Controllers\PersonAllDetailController.cs" />
+    <Compile Include="Controllers\PersonBankDetailController.cs" />
+    <Compile Include="Controllers\PersonBoardOfDirectorRelationController.cs" />
+    <Compile Include="Controllers\PersonBorrowingDetailController.cs" />
+    <Compile Include="Controllers\PersonChildActionController.cs" />
+    <Compile Include="Controllers\PersonChronicDiseaseController.cs" />
+    <Compile Include="Controllers\PersonCommoditiesAssetController.cs" />
+    <Compile Include="Controllers\PersonContactDetailController.cs" />
+    <Compile Include="Controllers\PersonController.cs" />
+    <Compile Include="Controllers\PersonCourtCaseController.cs" />
+    <Compile Include="Controllers\PersonCreditRatingController.cs" />
+    <Compile Include="Controllers\PersonDeathController.cs" />
+    <Compile Include="Controllers\PersonFamilyDetailController.cs" />
+    <Compile Include="Controllers\PersonFinancialAssetController.cs" />
+    <Compile Include="Controllers\PersonGroupAuthorizedSignatoryController.cs" />
+    <Compile Include="Controllers\PersonHomeBranchController.cs" />
+    <Compile Include="Controllers\PersonImmovableAssetController.cs" />
+    <Compile Include="Controllers\PersonIncomeTaxDetailController.cs" />
+    <Compile Include="Controllers\PersonInformationParameterController.cs" />
+    <Compile Include="Controllers\PersonInformationParameterDocumentTypeController.cs" />
+    <Compile Include="Controllers\PersonInformationParameterNoticeTypeController.cs" />
+    <Compile Include="Controllers\PersonInsuranceDetailController.cs" />
+    <Compile Include="Controllers\PersonMachineryAssetController.cs" />
+    <Compile Include="Controllers\PersonMasterController.cs" />
+    <Compile Include="Controllers\PersonMovableAssetController.cs" />
+    <Compile Include="Controllers\PersonPhotoSignController.cs" />
+    <Compile Include="Controllers\PersonSMSAlertController.cs" />
+    <Compile Include="Controllers\PersonSocialMediaController.cs" />
+    <Compile Include="Controllers\PowerAndFunctionController.cs" />
+    <Compile Include="Controllers\RoleProfileController.cs" />
+    <Compile Include="Controllers\ScheduleController.cs" />
+    <Compile Include="Controllers\SharesApplicationController.cs" />
+    <Compile Include="Controllers\SharesCapitalByLawsParameterController.cs" />
+    <Compile Include="Controllers\SharesCapitalReportController.cs" />
+    <Compile Include="Controllers\SharesCapitalSchemeController.cs" />
+    <Compile Include="Controllers\SharesCapitalSchemeParameterController.cs" />
+    <Compile Include="Controllers\SMSController.cs" />
+    <Compile Include="Controllers\StateController.cs" />
+    <Compile Include="Controllers\SubsidiaryBookController.cs" />
+    <Compile Include="Controllers\TalukaController.cs" />
+    <Compile Include="Controllers\TransactionChildActionController.cs" />
+    <Compile Include="Controllers\TransactionController.cs" />
+    <Compile Include="Controllers\TransactionDynamicDropdownListController.cs" />
+    <Compile Include="Controllers\UserAuthenticationParameterController.cs" />
+    <Compile Include="Controllers\UserProfileBusinessOfficeController.cs" />
+    <Compile Include="Controllers\UserProfileController.cs" />
+    <Compile Include="Controllers\UserRoleProfileController.cs" />
+    <Compile Include="Controllers\UserStatusController.cs" />
+    <Compile Include="Controllers\VehicleMakeController.cs" />
+    <Compile Include="Controllers\VehicleModelController.cs" />
+    <Compile Include="Controllers\VehicleVariantController.cs" />
+    <Compile Include="Controllers\VillageTownCityController.cs" />
+    <Compile Include="Controllers\WorkingScheduleController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Attribute\CustomDisplayNameAttribute.cs" />
+    <Compile Include="Infrastructure\CustomException\AccessDeniedException.cs" />
+    <Compile Include="Infrastructure\CustomException\DatabaseException.cs" />
+    <Compile Include="Infrastructure\CustomException\ExceedBoundaryLimitException.cs" />
+    <Compile Include="Infrastructure\CustomException\SubscriptionExpiredException.cs" />
+    <Compile Include="Infrastructure\CustomException\UnusualTrafficException.cs" />
+    <Compile Include="Infrastructure\CustomException\UserAlreadyLoggedInException.cs" />
+    <Compile Include="Infrastructure\CustomException\UserLockedException.cs" />
+    <Compile Include="Infrastructure\Filter\AuthorizeFilterAttribute.cs" />
+    <Compile Include="Infrastructure\Filter\ExceptionFilterAttribute.cs" />
+    <Compile Include="Infrastructure\Filter\RecaptchaFilterAttribute.cs" />
+    <Compile Include="Infrastructure\Filter\RequestValidityActionFilterAttribute.cs" />
+    <Compile Include="Infrastructure\Filter\SendTokenFilterAttribute.cs" />
+    <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\BalanceListReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\BalanceListReport.designer.cs">
+      <DependentUpon>BalanceListReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\J1Report.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\J1Report.Designer.cs" />
+    <Compile Include="Reports\J2Report.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\J2Report.designer.cs" />
+    <Compile Include="Reports\JReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\JReport.designer.cs" />
+    <Compile Include="Reports\KReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\KReport.designer.cs" />
+    <Compile Include="Reports\MasterReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\MasterReport.designer.cs">
+      <DependentUpon>MasterReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\MemberIncrementReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\MemberIncrementReport.Designer.cs" />
+    <Compile Include="Reports\MemberRegister.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\MemberRegister.Designer.cs">
+      <DependentUpon>MemberRegister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\MemberRegisterReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\MemberRegisterReport.designer.cs" />
+    <Compile Include="Reports\MemberTransferRegisterReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\MemberTransferRegisterReport.designer.cs" />
+    <Compile Include="Reports\SharesApplicationReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SharesApplicationReport.designer.cs">
+      <DependentUpon>SharesApplicationReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\SubReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SubReport.designer.cs">
+      <DependentUpon>SubReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\WReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\WReport.designer.cs" />
+    <Compile Include="Utility\CaptchaResponse.cs" />
+    <Compile Include="Utility\MemoryPostedFile.cs" />
+    <Compile Include="Utility\PageRequest.cs" />
+    <Compile Include="Utility\RoutingUtility.cs" />
+    <Compile Include="Utility\Subscription.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\ClearLoginSession.css" />
+    <Content Include="Content\css\jquery.multiselect.css" />
+    <Content Include="Content\css\multiselectstyle.css" />
+    <Content Include="Content\Landingpage.css" />
+    <Content Include="Content\bootstrap-grid.css" />
+    <Content Include="Content\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrap-reboot.css" />
+    <Content Include="Content\bootstrap-reboot.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\dataTables.bootstrap4.css" />
+    <Content Include="Content\css\fixedColumns.dataTables.min.css" />
+    <Content Include="Content\css\jquery.dataTables.min.css" />
+    <Content Include="Content\css\responsive.css" />
+    <Content Include="Content\css\select2.css" />
+    <Content Include="Content\css\select2.min.css" />
+    <Content Include="Content\Custom2.css" />
+    <Content Include="Content\Custom.css" />
+    <Content Include="Content\CustomLoginpage.css" />
+    <Content Include="Content\sweetalert.css" />
+    <Content Include="Content\TokenBasedMFA.css" />
+    <Content Include="DevTrends.MvcDonutCaching.README.txt" />
+    <Content Include="Document\Customer\Photo\default.png" />
+    <Content Include="Document\Customer\Sign\default.png" />
+    <Content Include="Document\Person\None.jpg" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Icons\BiometricLogin.jpg" />
+    <Content Include="Icons\DashBoard\CompanyLogo.png" />
+    <Content Include="Icons\Login\Adware.png" />
+    <Content Include="Icons\Login\Antivirus.png" />
+    <Content Include="Icons\Login\DifficultPassword.jpg" />
+    <Content Include="Icons\Login\DigitalCertificateImage.jpg" />
+    <Content Include="Icons\Login\DigitalCertificateIcon.jpg" />
+    <Content Include="Icons\Login\EmptyBag.jpg" />
+    <Content Include="Icons\Login\EVSSL1.png" />
+    <Content Include="Icons\Login\HttpsImage.png" />
+    <Content Include="Icons\Login\MultipleAccount.png" />
+    <Content Include="Icons\Login\Password.png" />
+    <Content Include="Icons\Login\Dictionary.png" />
+    <Content Include="Icons\Login\PrintSharing.png" />
+    <Content Include="Icons\Login\PrivacyPolicy.gif" />
+    <Content Include="Icons\Login\ResetSession.png" />
+    <Content Include="Icons\Login\ScsAddressBar.png" />
+    <Content Include="Icons\Login\ScsBrowserIcons.png" />
+    <Content Include="Icons\Login\SoftwareLicense.png" />
+    <Content Include="Icons\Login\Strong Password.png" />
+    <Content Include="Icons\Login\Support\SelfHelp.png" />
+    <Content Include="Icons\Login\Support\Application.png" />
+    <Content Include="Icons\Login\Support\Chat.png" />
+    <Content Include="Icons\Login\Support\Contact.png" />
+    <Content Include="Icons\Login\Support\Email.png" />
+    <Content Include="Icons\Login\Support\HeadPhone.png" />
+    <Content Include="Icons\Login\Support\VirtualAssistantSingle.png" />
+    <Content Include="Icons\Login\Update.jpg" />
+    <Content Include="Icons\Login\WritingNote.jpg" />
+    <Content Include="Icons\Login\Calander.png" />
+    <Content Include="Icons\Login\Certificate.png" />
+    <Content Include="Icons\Login\DigitalCertificateold.png" />
+    <Content Include="Icons\Login\DigitalCertificateIconold.jpg" />
+    <Content Include="Icons\Login\LOG.jpg" />
+    <Content Include="Icons\Login\MFA.jpg" />
+    <Content Include="Icons\Login\reCAPTCHA.png" />
+    <Content Include="Icons\Login\SecuritySolution.png" />
+    <Content Include="Icons\Login\SecurityTeam1.png" />
+    <Content Include="Icons\Login\SecurityTeam2.png" />
+    <Content Include="Icons\Login\Session.png" />
+    <Content Include="Icons\Login\SSLCertificate.png" />
+    <Content Include="Icons\Login\TransactionMonitor.png" />
+    <Content Include="Icons\Login\UnsafeMark.png" />
+    <Content Include="Icons\Login\UpArrow.png" />
+    <Content Include="Icons\MobileNotification.png" />
+    <Content Include="Icons\Otp.gif" />
+    <Content Include="Images\24-249271_wall-street-bull-black-and-white-logo-design.png" />
+    <Content Include="Images\Fund-PNG-Cutout.png" />
+    <Content Include="Images\imgbin_mutual-fund-investment-funding-finance-company-png.png" />
+    <Content Include="Images\kisspng-computer-icons-investment-portable-network-graphic-5c48c97c9ce777.9673797615482740446427.png" />
+    <Content Include="Images\Reportimages\dhanavantarilogo.png" />
+    <Content Include="Images\Reportimages\download.jpg" />
+    <Content Include="Images\ResetPwd.jpg" />
+    <Content Include="Images\landing.png" />
+    <Content Include="Images\login12.jpg" />
+    <Content Include="Images\Login\centerbankindialogo.png" />
+    <Content Include="Images\Login\Newlogin.svg" />
+    <Content Include="Images\Delete.svg" />
+    <Content Include="Images\LandingPage.jpg" />
+    <Content Include="Images\Login\two_factor_authentication.svg" />
+    <Content Include="Images\Login\UnAuthorizeAccess.jpg" />
+    <Content Include="Images\Login\UserLocked.png" />
+    <Content Include="Images\login.jpg" />
+    <Content Include="Images\question-mark.png" />
+    <Content Include="Images\ScsLogo.png" />
+    <Content Include="Images\SharedView\Checking.svg" />
+    <Content Include="Images\SharedView\Cleanup.png" />
+    <Content Include="Images\SharedView\data.png" />
+    <Content Include="Images\SharedView\Databaseicon.svg" />
+    <Content Include="Images\SharedView\data_adobespark.png" />
+    <Content Include="Images\SharedView\empty.svg" />
+    <Content Include="Images\SharedView\no-limits.png" />
+    <Content Include="Images\SharedView\RecordNotFound.png" />
+    <Content Include="Images\SharedView\UserLocked.png" />
+    <Content Include="Images\Subscription\wallet.svg" />
+    <Content Include="Images\UnAuthorizeAccess\access.jpg" />
+    <Content Include="Images\UnAuthorizeAccess\authentication.svg" />
+    <Content Include="Images\UnAuthorizeAccess\security.svg" />
+    <Content Include="Images\undraw_online_test_re_kyfx.svg" />
+    <Content Include="Images\user.jpg" />
+    <Content Include="Images\UserLocked\cancel.svg" />
+    <Content Include="Scripts\ace.js" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\cldr\event.js" />
+    <Content Include="Scripts\cldr\supplemental.js" />
+    <Content Include="Scripts\cldr\unresolved.js" />
+    <Content Include="Scripts\CustomSweetAlert.js" />
+    <Content Include="Scripts\Custom\Agenda.js" />
+    <Content Include="Scripts\Custom\AgendaMeetingType.js" />
+    <Content Include="Scripts\Custom\BeneficiaryDetail.js" />
+    <Content Include="Scripts\Custom\BoardOfDirectorParameter.js" />
+    <Content Include="Scripts\Custom\BusinessOffice.js" />
+    <Content Include="Scripts\Custom\BusinessOfficePasswordPolicy.js" />
+    <Content Include="Scripts\Custom\CenterDemographicDetail.js" />
+    <Content Include="Scripts\Custom\CustomerDepositAccount.js" />
+    <Content Include="Scripts\Custom\CustomerLoanAccount.js" />
+    <Content Include="Scripts\Custom\CustomerSharesCapitalAccount.js" />
+    <Content Include="Scripts\Custom\datatable.js" />
+    <Content Include="Scripts\Custom\dateLock.js" />
+    <Content Include="Scripts\Custom\DepositScheme.js" />
+    <Content Include="Scripts\Custom\Designation.js" />
+    <Content Include="Scripts\Custom\DisableBrowserFeatures.js" />
+    <Content Include="Scripts\Custom\Employees.js" />
+    <Content Include="Scripts\Custom\FixedAssetItem.js" />
+    <Content Include="Scripts\Custom\GeneralLedger.js" />
+    <Content Include="Scripts\Custom\GeneralLedgerBusinessOffice.js" />
+    <Content Include="Scripts\Custom\LoanCustomerAccountOld.js" />
+    <Content Include="Scripts\Custom\LoanScheme.js" />
+    <Content Include="Scripts\Custom\Meeting.js" />
+    <Content Include="Scripts\Custom\MinuteOfMeetingAgendaSpokesperson.js" />
+    <Content Include="Scripts\Custom\OpeningBalance.js" />
+    <Content Include="Scripts\Custom\Organization.js" />
+    <Content Include="Scripts\Custom\PasswordPolicy.js" />
+    <Content Include="Scripts\Custom\Person.js" />
+    <Content Include="Scripts\Custom\PersonAdditionalIncome.js" />
+    <Content Include="Scripts\Custom\PersonAgricultureAsset.js" />
+    <Content Include="Scripts\Custom\PersonBankDetail.js" />
+    <Content Include="Scripts\Custom\PersonBoardOfDirectorRelation.js" />
+    <Content Include="Scripts\Custom\PersonBorrowingDetail.js" />
+    <Content Include="Scripts\Custom\PersonChronicDisease.js" />
+    <Content Include="Scripts\Custom\PersonCommoditiesAsset.js" />
+    <Content Include="Scripts\Custom\PersonContactDetail.js" />
+    <Content Include="Scripts\Custom\PersonCourtCase.js" />
+    <Content Include="Scripts\Custom\PersonCreditRating.js" />
+    <Content Include="Scripts\Custom\PersonFamilyDetail.js" />
+    <Content Include="Scripts\Custom\PersonFinancialAsset.js" />
+    <Content Include="Scripts\Custom\PersonGroupAuthorizedSignatory.js" />
+    <Content Include="Scripts\Custom\PersonHomeBranch.js" />
+    <Content Include="Scripts\Custom\PersonImmovableAsset.js" />
+    <Content Include="Scripts\Custom\PersonIncomeTaxDetails.js" />
+    <Content Include="Scripts\Custom\PersonInformationParameter.js" />
+    <Content Include="Scripts\Custom\PersonInsuranceDetail.js" />
+    <Content Include="Scripts\Custom\PersonMachineryAsset.js" />
+    <Content Include="Scripts\Custom\PersonMaster.js" />
+    <Content Include="Scripts\Custom\PersonMovableAsset.js" />
+    <Content Include="Scripts\Custom\PersonPhotoSign.js" />
+    <Content Include="Scripts\Custom\PersonSMSAlert.js" />
+    <Content Include="Scripts\Custom\PersonSocialMedia.js" />
+    <Content Include="Scripts\Custom\Person_1.js" />
+    <Content Include="Scripts\Custom\RoleProfile.js" />
+    <Content Include="Scripts\Custom\SharesCapitalByLawsParameter.js" />
+    <Content Include="Scripts\Custom\Center.js" />
+    <Content Include="Scripts\Custom\ContentItem.js" />
+    <Content Include="Scripts\Custom\CustomeMenuSearch.js" />
+    <Content Include="Scripts\Custom\dateLock_old.js" />
+    <Content Include="Scripts\Custom\Department.js" />
+    <Content Include="Scripts\Custom\EducationQualification.js" />
+    <Content Include="Scripts\Custom\EvaluationSection.js" />
+    <Content Include="Scripts\Custom\EvaluationSectorContentItem.js" />
+    <Content Include="Scripts\Custom\NoticeSchedule.js" />
+    <Content Include="Scripts\Custom\OrganizationFund.js" />
+    <Content Include="Scripts\Custom\OrganizationLoanType.js" />
+    <Content Include="Scripts\Custom\PersonInformationParameterDocumentType.js" />
+    <Content Include="Scripts\Custom\PersonInformationParameterNoticeType.js" />
+    <Content Include="Scripts\Custom\SalaryBreakup.js" />
+    <Content Include="Scripts\Custom\Schedule.js" />
+    <Content Include="Scripts\Custom\SharesApplication.js" />
+    <Content Include="Scripts\Custom\SharesCapitalScheme.js" />
+    <Content Include="Scripts\Custom\TradingDetails.js" />
+    <Content Include="Scripts\Custom\Transaction.js" />
+    <Content Include="Scripts\Custom\TransactionOld.js" />
+    <Content Include="Scripts\Custom\TransactionDatatableCalculation.js" />
+    <Content Include="Scripts\Custom\TransactionNew.js" />
+    <Content Include="Scripts\Custom\TransactionNew11.js" />
+    <Content Include="Scripts\Custom\UserAuthenticationParameter.js" />
+    <Content Include="Scripts\Custom\UserProfile.js" />
+    <Content Include="Scripts\Custom\UserProfileBusinessOffice.js" />
+    <Content Include="Scripts\Custom\UserRoleProfile.js" />
+    <Content Include="Scripts\Custom\VehicleDetail.js" />
+    <Content Include="Scripts\Custom\Custometoastr.js" />
+    <Content Include="Scripts\Custom\CustomeDashboard.js" />
+    <Content Include="Scripts\Custom\CustomSweetAlert.js" />
+    <Content Include="Scripts\Custom\Customlogin.js" />
+    <Content Include="Scripts\Custom\VehicleMake.js" />
+    <Content Include="Scripts\Custom\VehicleModelVariant.js" />
+    <Content Include="Scripts\Custom\VillageTradingEntityDetail.js" />
+    <Content Include="Scripts\Custom\WorkingSchedule.js" />
+    <Content Include="Scripts\esm\popper-utils.js" />
+    <Content Include="Scripts\esm\popper-utils.min.js" />
+    <Content Include="Scripts\esm\popper.js" />
+    <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\esm\popper.min.js.map" />
+    <Content Include="Scripts\esm\popper.js.map" />
+    <Content Include="Scripts\esm\popper-utils.min.js.map" />
+    <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Images\design-work-progress-message-217330743.webp" />
+    <Content Include="Coding Standards\01 Java Script Coding Standards.docx" />
+    <Content Include="Coding Standards\02 HTML Coding Standards.docx" />
+    <Content Include="Coding Standards\03 Entity Coding Standards.docx" />
+    <Content Include="Coding Standards\04 View Model Coding Standards.docx" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\ext-language_tools.js" />
+    <Content Include="Scripts\globalize\currency.js" />
+    <Content Include="Scripts\globalize\date.js" />
+    <Content Include="Scripts\globalize\message.js" />
+    <Content Include="Scripts\globalize\number.js" />
+    <Content Include="Scripts\globalize\plural.js" />
+    <Content Include="Scripts\globalize\relative-time.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.mask.min.js" />
+    <Content Include="Scripts\jquery.multiselect.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\js\dataTables.bootstrap4.js" />
+    <Content Include="Scripts\js\editor.js" />
+    <Content Include="Scripts\js\jquery.dataTables.js" />
+    <Content Include="Scripts\js\Responsive.js" />
+    <Content Include="Scripts\js\rowsGroup.js" />
+    <Content Include="Scripts\knockout-3.4.0.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\myjquery.js" />
+    <Content Include="Scripts\popper-utils.js" />
+    <Content Include="Scripts\popper-utils.min.js" />
+    <Content Include="Scripts\popper.js" />
+    <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\Progress.js" />
+    <Content Include="Scripts\select2.js" />
+    <Content Include="Scripts\select2.min.js" />
+    <Content Include="Scripts\transliteration.I.js" />
+    <Content Include="Scripts\translation.js" />
+    <Content Include="Scripts\umd\jquery.multiselect.js" />
+    <Content Include="Scripts\umd\popper-utils.js" />
+    <Content Include="Scripts\umd\popper-utils.min.js" />
+    <Content Include="Scripts\umd\popper.js" />
+    <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\Dividend\Index.cshtml" />
+    <Content Include="Views\LoanSchemeParameter\Amend.cshtml" />
+    <Content Include="Views\LoanSchemeParameter\Index.cshtml" />
+    <Content Include="Views\LoanSchemeParameter\Modify.cshtml" />
+    <Content Include="Views\LoanSchemeParameter\Verify.cshtml" />
+    <Content Include="Views\GeneralLedgerBusinessOffice\Amend.cshtml" />
+    <Content Include="Views\GeneralLedgerBusinessOffice\Modify.cshtml" />
+    <Content Include="Views\GeneralLedgerBusinessOffice\RejectedIndex.cshtml" />
+    <Content Include="Views\GeneralLedgerBusinessOffice\UnverifiedIndex.cshtml" />
+    <Content Include="Views\GeneralLedgerBusinessOffice\VerifiedIndex.cshtml" />
+    <Content Include="Views\GeneralLedgerBusinessOffice\Verify.cshtml" />
+    <Content Include="Views\CustomerSharesCapitalAccount\Modify.cshtml" />
+    <Content Include="Views\CustomerSharesCapitalAccount\RejectedIndex.cshtml" />
+    <Content Include="Views\CustomerSharesCapitalAccount\UnverifiedIndex.cshtml" />
+    <Content Include="Views\CustomerSharesCapitalAccount\VerifiedIndex.cshtml" />
+    <Content Include="Views\CustomerDepositAccount\RejectedIndex.cshtml" />
+    <Content Include="Views\CustomerDepositAccount\UnverifiedIndex.cshtml" />
+    <Content Include="Views\CustomerDepositAccount\VerifiedIndex.cshtml" />
+    <Content Include="Views\Shared\_ExceedBoundaryLimit.cshtml" />
+    <Content Include="Views\CustomerSharesCapitalAccount\Amend.cshtml" />
+    <Content Include="Views\CustomerSharesCapitalAccount\Create.cshtml" />
+    <Content Include="Views\CustomerSharesCapitalAccount\Verify.cshtml" />
+    <Content Include="Views\CustomerDepositAccount\Amend.cshtml" />
+    <Content Include="Views\CustomerDepositAccount\Create.cshtml" />
+    <Content Include="Views\CustomerDepositAccount\Verify.cshtml" />
+    <Content Include="Views\ChequeBookMaster\Amend.cshtml" />
+    <Content Include="Views\ChequeBookMaster\Create.cshtml" />
+    <Content Include="Views\ChequeBookMaster\RejectedIndex.cshtml" />
+    <Content Include="Views\ChequeBookMaster\UnverifiedIndex.cshtml" />
+    <Content Include="Views\ChequeBookMaster\VerifiedIndex.cshtml" />
+    <Content Include="Views\ChequeBookMaster\Verify.cshtml" />
+    <Content Include="Views\RoleProfile\Amend.cshtml" />
+    <Content Include="Views\RoleProfile\Create.cshtml" />
+    <Content Include="Views\RoleProfile\Modify.cshtml" />
+    <Content Include="Views\RoleProfile\RejectedIndex.cshtml" />
+    <Content Include="Views\RoleProfile\UnverifiedIndex.cshtml" />
+    <Content Include="Views\RoleProfile\Verify.cshtml" />
+    <Content Include="Views\BusinessOffice\Amend.cshtml" />
+    <Content Include="Views\BusinessOffice\Create.cshtml" />
+    <Content Include="Views\BusinessOffice\Modify.cshtml" />
+    <Content Include="Views\BusinessOffice\RejectedIndex.cshtml" />
+    <Content Include="Views\BusinessOffice\UnverifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOffice\VerifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOffice\Verify.cshtml" />
+    <Content Include="Views\Organization\Amend.cshtml" />
+    <Content Include="Views\Organization\Index.cshtml" />
+    <Content Include="Views\Organization\Modify.cshtml" />
+    <Content Include="Views\Organization\VerifiedIndex.cshtml" />
+    <Content Include="Views\Organization\Verify.cshtml" />
+    <Content Include="Views\Organization\ViewEntry.cshtml" />
+    <Content Include="Views\GeneralLedger\Amend.cshtml" />
+    <Content Include="Views\GeneralLedger\Create.cshtml" />
+    <Content Include="Views\GeneralLedger\Modify.cshtml" />
+    <Content Include="Views\GeneralLedger\RejectedIndex.cshtml" />
+    <Content Include="Views\GeneralLedger\UnverifiedIndex.cshtml" />
+    <Content Include="Views\GeneralLedger\VerifiedIndex.cshtml" />
+    <Content Include="Views\GeneralLedger\Verify.cshtml" />
+    <Content Include="Views\Designation\Amend.cshtml" />
+    <Content Include="Views\Designation\Create.cshtml" />
+    <Content Include="Views\Designation\Modify.cshtml" />
+    <Content Include="Views\Designation\RejectedIndex.cshtml" />
+    <Content Include="Views\Designation\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Designation\VerifiedIndex.cshtml" />
+    <Content Include="Views\Designation\Verify.cshtml" />
+    <Content Include="Views\Meeting\Amend.cshtml" />
+    <Content Include="Views\Meeting\Create.cshtml" />
+    <Content Include="Views\Meeting\Modify.cshtml" />
+    <Content Include="Views\Meeting\RejectedIndex.cshtml" />
+    <Content Include="Views\Meeting\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Meeting\VerifiedIndex.cshtml" />
+    <Content Include="Views\Meeting\Verify.cshtml" />
+    <Content Include="Views\MinuteOfMeetingAgenda\Amend.cshtml" />
+    <Content Include="Views\MinuteOfMeetingAgenda\Create.cshtml" />
+    <Content Include="Views\MinuteOfMeetingAgenda\CreateIndex.cshtml" />
+    <Content Include="Views\MinuteOfMeetingAgenda\Modify.cshtml" />
+    <Content Include="Views\MinuteOfMeetingAgenda\RejectedIndex.cshtml" />
+    <Content Include="Views\MinuteOfMeetingAgenda\UnverifiedIndex.cshtml" />
+    <Content Include="Views\MinuteOfMeetingAgenda\VerifiedIndex.cshtml" />
+    <Content Include="Views\MinuteOfMeetingAgenda\Verify.cshtml" />
+    <Content Include="Views\ByLawsLoanScheduleParameter\Amend.cshtml" />
+    <Content Include="Views\ByLawsLoanScheduleParameter\Index.cshtml" />
+    <Content Include="Views\ByLawsLoanScheduleParameter\Modify.cshtml" />
+    <Content Include="Views\ByLawsLoanScheduleParameter\RejectedIndex.cshtml" />
+    <Content Include="Views\ByLawsLoanScheduleParameter\UnverifiedIndex.cshtml" />
+    <Content Include="Views\ByLawsLoanScheduleParameter\Verify.cshtml" />
+    <Content Include="Views\ByLawsLoanScheduleParameter\ViewEntry.cshtml" />
+    <Content Include="Views\LoanScheme\Amend.cshtml" />
+    <Content Include="Views\LoanScheme\Create.cshtml" />
+    <Content Include="Views\LoanScheme\RejectedIndex.cshtml" />
+    <Content Include="Views\LoanScheme\VerifiedIndex.cshtml" />
+    <Content Include="Views\LoanScheme\Verify.cshtml" />
+    <Content Include="Views\Employee\Amend.cshtml" />
+    <Content Include="Views\Employee\Create.cshtml" />
+    <Content Include="Views\Employee\Modify.cshtml" />
+    <Content Include="Views\Employee\RejectedIndex.cshtml" />
+    <Content Include="Views\Employee\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Employee\VerifiedIndex.cshtml" />
+    <Content Include="Views\Employee\Verify.cshtml" />
+    <Content Include="Views\DepositScheme\Create.cshtml" />
+    <Content Include="Views\DepositScheme\RejectedIndex.cshtml" />
+    <Content Include="Views\DepositScheme\UnverifiedIndex.cshtml" />
+    <Content Include="Views\DepositScheme\VerifiedIndex.cshtml" />
+    <Content Include="Views\DepositScheme\Verify.cshtml" />
+    <Content Include="Views\PersonHomeBranch\Amend.cshtml" />
+    <Content Include="Views\PersonHomeBranch\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonHomeBranch\Modify.cshtml" />
+    <Content Include="Views\PersonHomeBranch\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonHomeBranch\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonHomeBranch\Verify.cshtml" />
+    <Content Include="Views\DepositScheme\Amend.cshtml" />
+    <Content Include="Views\PersonIncomeTaxDetail\Amend.cshtml" />
+    <Content Include="Views\PersonIncomeTaxDetail\Modify.cshtml" />
+    <Content Include="Views\PersonIncomeTaxDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonIncomeTaxDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonIncomeTaxDetail\Verify.cshtml" />
+    <Content Include="Views\PersonInsuranceDetail\Amend.cshtml" />
+    <Content Include="Views\PersonInsuranceDetail\Modify.cshtml" />
+    <Content Include="Views\PersonInsuranceDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonInsuranceDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonInsuranceDetail\Verify.cshtml" />
+    <Content Include="Views\PersonMachineryAsset\Amend.cshtml" />
+    <Content Include="Views\PersonMachineryAsset\Modify.cshtml" />
+    <Content Include="Views\PersonMachineryAsset\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonMachineryAsset\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonMachineryAsset\Verify.cshtml" />
+    <Content Include="Views\PersonInformationParameter\Amend.cshtml" />
+    <Content Include="Views\PersonInformationParameter\Index.cshtml" />
+    <Content Include="Views\PersonInformationParameter\Modify.cshtml" />
+    <Content Include="Views\PersonInformationParameter\Verify.cshtml" />
+    <Content Include="Views\PersonInformationParameter\ViewEntry.cshtml" />
+    <Content Include="Views\AdditionalIncomeDetail\PersonAdditionalIncomeDetail\Amend.cshtml" />
+    <Content Include="Views\AdditionalIncomeDetail\PersonAdditionalIncomeDetail\Modify.cshtml" />
+    <Content Include="Views\AdditionalIncomeDetail\PersonAdditionalIncomeDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\AdditionalIncomeDetail\PersonAdditionalIncomeDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\AdditionalIncomeDetail\PersonAdditionalIncomeDetail\VerifiedIndex.cshtml" />
+    <Content Include="Views\AdditionalIncomeDetail\PersonAdditionalIncomeDetail\Verify.cshtml" />
+    <Content Include="Views\PersonMachineryAsset\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonIncomeTaxDetail\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonInsuranceDetail\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonFamilyDetail\Amend.cshtml" />
+    <Content Include="Views\PersonFamilyDetail\Modify.cshtml" />
+    <Content Include="Views\PersonFamilyDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonFamilyDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonFamilyDetail\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonFamilyDetail\Verify.cshtml" />
+    <Content Include="Views\PersonAdditionalIncomeDetail\Amend.cshtml" />
+    <Content Include="Views\PersonAdditionalIncomeDetail\Modify.cshtml" />
+    <Content Include="Views\PersonAdditionalIncomeDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonAdditionalIncomeDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonAdditionalIncomeDetail\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonAdditionalIncomeDetail\Verify.cshtml" />
+    <Content Include="Views\PersonBankDetail\Amend.cshtml" />
+    <Content Include="Views\PersonBankDetail\Modify.cshtml" />
+    <Content Include="Views\PersonBankDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonBankDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonBankDetail\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonBankDetail\Verify.cshtml" />
+    <Content Include="Views\PersonBorrowingDetail\Amend.cshtml" />
+    <Content Include="Views\PersonBorrowingDetail\Modify.cshtml" />
+    <Content Include="Views\PersonBorrowingDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonBorrowingDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonBorrowingDetail\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonBorrowingDetail\Verify.cshtml" />
+    <Content Include="Views\PersonFinancialAsset\Amend.cshtml" />
+    <Content Include="Views\PersonFinancialAsset\Modify.cshtml" />
+    <Content Include="Views\PersonFinancialAsset\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonFinancialAsset\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonFinancialAsset\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonFinancialAsset\Verify.cshtml" />
+    <Content Include="Views\PersonAgricultureAsset\Amend.cshtml" />
+    <Content Include="Views\PersonAgricultureAsset\Modify.cshtml" />
+    <Content Include="Views\PersonAgricultureAsset\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonAgricultureAsset\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonAgricultureAsset\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonAgricultureAsset\Verify.cshtml" />
+    <Content Include="Views\PersonBoardOfDirectorRelation\Amend.cshtml" />
+    <Content Include="Views\PersonBoardOfDirectorRelation\Modify.cshtml" />
+    <Content Include="Views\PersonBoardOfDirectorRelation\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonBoardOfDirectorRelation\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonBoardOfDirectorRelation\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonBoardOfDirectorRelation\Verify.cshtml" />
+    <Content Include="Views\PersonChronicDisease\Amend.cshtml" />
+    <Content Include="Views\PersonChronicDisease\Modify.cshtml" />
+    <Content Include="Views\PersonChronicDisease\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonChronicDisease\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonChronicDisease\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonChronicDisease\Verify.cshtml" />
+    <Content Include="Views\PersonGroupAuthorizedSignatory\Amend.cshtml" />
+    <Content Include="Views\PersonGroupAuthorizedSignatory\Modify.cshtml" />
+    <Content Include="Views\PersonGroupAuthorizedSignatory\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonGroupAuthorizedSignatory\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonGroupAuthorizedSignatory\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonGroupAuthorizedSignatory\Verify.cshtml" />
+    <Content Include="Views\RoleProfile\VerifiedIndex.cshtml" />
+    <Content Include="Views\LoanScheme\UnverifiedIndex.cshtml" />
+    <Content Include="Views\District\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonPhotoSign\VerifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOffice\ViewEntry.cshtml" />
+    <Content Include="Views\LoanScheme\ViewEntry.cshtml" />
+    <Content Include="Views\DepositScheme\ViewEntry.cshtml" />
+    <Content Include="Views\PasswordPolicy\Amend.cshtml" />
+    <Content Include="Views\PasswordPolicy\Create.cshtml" />
+    <Content Include="Views\PasswordPolicy\Modify.cshtml" />
+    <Content Include="Views\PasswordPolicy\RejectedIndex.cshtml" />
+    <Content Include="Views\PasswordPolicy\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PasswordPolicy\VerifiedIndex.cshtml" />
+    <Content Include="Views\PasswordPolicy\Verify.cshtml" />
+    <Content Include="Views\PasswordPolicy\ViewEntry.cshtml" />
+    <Content Include="Views\PersonMaster\Amend.cshtml" />
+    <Content Include="Views\PersonMaster\Modify.cshtml" />
+    <Content Include="Views\PersonMaster\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonMaster\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonMaster\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonMaster\Verify.cshtml" />
+    <Content Include="Views\Person\Amend.cshtml" />
+    <Content Include="Views\Person\Create.cshtml" />
+    <Content Include="Views\Person\Modify.cshtml" />
+    <Content Include="Views\Person\RejectedIndex.cshtml" />
+    <Content Include="Views\Person\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Person\VerifiedIndex.cshtml" />
+    <Content Include="Views\Person\Verify.cshtml" />
+    <Content Include="Views\BoardOfDirector\ViewEntry.cshtml" />
+    <Content Include="Views\BoardOfDirectorPowerAndFunction\ViewEntry.cshtml" />
+    <Content Include="Views\FixedAssetItem\ViewEntry.cshtml" />
+    <Content Include="Views\Employee\ViewEntry.cshtml" />
+    <Content Include="Views\GeneralLedgerBusinessOffice\ViewEntry.cshtml" />
+    <Content Include="Views\CustomerLoanAccount\Amend.cshtml" />
+    <Content Include="Views\CustomerLoanAccount\Create.cshtml" />
+    <Content Include="Views\CustomerLoanAccount\RejectedIndex.cshtml" />
+    <Content Include="Views\CustomerLoanAccount\UnverifiedIndex.cshtml" />
+    <Content Include="Views\CustomerLoanAccount\VerifiedIndex.cshtml" />
+    <Content Include="Views\CustomerLoanAccount\Verify.cshtml" />
+    <None Include="Views\Shared\_WorkInProgress.cshtml" />
+    <Content Include="Views\UserProfile\VerifiedIndex.txt" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\DashBoard.cshtml" />
+    <Content Include="Views\Account\TokenBasedMFA.cshtml" />
+    <Content Include="Scripts\umd\popper.min.js.map" />
+    <Content Include="Scripts\umd\popper.js.map" />
+    <Content Include="Scripts\umd\popper-utils.min.js.map" />
+    <Content Include="Scripts\umd\popper-utils.js.map" />
+    <Content Include="Scripts\README.md" />
+    <Content Include="Scripts\popper.min.js.map" />
+    <Content Include="Scripts\popper.js.map" />
+    <Content Include="Scripts\popper-utils.min.js.map" />
+    <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Account\AccountRecoveryViaMobileOTP.cshtml" />
+    <Content Include="Views\Shared\_Recaptcha.cshtml" />
+    <Content Include="Views\Shared\_LoginSupportLayout.cshtml" />
+    <Content Include="Views\AccountServices\Authentication.cshtml" />
+    <Content Include="Views\AccountServices\GoogleReCaptcha.cshtml" />
+    <Content Include="Views\AccountServices\EVSSL.cshtml" />
+    <Content Include="Views\AccountServices\SecuritySolutions.cshtml" />
+    <Content Include="Views\AccountServices\Log.cshtml" />
+    <Content Include="Views\AccountServices\SecurityTeam.cshtml" />
+    <Content Include="Views\AccountServices\SessionSecurity.cshtml" />
+    <Content Include="Views\AccountServices\TransactionMonitor.cshtml" />
+    <Content Include="Views\AccountServices\SafePassword.cshtml" />
+    <Content Include="Views\AccountServices\SecurityTips.cshtml" />
+    <Content Include="Views\AccountServices\DigitalCertificate.cshtml" />
+    <Content Include="Views\AccountServices\Faq.cshtml" />
+    <Content Include="Views\Shared\_DashBoard.cshtml" />
+    <Content Include="Views\AccountServices\Support.cshtml" />
+    <Content Include="Views\AccountServices\TroubleLogin.cshtml" />
+    <Content Include="Views\Shared\_PhoneRecovery.cshtml" />
+    <Content Include="Views\AccountServices\_PhoneRecovery.cshtml" />
+    <Content Include="Views\AccountServices\_EmailRecovery.cshtml" />
+    <Content Include="Views\Account\LandingPage1.cshtml" />
+    <Content Include="Views\Shared\_SubscriptionExpired.cshtml" />
+    <Content Include="Views\Shared\_UserLocked.cshtml" />
+    <Content Include="Views\Account\UnlockUserViaToken.cshtml" />
+    <Content Include="Views\Account\ClearUserLoginSessionViaToken.cshtml" />
+    <Content Include="Views\Account\Contact.cshtml" />
+    <Content Include="Views\Shared\_ClearRecentSession1.cshtml" />
+    <Content Include="Views\Shared\_UnAuthorizedAccess.cshtml" />
+    <Content Include="Views\Account\UnAuthorizedAccess.cshtml" />
+    <Content Include="Views\Shared\Header.cshtml" />
+    <Content Include="Views\Shared\_AuthorizationPending.cshtml" />
+    <Content Include="Views\Shared\_RecordNotFound.cshtml" />
+    <Content Include="Views\Department\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Department\RejectedIndex.cshtml" />
+    <Content Include="Views\Department\VerifiedIndex.cshtml" />
+    <Content Include="Views\Shared\_DatabaseError.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Account\TokenBasedMFA123.cshtml" />
+    <Content Include="Views\Agenda\Amend.cshtml" />
+    <Content Include="Views\Agenda\Create.cshtml" />
+    <Content Include="Views\Agenda\Modify.cshtml" />
+    <Content Include="Views\Agenda\RejectedIndex.cshtml" />
+    <Content Include="Views\Agenda\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Agenda\VerifiedIndex.cshtml" />
+    <Content Include="Views\Agenda\Verify.cshtml" />
+    <Content Include="Views\BoardOfDirector\Amend.cshtml" />
+    <Content Include="Views\BoardOfDirector\Create.cshtml" />
+    <Content Include="Views\BoardOfDirector\Modify.cshtml" />
+    <Content Include="Views\BoardOfDirector\RejectedIndex.cshtml" />
+    <Content Include="Views\BoardOfDirector\UnverifiedIndex.cshtml" />
+    <Content Include="Views\BoardOfDirector\VerifiedIndex.cshtml" />
+    <Content Include="Views\BoardOfDirector\Verify.cshtml" />
+    <Content Include="Views\BoardOfDirectorPowerAndFunction\Amend.cshtml" />
+    <Content Include="Views\BoardOfDirectorPowerAndFunction\Create.cshtml" />
+    <Content Include="Views\BoardOfDirectorPowerAndFunction\RejectedIndex.cshtml" />
+    <Content Include="Views\BoardOfDirectorPowerAndFunction\UnverifiedIndex.cshtml" />
+    <Content Include="Views\BoardOfDirectorPowerAndFunction\VerifiedIndex.cshtml" />
+    <Content Include="Views\BoardOfDirectorPowerAndFunction\Verify.cshtml" />
+    <Content Include="Views\PowerAndFunction\Amend.cshtml" />
+    <Content Include="Views\PowerAndFunction\Create.cshtml" />
+    <Content Include="Views\PowerAndFunction\RejectedIndex.cshtml" />
+    <Content Include="Views\PowerAndFunction\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PowerAndFunction\VerifiedIndex.cshtml" />
+    <Content Include="Views\PowerAndFunction\Verify.cshtml" />
+    <Content Include="Views\RevenueGeneralLedgerParameter\Amend.cshtml" />
+    <Content Include="Views\RevenueGeneralLedgerParameter\Create.cshtml" />
+    <Content Include="Views\RevenueGeneralLedgerParameter\Modify.cshtml" />
+    <Content Include="Views\RevenueGeneralLedgerParameter\RejectedIndex.cshtml" />
+    <Content Include="Views\RevenueGeneralLedgerParameter\UnverifiedIndex.cshtml" />
+    <Content Include="Views\RevenueGeneralLedgerParameter\VerifiedIndex.cshtml" />
+    <Content Include="Views\RevenueGeneralLedgerParameter\Verify.cshtml" />
+    <Content Include="Views\Shared\_DashBoard2.cshtml" />
+    <Content Include="Views\AuthorizedSharesCapital\Amend.cshtml" />
+    <Content Include="Views\AuthorizedSharesCapital\Index.cshtml" />
+    <Content Include="Views\AuthorizedSharesCapital\Modify.cshtml" />
+    <Content Include="Views\AuthorizedSharesCapital\Verify.cshtml" />
+    <Content Include="Views\CenterDemographicDetail\Amend.cshtml" />
+    <Content Include="Views\CenterDemographicDetail\Create.cshtml" />
+    <Content Include="Views\CenterDemographicDetail\Index.cshtml" />
+    <Content Include="Views\CenterDemographicDetail\Modify.cshtml" />
+    <Content Include="Views\CenterDemographicDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\CenterDemographicDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\CenterDemographicDetail\Verify.cshtml" />
+    <Content Include="Views\CenterDemographicDetail\VerifyIndex.cshtml" />
+    <Content Include="Views\CenterOccupation\Amend.cshtml" />
+    <Content Include="Views\CenterOccupation\Create.cshtml" />
+    <Content Include="Views\CenterOccupation\Index.cshtml" />
+    <Content Include="Views\CenterOccupation\Modify.cshtml" />
+    <Content Include="Views\CenterOccupation\RejectedIndex.cshtml" />
+    <Content Include="Views\CenterOccupation\UnverifiedIndex.cshtml" />
+    <Content Include="Views\CenterOccupation\Verify.cshtml" />
+    <Content Include="Views\CountryAdditionalDetail\Amend.cshtml" />
+    <Content Include="Views\CountryAdditionalDetail\Create.cshtml" />
+    <Content Include="Views\CountryAdditionalDetail\Index.cshtml" />
+    <Content Include="Views\CountryAdditionalDetail\Modify.cshtml" />
+    <Content Include="Views\CountryAdditionalDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\CountryAdditionalDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\CountryAdditionalDetail\Verify.cshtml" />
+    <Content Include="Views\CenterTradingEntityDetail\Amend.cshtml" />
+    <Content Include="Views\CenterTradingEntityDetail\Create.cshtml" />
+    <Content Include="Views\CenterTradingEntityDetail\Index.cshtml" />
+    <Content Include="Views\CenterTradingEntityDetail\Modify.cshtml" />
+    <Content Include="Views\CenterTradingEntityDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\CenterTradingEntityDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\CenterTradingEntityDetail\Verify.cshtml" />
+    <Content Include="Views\Shared\_DashBoardOld.cshtml" />
+    <Content Include="Views\AgendaMeetingType\Amend.cshtml" />
+    <Content Include="Views\AgendaMeetingType\Closed.cshtml" />
+    <Content Include="Views\AgendaMeetingType\Create.cshtml" />
+    <Content Include="Views\AgendaMeetingType\Index.cshtml" />
+    <Content Include="Views\AgendaMeetingType\RejectedIndex.cshtml" />
+    <Content Include="Views\AgendaMeetingType\UnverifiedIndex.cshtml" />
+    <Content Include="Views\AgendaMeetingType\VerifiedIndex.cshtml" />
+    <Content Include="Views\AgendaMeetingType\Verify.cshtml" />
+    <Content Include="Views\BoardOfDirectorParameter\Amend.cshtml" />
+    <Content Include="Views\BoardOfDirectorParameter\Index.cshtml" />
+    <Content Include="Views\BoardOfDirectorParameter\Modify.cshtml" />
+    <Content Include="Views\BoardOfDirectorParameter\Verify.cshtml" />
+    <Content Include="Views\BoardOfDirectorParameter\ViewEntry.cshtml" />
+    <Content Include="Views\OfficeSchedule\Amend.cshtml" />
+    <Content Include="Views\OfficeSchedule\Create.cshtml" />
+    <Content Include="Views\OfficeSchedule\Modify.cshtml" />
+    <Content Include="Views\OfficeSchedule\RejectedIndex.cshtml" />
+    <Content Include="Views\OfficeSchedule\UnverifiedIndex.cshtml" />
+    <Content Include="Views\OfficeSchedule\VerifiedIndex.cshtml" />
+    <Content Include="Views\OfficeSchedule\Verify.cshtml" />
+    <Content Include="Views\WorkingSchedule\Amend.cshtml" />
+    <Content Include="Views\WorkingSchedule\Create.cshtml" />
+    <Content Include="Views\WorkingSchedule\Modify.cshtml" />
+    <Content Include="Views\WorkingSchedule\RejectedIndex.cshtml" />
+    <Content Include="Views\WorkingSchedule\UnverifiedIndex.cshtml" />
+    <Content Include="Views\WorkingSchedule\VerifiedIndex.cshtml" />
+    <Content Include="Views\WorkingSchedule\Verify.cshtml" />
+    <Content Include="Views\ContentItem\Amend.cshtml" />
+    <Content Include="Views\ContentItem\Create.cshtml" />
+    <Content Include="Views\ContentItem\Modify.cshtml" />
+    <Content Include="Views\ContentItem\RejectedIndex.cshtml" />
+    <Content Include="Views\ContentItem\UnverifiedIndex.cshtml" />
+    <Content Include="Views\ContentItem\VerifiedIndex.cshtml" />
+    <Content Include="Views\ContentItem\Verify.cshtml" />
+    <Content Include="Views\EvaluationSection\Amend.cshtml" />
+    <Content Include="Views\EvaluationSection\Create.cshtml" />
+    <Content Include="Views\EvaluationSection\Modify.cshtml" />
+    <Content Include="Views\EvaluationSection\RejectedIndex.cshtml" />
+    <Content Include="Views\EvaluationSection\UnverifiedIndex.cshtml" />
+    <Content Include="Views\EvaluationSection\VerifiedIndex.cshtml" />
+    <Content Include="Views\EvaluationSection\Verify.cshtml" />
+    <Content Include="Views\Shared\_DashBoard27112021.cshtml" />
+    <Content Include="Views\EvaluationSectorContentItem\Amend.cshtml" />
+    <Content Include="Views\EvaluationSectorContentItem\Create.cshtml" />
+    <Content Include="Views\EvaluationSectorContentItem\Index.cshtml" />
+    <Content Include="Views\EvaluationSectorContentItem\RejectedIndex.cshtml" />
+    <Content Include="Views\EvaluationSectorContentItem\UnverifiedIndex.cshtml" />
+    <Content Include="Views\EvaluationSectorContentItem\Verify.cshtml" />
+    <Content Include="Views\EvaluationSectorContentItem\VerifyIndex.cshtml" />
+    <Content Include="Views\Home\Menus.cshtml" />
+    <Content Include="Views\Account\LandingPage.cshtml" />
+    <Content Include="Views\Account\Otp.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\PersonInformationParameterDocumentType\Amend.cshtml" />
+    <Content Include="Views\PersonInformationParameterDocumentType\Index.cshtml" />
+    <Content Include="Views\PersonInformationParameterDocumentType\Modify.cshtml" />
+    <Content Include="Views\PersonInformationParameterDocumentType\Verify.cshtml" />
+    <Content Include="Views\PersonInformationParameterDocumentType\ViewEntry.cshtml" />
+    <Content Include="Views\PersonInformationParameterNoticeType\Amend.cshtml" />
+    <Content Include="Views\PersonInformationParameterNoticeType\Index.cshtml" />
+    <Content Include="Views\PersonInformationParameterNoticeType\Modify.cshtml" />
+    <Content Include="Views\PersonInformationParameterNoticeType\Verify.cshtml" />
+    <Content Include="Views\PersonInformationParameterNoticeType\ViewEntry.cshtml" />
+    <Content Include="Views\SharesApplication\Create.cshtml" />
+    <Content Include="Views\NoticeSchedule\Amend.cshtml" />
+    <Content Include="Views\NoticeSchedule\Create.cshtml" />
+    <Content Include="Views\NoticeSchedule\Modify.cshtml" />
+    <Content Include="Views\NoticeSchedule\RejectedIndex.cshtml" />
+    <Content Include="Views\NoticeSchedule\UnverifiedIndex.cshtml" />
+    <Content Include="Views\NoticeSchedule\VerifiedIndex.cshtml" />
+    <Content Include="Views\NoticeSchedule\Verify.cshtml" />
+    <Content Include="Views\Schedule\Amend.cshtml" />
+    <Content Include="Views\Schedule\Create.cshtml" />
+    <Content Include="Views\Schedule\Modify.cshtml" />
+    <Content Include="Views\Schedule\RejectedIndex.cshtml" />
+    <Content Include="Views\Schedule\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Schedule\VerifiedIndex.cshtml" />
+    <Content Include="Views\Schedule\Verify.cshtml" />
+    <Content Include="Views\Shared\_ClearRecentSession.cshtml" />
+    <Content Include="Views\FinancialCycle\Amend.cshtml" />
+    <Content Include="Views\SharesCapitalByLawsParameter\Amend.cshtml" />
+    <Content Include="Views\SharesCapitalByLawsParameter\Index.cshtml" />
+    <Content Include="Views\SharesCapitalByLawsParameter\Modify.cshtml" />
+    <Content Include="Views\SharesCapitalByLawsParameter\Verify.cshtml" />
+    <Content Include="Views\SharesCapitalByLawsParameter\ViewEntry.cshtml" />
+    <Content Include="Views\PersonCommoditiesAsset\Amend.cshtml" />
+    <Content Include="Views\PersonCommoditiesAsset\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonCommoditiesAsset\Modify.cshtml" />
+    <Content Include="Views\PersonCommoditiesAsset\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonCommoditiesAsset\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonCommoditiesAsset\Verify.cshtml" />
+    <Content Include="Views\PersonContactDetail\Amend.cshtml" />
+    <Content Include="Views\PersonContactDetail\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonContactDetail\Modify.cshtml" />
+    <Content Include="Views\PersonContactDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonContactDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonContactDetail\Verify.cshtml" />
+    <Content Include="Views\PersonCourtCase\Amend.cshtml" />
+    <Content Include="Views\PersonCourtCase\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonCourtCase\Modify.cshtml" />
+    <Content Include="Views\PersonCourtCase\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonCourtCase\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonCourtCase\Verify.cshtml" />
+    <Content Include="Views\PersonCreditRating\Amend.cshtml" />
+    <Content Include="Views\PersonCreditRating\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonCreditRating\Modify.cshtml" />
+    <Content Include="Views\PersonCreditRating\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonCreditRating\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonCreditRating\Verify.cshtml" />
+    <Content Include="Views\PersonDeath\Amend.cshtml" />
+    <Content Include="Views\PersonDeath\Modify.cshtml" />
+    <Content Include="Views\PersonDeath\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonDeath\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonDeath\Verify.cshtml" />
+    <Content Include="Views\PersonImmovableAsset\Amend.cshtml" />
+    <Content Include="Views\PersonImmovableAsset\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonImmovableAsset\Modify.cshtml" />
+    <Content Include="Views\PersonImmovableAsset\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonImmovableAsset\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonImmovableAsset\Verify.cshtml" />
+    <Content Include="Views\PersonMovableAsset\Amend.cshtml" />
+    <Content Include="Views\PersonMovableAsset\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonMovableAsset\Modify.cshtml" />
+    <Content Include="Views\PersonMovableAsset\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonMovableAsset\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonMovableAsset\Verify.cshtml" />
+    <Content Include="Views\PersonPhotoSign\Amend.cshtml" />
+    <Content Include="Views\PersonPhotoSign\Modify.cshtml" />
+    <Content Include="Views\PersonPhotoSign\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonPhotoSign\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonPhotoSign\Verify.cshtml" />
+    <Content Include="Views\PersonSMSAlert\Amend.cshtml" />
+    <Content Include="Views\PersonSMSAlert\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonSMSAlert\Modify.cshtml" />
+    <Content Include="Views\PersonSMSAlert\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonSMSAlert\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonSMSAlert\Verify.cshtml" />
+    <Content Include="Views\PersonSocialMedia\Amend.cshtml" />
+    <Content Include="Views\PersonSocialMedia\VerifiedIndex.cshtml" />
+    <Content Include="Views\PersonSocialMedia\Modify.cshtml" />
+    <Content Include="Views\PersonSocialMedia\RejectedIndex.cshtml" />
+    <Content Include="Views\PersonSocialMedia\UnverifiedIndex.cshtml" />
+    <Content Include="Views\PersonSocialMedia\Verify.cshtml" />
+    <Content Include="Views\TransactionMaster\Amend.cshtml" />
+    <Content Include="Views\TransactionMaster\Index.cshtml" />
+    <Content Include="Views\TransactionMaster\Modify.cshtml" />
+    <Content Include="Views\TransactionMaster\Verify.cshtml" />
+    <Content Include="Views\TransactionMaster\ViewEntry.cshtml" />
+    <Content Include="Views\MeetingAllowance\Amend.cshtml" />
+    <Content Include="Views\MeetingAllowance\Create.cshtml" />
+    <Content Include="Views\MeetingAllowance\Modify.cshtml" />
+    <Content Include="Views\MeetingAllowance\RejectedIndex.cshtml" />
+    <Content Include="Views\MeetingAllowance\UnverifiedIndex.cshtml" />
+    <Content Include="Views\MeetingAllowance\VerifiedIndex.cshtml" />
+    <Content Include="Views\MeetingAllowance\Verify.cshtml" />
+    <Content Include="Views\Shared\_MenuPartial.cshtml" />
+    <Content Include="Views\Account\CreateNewPasswordAfterReset.cshtml" />
+    <Content Include="Views\Account\ResetPasswordViaToken.cshtml" />
+    <Content Include="Views\DashBoard\Index.cshtml" />
+    <Content Include="Views\FixedAssetItem\Amend.cshtml" />
+    <Content Include="Views\FixedAssetItem\Create.cshtml" />
+    <Content Include="Views\FixedAssetItem\Modify.cshtml" />
+    <Content Include="Views\FixedAssetItem\RejectedIndex.cshtml" />
+    <Content Include="Views\FixedAssetItem\UnverifiedIndex.cshtml" />
+    <Content Include="Views\FixedAssetItem\VerifiedIndex.cshtml" />
+    <Content Include="Views\FixedAssetItem\Verify.cshtml" />
+    <Content Include="Views\FinancialCycle\Create.cshtml" />
+    <Content Include="Views\FinancialCycle\RejectedIndex.cshtml" />
+    <Content Include="Views\FinancialCycle\UnverifiedIndex.cshtml" />
+    <Content Include="Views\FinancialCycle\Verify.cshtml" />
+    <Content Include="Views\Department\Amend.cshtml" />
+    <Content Include="Views\Department\Create.cshtml" />
+    <Content Include="Views\Department\Modify.cshtml" />
+    <Content Include="Views\Department\Verify.cshtml" />
+    <Content Include="Views\Continent\Amend.cshtml" />
+    <Content Include="Views\Continent\Create.cshtml" />
+    <Content Include="Views\Continent\Modify.cshtml" />
+    <Content Include="Views\Continent\RejectedIndex.cshtml" />
+    <Content Include="Views\Continent\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Continent\VerifiedIndex.cshtml" />
+    <Content Include="Views\Continent\Verify.cshtml" />
+    <Content Include="Views\Country\Amend.cshtml" />
+    <Content Include="Views\Country\Create.cshtml" />
+    <Content Include="Views\Country\Modify.cshtml" />
+    <Content Include="Views\Country\RejectedIndex.cshtml" />
+    <Content Include="Views\Country\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Country\VerifiedIndex.cshtml" />
+    <Content Include="Views\Country\Verify.cshtml" />
+    <Content Include="Views\District\Amend.cshtml" />
+    <Content Include="Views\District\Create.cshtml" />
+    <Content Include="Views\District\Modify.cshtml" />
+    <Content Include="Views\District\UnverifiedIndex.cshtml" />
+    <Content Include="Views\District\VerifiedIndex.cshtml" />
+    <Content Include="Views\District\Verify.cshtml" />
+    <Content Include="Views\Division\Amend.cshtml" />
+    <Content Include="Views\Division\Create.cshtml" />
+    <Content Include="Views\Division\Modify.cshtml" />
+    <Content Include="Views\Division\RejectedIndex.cshtml" />
+    <Content Include="Views\Division\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Division\VerifiedIndex.cshtml" />
+    <Content Include="Views\Division\Verify.cshtml" />
+    <Content Include="Views\State\Amend.cshtml" />
+    <Content Include="Views\State\Create.cshtml" />
+    <Content Include="Views\State\Modify.cshtml" />
+    <Content Include="Views\State\RejectedIndex.cshtml" />
+    <Content Include="Views\State\UnverifiedIndex.cshtml" />
+    <Content Include="Views\State\VerifiedIndex.cshtml" />
+    <Content Include="Views\State\Verify.cshtml" />
+    <Content Include="Views\Taluka\Amend.cshtml" />
+    <Content Include="Views\Taluka\Create.cshtml" />
+    <Content Include="Views\Taluka\Modify.cshtml" />
+    <Content Include="Views\Taluka\RejectedIndex.cshtml" />
+    <Content Include="Views\Taluka\UnverifiedIndex.cshtml" />
+    <Content Include="Views\Taluka\VerifiedIndex.cshtml" />
+    <Content Include="Views\Taluka\Verify.cshtml" />
+    <Content Include="Views\BusinessOfficeCoopRegistration\Amend.cshtml" />
+    <Content Include="Views\BusinessOfficeCoopRegistration\Create.cshtml" />
+    <Content Include="Views\BusinessOfficeCoopRegistration\Modify.cshtml" />
+    <Content Include="Views\BusinessOfficeCoopRegistration\RejectedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficeCoopRegistration\UnverifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficeCoopRegistration\VerifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficeCoopRegistration\Verify.cshtml" />
+    <Content Include="Views\BusinessOfficeDetail\Amend.cshtml" />
+    <Content Include="Views\BusinessOfficeDetail\Create.cshtml" />
+    <Content Include="Views\BusinessOfficeDetail\Modify.cshtml" />
+    <Content Include="Views\BusinessOfficeDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficeDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficeDetail\VerifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficeDetail\Verify.cshtml" />
+    <Content Include="Views\BusinessOfficePasswordPolicy\Amend.cshtml" />
+    <Content Include="Views\BusinessOfficePasswordPolicy\Closed.cshtml" />
+    <Content Include="Views\BusinessOfficePasswordPolicy\ClosedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficePasswordPolicy\Create.cshtml" />
+    <Content Include="Views\BusinessOfficePasswordPolicy\Index.cshtml" />
+    <Content Include="Views\BusinessOfficePasswordPolicy\RejectedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficePasswordPolicy\UnverifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficePasswordPolicy\Verify.cshtml" />
+    <Content Include="Views\BusinessOfficeRBIRegistration\Amend.cshtml" />
+    <Content Include="Views\BusinessOfficeRBIRegistration\Create.cshtml" />
+    <Content Include="Views\BusinessOfficeRBIRegistration\Modify.cshtml" />
+    <Content Include="Views\BusinessOfficeRBIRegistration\RejectedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficeRBIRegistration\UnverifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficeRBIRegistration\VerifiedIndex.cshtml" />
+    <Content Include="Views\BusinessOfficeRBIRegistration\Verify.cshtml" />
+    <Content Include="Views\OrganizationFund\Amend.cshtml" />
+    <Content Include="Views\OrganizationFund\Modify.cshtml" />
+    <Content Include="Views\OrganizationFund\VerifiedIndex.cshtml" />
+    <Content Include="Views\OrganizationFund\Verify.cshtml" />
+    <Content Include="Views\OrganizationLoanType\Amend.cshtml" />
+    <Content Include="Views\OrganizationLoanType\Modify.cshtml" />
+    <Content Include="Views\OrganizationLoanType\VerifiedIndex.cshtml" />
+    <Content Include="Views\OrganizationLoanType\Verify.cshtml" />
+    <Content Include="Views\BeneficiaryDetail\Amend.cshtml" />
+    <Content Include="Views\BeneficiaryDetail\Create.cshtml" />
+    <Content Include="Views\BeneficiaryDetail\RejectedIndex.cshtml" />
+    <Content Include="Views\BeneficiaryDetail\UnverifiedIndex.cshtml" />
+    <Content Include="Views\BeneficiaryDetail\Verify.cshtml" />
+    <Content Include="Views\FinancialStatementsReport\BalanceListReport.cshtml" />
+    <Content Include="Views\SubsidiaryBook\SubsidiaryBook.cshtml" />
+    <Content Include="Views\UserAuthenticationParameter\Amend.cshtml" />
+    <Content Include="Views\UserAuthenticationParameter\Index.cshtml" />
+    <Content Include="Views\UserAuthenticationParameter\Modify.cshtml" />
+    <Content Include="Views\UserAuthenticationParameter\Verify.cshtml" />
+    <Content Include="Views\UserAuthenticationParameter\ViewEntry.cshtml" />
+    <Content Include="Views\OpeningBalance\Amend.cshtml" />
+    <Content Include="Views\OpeningBalance\Create.cshtml" />
+    <Content Include="Views\OpeningBalance\Index.cshtml" />
+    <Content Include="Views\OpeningBalance\Indexwebgrid.cshtml" />
+    <Content Include="Views\OpeningBalance\JsGridCreate.cshtml" />
+    <Content Include="Views\OpeningBalance\ModifiedIndex.cshtml" />
+    <Content Include="Views\OpeningBalance\Modify.cshtml" />
+    <Content Include="Views\OpeningBalance\Verify.cshtml" />
+    <Content Include="Views\OpeningBalance\VerifyIndex.cshtml" />
+    <Content Include="Views\SharesCapitalSchemeParameter\Amend.cshtml" />
+    <Content Include="Views\SharesCapitalSchemeParameter\Index.cshtml" />
+    <Content Include="Views\SharesCapitalSchemeParameter\Modify.cshtml" />
+    <Content Include="Views\SharesCapitalSchemeParameter\Verify.cshtml" />
+    <Content Include="Views\SharesCapitalSchemeParameter\ViewEntry.cshtml" />
+    <Content Include="Views\SharesApplication\Amend.cshtml" />
+    <Content Include="Views\SharesApplication\Modify.cshtml" />
+    <Content Include="Views\SharesApplication\RejectedIndex.cshtml" />
+    <Content Include="Views\SharesApplication\SharesApplicationReport.cshtml" />
+    <Content Include="Views\SharesApplication\UnverifiedIndex.cshtml" />
+    <Content Include="Views\SharesApplication\VerifiedIndex.cshtml" />
+    <Content Include="Views\SharesApplication\Verify.cshtml" />
+    <Content Include="Views\DepositSchemeParameter\Amend.cshtml" />
+    <Content Include="Views\DepositSchemeParameter\Index.cshtml" />
+    <Content Include="Views\DepositSchemeParameter\Modify.cshtml" />
+    <Content Include="Views\DepositSchemeParameter\Verify.cshtml" />
+    <Content Include="Views\SharesCapitalReport\J1Report.cshtml" />
+    <Content Include="Views\SharesCapitalReport\J2Report.cshtml" />
+    <Content Include="Views\SharesCapitalReport\JReport.cshtml" />
+    <Content Include="Views\SharesCapitalReport\KReport.cshtml" />
+    <Content Include="Views\SharesCapitalReport\MemberIncrementReport.cshtml" />
+    <Content Include="Views\SharesCapitalReport\MemberRegisterReport.cshtml" />
+    <Content Include="Views\SharesCapitalReport\SharesApplicationReport.cshtml" />
+    <Content Include="Views\SharesCapitalReport\WReport.cshtml" />
+    <Content Include="Views\TransactionMaster\Create.cshtml" />
+    <Content Include="Views\UserStatus\Index.cshtml" />
+    <Content Include="Views\UserProfileBusinessOffice\Amend.cshtml" />
+    <Content Include="Views\UserProfileBusinessOffice\Modify.cshtml" />
+    <Content Include="Views\UserProfileBusinessOffice\RejectedIndex.cshtml" />
+    <Content Include="Views\UserProfileBusinessOffice\UnverifiedIndex.cshtml" />
+    <Content Include="Views\UserProfileBusinessOffice\VerifiedIndex.cshtml" />
+    <Content Include="Views\UserProfileBusinessOffice\Verify.cshtml" />
+    <Content Include="Views\UserRoleProfile\Amend.cshtml" />
+    <Content Include="Views\UserRoleProfile\Modify.cshtml" />
+    <Content Include="Views\UserRoleProfile\RejectedIndex.cshtml" />
+    <Content Include="Views\UserRoleProfile\UnverifiedIndex.cshtml" />
+    <Content Include="Views\UserRoleProfile\VerifiedIndex.cshtml" />
+    <Content Include="Views\UserRoleProfile\Verify.cshtml" />
+    <Content Include="Views\SharesCapitalScheme\Amend.cshtml" />
+    <Content Include="Views\SharesCapitalScheme\Create.cshtml" />
+    <Content Include="Views\SharesCapitalScheme\RejectedIndex.cshtml" />
+    <Content Include="Views\SharesCapitalScheme\UnverifiedIndex.cshtml" />
+    <Content Include="Views\SharesCapitalScheme\Verify.cshtml" />
+    <Content Include="Views\UserProfile\Amend.cshtml" />
+    <Content Include="Views\UserProfile\Create.cshtml" />
+    <Content Include="Views\UserProfile\Modify.cshtml" />
+    <Content Include="Views\UserProfile\RejectedIndex.cshtml" />
+    <Content Include="Views\UserProfile\UnverifiedIndex.cshtml" />
+    <Content Include="Views\UserProfile\Verify.cshtml" />
+    <Content Include="Views\SharesCapitalScheme\VerifiedIndex.cshtml" />
+    <Content Include="Views\UserProfile\VerifiedIndex.cshtml" />
+    <Content Include="Views\SharesCapitalScheme\ViewEntry.cshtml" />
+    <Content Include="Views\VehicleMake\Amend.cshtml" />
+    <Content Include="Views\VehicleMake\Create.cshtml" />
+    <Content Include="Views\VehicleMake\Modify.cshtml" />
+    <Content Include="Views\VehicleMake\RejectedIndex.cshtml" />
+    <Content Include="Views\VehicleMake\UnverifiedIndex.cshtml" />
+    <Content Include="Views\VehicleMake\VerifiedIndex.cshtml" />
+    <Content Include="Views\VehicleMake\Verify.cshtml" />
+    <Content Include="Views\VehicleModel\Amend.cshtml" />
+    <Content Include="Views\VehicleModel\Create.cshtml" />
+    <Content Include="Views\VehicleModel\Modify.cshtml" />
+    <Content Include="Views\VehicleModel\RejectedIndex.cshtml" />
+    <Content Include="Views\VehicleModel\UnverifiedIndex.cshtml" />
+    <Content Include="Views\VehicleModel\VerifiedIndex.cshtml" />
+    <Content Include="Views\VehicleModel\Verify.cshtml" />
+    <Content Include="Views\VehicleVariant\Amend.cshtml" />
+    <Content Include="Views\VehicleVariant\Create.cshtml" />
+    <Content Include="Views\VehicleVariant\Modify.cshtml" />
+    <Content Include="Views\VehicleVariant\RejectedIndex.cshtml" />
+    <Content Include="Views\VehicleVariant\UnverifiedIndex.cshtml" />
+    <Content Include="Views\VehicleVariant\VerifiedIndex.cshtml" />
+    <Content Include="Views\VehicleVariant\Verify.cshtml" />
+    <Content Include="Views\VillageTownCity\Amend.cshtml" />
+    <Content Include="Views\VillageTownCity\Create.cshtml" />
+    <Content Include="Views\VillageTownCity\Modify.cshtml" />
+    <Content Include="Views\VillageTownCity\RejectedIndex.cshtml" />
+    <Content Include="Views\VillageTownCity\UnverifiedIndex.cshtml" />
+    <Content Include="Views\VillageTownCity\VerifiedIndex.cshtml" />
+    <Content Include="Views\VillageTownCity\Verify.cshtml" />
+    <Content Include="Views\Transaction\Amend.cshtml" />
+    <Content Include="Views\Transaction\Create.cshtml" />
+    <Content Include="Views\Transaction\Index.cshtml" />
+    <Content Include="Views\Transaction\Modify.cshtml" />
+    <Content Include="Views\Transaction\Verify.cshtml" />
+    <Content Include="Views\Transaction\ViewEntry.cshtml" />
+    <Content Include="Views\Transaction\UnverifiedIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Document\Customer\Loan\" />
+    <Folder Include="Document\Employee\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DemoProject.Domain\DemoProject.Domain.csproj">
+      <Project>{b896cea9-24b5-491b-a491-a352b9170c7c}</Project>
+      <Name>DemoProject.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DemoProject.Mapping\DemoProject.Mapping.csproj">
+      <Project>{a98e53f8-3182-4b43-9b63-03466fa7d3f5}</Project>
+      <Name>DemoProject.Mapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DemoProject.Services\DemoProject.Services.csproj">
+      <Project>{55457c53-1ea8-4812-8c59-c160fb62c409}</Project>
+      <Name>DemoProject.Services</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Reports\BalanceListReport.resx">
+      <DependentUpon>BalanceListReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\J1Report.resx" />
+    <EmbeddedResource Include="Reports\J2Report.resx" />
+    <EmbeddedResource Include="Reports\JReport.resx" />
+    <EmbeddedResource Include="Reports\KReport.resx" />
+    <EmbeddedResource Include="Reports\MasterReport.resx">
+      <DependentUpon>MasterReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\MemberIncrementReport.resx" />
+    <EmbeddedResource Include="Reports\MemberRegister.resx">
+      <DependentUpon>MemberRegister.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\MemberRegisterReport.resx" />
+    <EmbeddedResource Include="Reports\MemberTransferRegisterReport.resx" />
+    <EmbeddedResource Include="Reports\SharesApplicationReport.resx">
+      <DependentUpon>SharesApplicationReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\SubReport.resx">
+      <DependentUpon>SubReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\WReport.resx" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>64894</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:64894/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>https://localhost:44304/</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <ItemGroup>
+    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="24.2.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

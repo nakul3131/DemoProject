@@ -1,0 +1,50 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LoginSupportLayout.cshtml";
+}
+
+<!doctype html>
+
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Authentication For Financial Transaction</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- First Row (<- Back Arrow and Title) -->
+        <div class="row mt-5">
+            <div class="col-1">
+                <a class="text-center" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Login", "Account")'">
+                    <i class='fas fa-arrow-left btn-lg text-primary'></i>
+                </a>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center text-primary">
+                    <strong>Multi Factor Authentication</strong> 
+                </h2>
+            </div>
+        </div>
+        <!-- Second Row (Page Description) -->
+        <div class="row mt-4">
+            <div class="offset-1 col-10 text-center">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/MFA.jpg" alt="MFA Image" />
+                    <figcaption>
+                        <h6 class="text-justify line-height-3 mt-3">
+                            Multi-factor authentication (MFA) is an authentication method in which a computer user is granted access
+                            only after successfully presenting two or more pieces of evidence (or factors) to an authentication mechanism:
+                            Knowledge (something the user and only the user knows), Possession (something the user and only the user has),
+                            and Inherence (something the user and only the user is).
+                        </h6>
+                    </figcaption>
+                </figure>                
+            </div>            
+        </div>
+    </div>
+</body>
+</html>
+
+
+

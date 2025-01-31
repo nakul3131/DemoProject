@@ -1,0 +1,422 @@
+﻿@model DemoProject.Services.ViewModel.Master.General.Notice.NoticeScheduleViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Master.General.Notice
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    NoticeScheduleViewModel model = new NoticeScheduleViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("NTSAUT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>NoticeSchedule - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+
+                        @* ======= First Row - Mandatory Mark ======= *@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @* ======= Second Row - Page Title, Translation ======= *@
+
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-6">
+                                <h5 class="font-weight-bold mt-1">Verify</h5>
+                                <hr />
+                            </div>
+
+                            @*Translation*@
+                            <div class="col-6">
+                                <div class="d-none d-sm-none d-md-none d-lg-block d-xl-block">
+                                    <h5 class="mt-1"><b>Translation : मराठी</b></h5>
+                                    <hr />
+                                </div>
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @* ======= Third Row - Data Entry Page ======= *@
+                        <div class="row read-only">
+                            <div class="col-lg-6">
+
+                                @*Name Of NoticeSchedule*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Name Of Notice Schedule")
+                                    <div>
+                                        @Html.TextBoxFor(m => m.NameOfNoticeSchedule, new { @id = "designation-name", @class = "form-control mandatory-mark text-capitalize", @maxlength = "50", @autocomplete = "off", @placeholder = "Enter Name Of Notice Schedule", required = "required", onkeydown = "Maketranslation()" })
+                                        @Html.ValidationMessageFor(m => m.NameOfNoticeSchedule)
+                                    </div>
+                                </div>
+
+                                @*Alias Name*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Alias Name")
+                                    <div>
+                                        @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control mandatory-mark text-capitalize default-none", @maxlength = "10", @autocomplete = "off", @placeholder = "Enter Alias Name", onkeydown = "Maketranslation()" })
+                                        @Html.ValidationMessageFor(m => m.AliasName)
+                                    </div>
+                                </div>
+
+                                @*Name On Report*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Name On Report")
+                                    <div>
+                                        @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control mandatory-mark text-capitalize default-none", @maxlength = "100", @autocomplete = "off", @placeholder = "Enter Name On Report", required = "required", onkeydown = "Maketranslation()" })
+                                        @Html.ValidationMessageFor(m => m.NameOnReport)
+                                    </div>
+                                </div>
+
+                                @*StartAfterDays*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Start After Days")
+                                    <div>
+                                        @Html.TextBoxFor(m => m.StartAfterDays, new { @class = "form-control mandatory-mark", @autocomplete = "off", @placeholder = "Enter Start After Days", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.StartAfterDays)
+                                    </div>
+                                </div>
+
+                                @*EnableTransferShares*@
+                                <div class="row mt-3 form-group">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Is Every Day")
+                                    </div>
+
+                                    <div class="text-right">
+                                        <label class="switch switch-left-right">
+                                            @Html.CheckBoxFor(m => m.IsEveryDay, new { @class = "form-control switch-input", @id = "IsOpen", required = "required" })
+                                            <span class="slider round">
+                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                @*IntervalBetweenDay*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Interval Between Day")
+                                    <div>
+                                        @Html.TextBoxFor(m => m.IntervalBetweenDay, new { @class = "form-control mandatory-mark", @autocomplete = "off", @placeholder = "Enter Interval Between Day", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.IntervalBetweenDay)
+                                    </div>
+                                </div>
+
+                                @*ScheduleTime*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Schedule Time")
+                                    <div>
+                                        @Html.TextBoxFor(m => m.ScheduleTime, new { @id = "start-time", @class = "form-control mandatory-mark", @Type = "time", @autocomplete = "off", @placeholder = "Enter Schedule Time", required = "required", onkeydown = "Maketranslation()" })
+                                        @Html.ValidationMessageFor(m => m.ScheduleTime)
+                                    </div>
+                                </div>
+
+                                @*Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Note")
+                                    <div>
+                                        @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control mandatory-mark text-capitalize default-none", @autocomplete = "off", @maxlength = "1500", @placeholder = "Enter Note", onkeydown = "Maketranslation()" })
+                                        @Html.ValidationMessageFor(m => m.Note)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 card d-block bg-darkgray text-white read-only">
+                                <div class="d-block d-sm-block d-md-block d-lg-none d-xl-none">
+                                    <h5 class="mt-1"><b>Translation : मराठी</b></h5>
+                                    <hr class="bg-white" />
+                                </div>
+
+                                @*Name Of NoticeSchedule*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("सूचना वेळापत्रक")
+                                    <div>
+                                        @Html.TextBoxFor(m => m.TransNameOfNoticeSchedule, null, new { @id = "trans-designation-name", @class = "form-control mandatory-mark", @autocomplete = "off", @maxlength = "100", @placeholder = "सूचना वेळापत्रक चे नाव प्रविष्ट करा" })
+                                        @Html.ValidationMessageFor(m => m.TransNameOfNoticeSchedule)
+                                    </div>
+                                </div>
+
+                                @*Alias Name*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("उर्फ नाव")
+                                    <div>
+                                        @Html.TextBoxFor(m => m.TransAliasName, null, new { @id = "trans-alias-name", @class = "form-control mandatory-mark default-none", @autocomplete = "off", @maxlength = "100", @placeholder = "उर्फ नाव प्रविष्ट करा" })
+                                        @Html.ValidationMessageFor(m => m.TransAliasName)
+                                    </div>
+                                </div>
+
+                                @*Name On Report*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("अहवालासाठी नाव")
+                                    <div>
+                                        @Html.TextBoxFor(m => m.TransNameOnReport, null, new { @id = "trans-name-on-report", @class = "form-control mandatory-mark default-none", @autocomplete = "off", @maxlength = "100", @placeholder = "अहवालासाठी नाव प्रविष्ट करा" })
+                                        @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                    </div>
+                                </div>
+
+                                @*Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("टिप")
+                                    <div>
+                                        @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control mandatory-mark default-none", @autocomplete = "off", @maxlength = "4000", @placeholder = "टीप प्रविष्ट करा" })
+                                        @Html.ValidationMessageFor(m => m.TransNote)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                    <div class="card">
+                                        <div class="card-header p-3" aria-expanded="false" data-toggle="collapse" href="#collapseOne">
+                                            <a class="card-title">
+                                                <b>Week Notice Schedule </b>
+                                            </a>
+                                        </div>
+                                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                            <div class="row card-body read-only">
+                                                <div class="col-lg-6">
+                                                    @*WeekInterval*@
+                                                    <div class="row ml-2">
+                                                        @Html.CustomLabel("Week Interval")
+                                                        <div class="col-lg-10">
+                                                            @Html.TextBoxFor(m => m.WeekInterval, new { @class = "form-control mandatory-mark", @autocomplete = "off", @placeholder = "Enter Week Interval", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.WeekInterval)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg">
+                                                    @*IsEveryWeek*@
+                                                    <div class="row ml-2 form-group">
+                                                        <div class="col-lg-3">
+                                                            @Html.CustomLabel("Is Every Week")
+                                                        </div>
+
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.IsEveryWeek, new { @class = "form-control switch-input", @id = "IsEveryWeek", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <br />
+                                                <table id="tblWeek" class="table table-bordered">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th>Week Day</th>
+                                                            <th>Schedule Time</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable<WeekScheduleViewModel> WeekViewModelList = (IEnumerable<WeekScheduleViewModel>)HttpContext.Current.Session["WeekSchedule"];
+
+                                                            foreach (WeekScheduleViewModel viewModel in WeekViewModelList)
+                                                            {
+                                                                <tr class="hoverlightblue">
+                                                                    <td>@viewModel.NameOfWeekDay</td>
+                                                                    <td>@viewModel.WeekScheduleTime</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card mt-3">
+                                        <div class="card-header collapsed p-3" aria-expanded="false" data-toggle="collapse" href="#collapseTwo">
+                                            <a class="card-title">
+                                                <b>Month Notice Schedule</b>
+                                            </a>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                            <div class="row card-body read-only">
+                                                <div class="col-lg-6">
+                                                    @*MonthInterval*@
+                                                    <div class="row ml-2">
+                                                        @Html.CustomLabel("Month Interval")
+                                                        <div class="col-lg-10">
+                                                            @Html.TextBoxFor(m => m.MonthInterval, new { @class = "form-control mandatory-mark", @autocomplete = "off", @placeholder = "Enter Month Interval", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.MonthInterval)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg">
+                                                    @*IsEveryMonth*@
+                                                    <div class="row ml-2 form-group">
+                                                        <div class="col-3">
+                                                            @Html.CustomLabel("Is Every Month")
+                                                        </div>
+
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.IsEveryMonth, new { @class = "form-control switch-input", @id = "IsEveryMonth", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <br />
+                                                <table id="tblMonth" class="table table-bordered">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th>Month</th>
+                                                            <th>Month Day</th>
+                                                            <th>Schedule Time</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable<MonthScheduleViewModel> MonthViewModelList = (IEnumerable<MonthScheduleViewModel>)HttpContext.Current.Session["MonthSchedule"];
+
+                                                            foreach (MonthScheduleViewModel viewModel in MonthViewModelList)
+                                                            {
+                                                                <tr class="hoverlightblue">
+                                                                    <td>@viewModel.NameOfMonth</td>
+                                                                    <td>@viewModel.NameOfMonthDay</td>
+                                                                    <td>@viewModel.MonthScheduleTime</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card mt-3">
+                                        <div class="card-header collapsed p-3" aria-expanded="false" data-toggle="collapse" href="#collapseThree">
+                                            <a class="card-title">
+                                                <b>Day Notice Schedule</b>
+                                            </a>
+                                        </div>
+
+                                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                            <div class="card-body read-only">
+                                                <div class="row ml-4">
+                                                    @Html.CustomLabel("Schedule Date")
+                                                    <div class="col-lg-6">
+                                                        @Html.TextBoxFor(m => m.ScheduleDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark", @id = "ScheduleDate", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.ScheduleDate)
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <table id="tblDay" class="table table-bordered">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th>Schedule Time</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable<DayScheduleViewModel> dayViewModelList = (IEnumerable<DayScheduleViewModel>)HttpContext.Current.Session["DaySchedule"];
+
+                                                            foreach (DayScheduleViewModel viewModel in dayViewModelList)
+                                                            {
+                                                                <tr class="hoverlightblue">
+                                                                    <td>@viewModel.DateScheduleTime</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        @*Hiddent Field For PrmKey*@
+                        @Html.HiddenFor(m => m.PrmKey)
+
+                        @*Hiddent Field For EntryDateTime*@
+                        @Html.HiddenFor(m => m.EntryDateTime)
+
+                        @*Hiddent Field For NoticeSchedulePrmKey*@
+                        @Html.HiddenFor(m => m.NoticeSchedulePrmKey)
+
+                        @*Hiddent Field For NoticeScheduleTranslationPrmKey*@
+                        @Html.HiddenFor(m => m.NoticeScheduleTranslationPrmKey)
+
+                        @*Hiddent Field For NoticeScheduleOnDatePrmKey*@
+                        @Html.HiddenFor(m => m.NoticeScheduleOnDatePrmKey)
+
+                        @*Hiddent Field For NoticeScheduleOnDateTimePrmKey*@
+                        @Html.HiddenFor(m => m.NoticeScheduleOnDateTimePrmKey)
+
+                        @*Hiddent Field For NoticeScheduleOnDaysOfMonthPrmKey*@
+                        @Html.HiddenFor(m => m.NoticeScheduleOnDaysOfMonthPrmKey)
+
+                        @*Hiddent Field For NoticeScheduleOnDaysOfMonthTimePrmKey*@
+                        @Html.HiddenFor(m => m.NoticeScheduleOnDaysOfMonthTimePrmKey)
+
+                        @*Hiddent Field For NoticeScheduleOnDaysOfWeekPrmKey*@
+                        @Html.HiddenFor(m => m.NoticeScheduleOnDaysOfWeekPrmKey)
+
+                        @*Hiddent Field For NoticeScheduleOnDaysOfWeekTimePrmKey*@
+                        @Html.HiddenFor(m => m.NoticeScheduleOnDaysOfWeekTimePrmKey)
+
+                        @*Hiddent Field For UserProfilePrmKey*@
+                        @Html.HiddenFor(m => m.UserProfilePrmKey)
+
+                        @*Hiddent Field For UserAction*@
+                        @Html.HiddenFor(m => m.UserAction)
+                    </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Verify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.Master.CenterOccupationViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.PersonInformation.Master
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    CenterOccupationViewModel model = new CenterOccupationViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("COSMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>CenterOccuptionStructure - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+                        @*======= First Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title =======*@
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Modify</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @*======= Third Row - Data Entry Page =======*@
+                        @*Two Columns For Default Application Language (i.e. English) And Other For Regional Language Translation With Equal Length*@
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    @Html.CustomLabel("Occupation Activity")
+                                    <div class="bleft">
+                                        @Html.ListBoxFor(m => m.SelectedOccupationId, new MultiSelectList(model.OccupationDropdownList, "Value", "Text"), new { @class = "form-control js-example-basic-multiple", name = "CenterOccupationId", multiple = "multiple", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.SelectedOccupationId)
+                                    </div>
+                                </div>
+
+                                @*ReasonForModification*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("ReasonForModification")
+                                    @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control text-capitalize", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                </div>
+
+                                @*Hiddent Field For CenterPrmKey*@
+                                @Html.HiddenFor(m => m.CenterPrmKey)
+                            </div>
+                        </div>
+                    </div>
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Modify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $(".js-example-basic-multiple").select2();
+</script>

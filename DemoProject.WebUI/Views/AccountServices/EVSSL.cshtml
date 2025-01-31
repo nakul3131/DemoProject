@@ -1,0 +1,97 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LoginSupportLayout.cshtml";
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Extended Validation Secure Sockets Layer Certificate (EVSSL)</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- First Row (<- Back Arrow and Title) -->
+        <div class="row mt-5">
+            <div class="col-1">
+                <a class="text-center" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Login", "Account")'">
+                    <i class='fas fa-arrow-left btn-lg text-primary'></i>
+                </a>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center text-primary">
+                    <strong>Extended Validation Secure Sockets Layer Certificate (EVSSL)</strong>
+                </h2>
+            </div>
+        </div>
+        <!-- Third Row (Page Description) -->
+        <div class="row mt-5">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/EVSSL1.png" alt="Certificate Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="text-justify line-height-2">
+                    Taking internet security to a new level and to prevent frauds, We enhanced our banking
+                    security by obtaining the Extended Validation Secure Sockets Layer Certificate (here by referred to
+                    as "The EVSSL Certificate" or "The Certificate").
+                </h6>
+            </div>
+        </div>
+        <!-- Fourth Row  -->
+        <div class="row mt-5">
+            <div class="offset-1 col-8">
+                <h6 class="text-justify line-height-2">
+                    The EVSSL Certificate provides clear visual indicators in the form of a green address bar so that
+                    customers can easily identify a genuine website. The green bar clearly verifies that the website
+                    belongs to the organization it claims to be from, In this case, HDFC bank Ltd. As soon as the bar
+                    (URL address bar) turns green, customers can be assured it is the genuine website.
+                </h6>
+            </div>
+            <div class="col-2 text-center">
+                <figure>
+                    <img class="img-fluid mt-2" src="~/Icons/Login/SSLCertificate.png" alt="Certificate Image" />
+                </figure>
+            </div>
+        </div>
+        <!-- Fifth Row  -->
+        <div class="row mt-5">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/UnsafeMark.png" alt="Safe Mark Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="text-justify line-height-2">
+                    Alternatively, if the bar turns red, it means that the web page being accessing might be unsafe, and
+                    customers are advised to stop accessing the web page immediately. For further verification, you also
+                    click on the green address bar to check for the details of the organization (simultaneously, you can
+                    also be on a lookout for the padlock* in the bar and the Norton Secured Seal**).
+                </h6>
+            </div>
+        </div>
+        <!-- Sixth Row  -->
+        <div class="row mt-5">
+            <div class="offset-1 col-8">
+                <h6 class="text-justify line-height-2">
+                    The certificate works on all the major browsers like Internet Explorer 7, Mozilla Firefox 3, Opera 9.5,
+                    Google Chrome and Safari 3.2 and the higher versions of these. In case customers are using &nbsp; an
+                    older browser, they will not get a green color notification in the address bar. even though the website
+                    is EVSSL authenticated. It is highly recommended that they upgrade their browser to a version that is
+                    compatible with EVSSL certificates.
+                </h6>
+            </div>
+            <div class="col-2">
+                <figure>
+                    <img class="img-fluid mt-3" src="~/Icons/Login/UpArrow.png" alt="EVSSL Image" />
+                </figure>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

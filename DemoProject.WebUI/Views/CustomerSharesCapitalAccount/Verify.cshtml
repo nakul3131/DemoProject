@@ -1,0 +1,1109 @@
+﻿@model DemoProject.Services.ViewModel.Account.Customer.SharesCapitalCustomerAccountViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Customer
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+
+@{
+    SharesCapitalCustomerAccountDetailViewModel sharesCapitalCustomerAccountDetailViewModel = new SharesCapitalCustomerAccountDetailViewModel();
+
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("CUCVRF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Customer Shares Capital Account - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, htmlAttributes: new { @id = "form", @autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+                        @*======= First Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title, Translation =======*@
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Verify</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @*======= Third Row - Data Entry Page =======*@
+                        <div class="row">
+                            <div id="verify-view" class="col-12 read-only">
+                                @*MakerRemark*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maker Remark")
+                                    @Html.TextBoxFor(m => m.MakerRemark, new { @id = "name-of-center", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.MakerRemark)
+                                </div>
+
+                                @*BusinessOfficeId*@
+                                <div class="form-group @(sharesCapitalCustomerAccountDetailViewModel.HasBranch ? "" : "d-none")">
+                                    @Html.CustomLabel("Branch")
+                                    @Html.DropDownListFor(m => m.CustomerAccountDetailViewModel.BusinessOfficeId, new SelectList(sharesCapitalCustomerAccountDetailViewModel.AuthorizedBusinessOfficeDropdownList, "Value", "Text", 0), new { @id = "business-office-id", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CustomerAccountDetailViewModel.BusinessOfficeId)
+                                </div>
+
+                                @*GeneralLedgerId*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("General Ledger")
+                                    @Html.DropDownListFor(m => m.CustomerAccountDetailViewModel.GeneralLedgerId, new SelectList(sharesCapitalCustomerAccountDetailViewModel.GeneralLedgerDropdownList, "Value", "Text"), new { @id = "general-ledger-id", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CustomerAccountDetailViewModel.GeneralLedgerId)
+                                </div>
+
+                                @*SchemeId*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Scheme")
+                                    @Html.DropDownListFor(m => m.CustomerAccountDetailViewModel.SchemeId, new SelectList(sharesCapitalCustomerAccountDetailViewModel.SharesCapitalSchemeDropdownList, "Value", "Text"), new { @id = "scheme-id", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CustomerAccountDetailViewModel.SchemeId)
+                                </div>
+
+                                @*MinuteOfMeetingAgenda*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minute Of Meeting Agenda")
+                                    @Html.DropDownListFor(m => m.CustomerSharesCapitalAccountViewModel.MinuteOfMeetingAgendaId, new SelectList(sharesCapitalCustomerAccountDetailViewModel.MinuteOfMeetingAgendaDropdownList, "Value", "Text"), new { @id = "minute-of-meeting-agenda-id", @class = "form-control mandatory-mark", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.CustomerSharesCapitalAccountViewModel.MinuteOfMeetingAgendaId)
+                                </div>
+
+                                @*PersonId*@
+                                <div class="form-group" id="person-name">
+                                    @Html.CustomLabel("Customer Name")
+                                    <span id="person-change-info" class="ml-5 text-primary d-none"> ** You Are Changing Customer Name So Joint / ineeinne Data Has Been Removed.</span>
+                                    @Html.DropDownListFor(m => m.CustomerAccountDetailViewModel.PersonId, new SelectList(sharesCapitalCustomerAccountDetailViewModel.PersonDropdownList, "Value", "Text", 0), "--- Select Person ---", new { @id = "person-id1", @class = "form-control mandatory-mark", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.CustomerAccountDetailViewModel.PersonId)
+                                    <span id="person-id-error" class="error d-none"> Please Select Person Name.</span>
+                                </div>
+
+                                @*CurrencyId*@
+                                <div class="form-group @(sharesCapitalCustomerAccountDetailViewModel.HasMultiCurrency ? "" : "d-none")">
+                                    @Html.CustomLabel("Currency")
+                                    @Html.DropDownListFor(m => m.CustomerAccountDetailViewModel.CurrencyId, new SelectList(sharesCapitalCustomerAccountDetailViewModel.CurrencyDropdownList, "Value", "Text", 0), new { @id = "currency-id", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CustomerAccountDetailViewModel.CurrencyId)
+                                </div>
+
+                                @*AccountOpeningDate*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Account Opening Date")
+                                    @Html.TextBoxFor(m => m.AccountOpeningDate, "{0:yyyy-MM-dd}", new { @id = "account-opening-date", @class = "form-control mandatory-mark deny-future-date", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.AccountOpeningDate)
+                                </div>
+
+                                @*ApplicationNumber*@
+                                <div id="application-number-input" class="form-group">
+                                    @Html.CustomLabel("Application Number")
+                                    @Html.TextBoxFor(m => m.ApplicationNumber, new { @id = "application-number", @class = "form-control real-number mandatory-mark", @placeholder = "Enter Application Number", required = "required", @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.ApplicationNumber)
+                                </div>
+
+                                @*AccountNumber*@
+                                <div id="account-number-input" class="form-group">
+                                    @Html.CustomLabel("Account Number")
+                                    @Html.TextBoxFor(m => m.AccountNumber, new { @id = "account-number", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.AccountNumber)
+                                </div>
+
+                                @*AlternateAccountNumber1*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Alternate Account Number 1")
+                                    @Html.TextBoxFor(m => m.AlternateAccountNumber1, new { @id = "alternate-account-number-1", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.AlternateAccountNumber1)
+                                </div>
+
+                                @*AlternateAccountNumber2*@
+                                <div id="account-number2" class="form-group">
+                                    @Html.CustomLabel("Alternate Account Number 2")
+                                    @Html.TextBoxFor(m => m.AlternateAccountNumber2, new { @id = "alternate-account-number-2", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.AlternateAccountNumber2)
+                                </div>
+
+                                @*AlternateAccountNumber3*@
+                                <div id="account-number3" class="form-group ">
+                                    @Html.CustomLabel("Alternate Account Number 3")
+                                    @Html.TextBoxFor(m => m.AlternateAccountNumber3, new { @id = "alternate-account-number-3", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.AlternateAccountNumber3)
+                                </div>
+
+                                @*MemberNumber*@
+                                <div id="member-number-grp" class="form-group">
+                                    @Html.CustomLabel("Member Number")
+                                    @Html.TextBoxFor(m => m.CustomerSharesCapitalAccountViewModel.MemberNumber, new { @id = "member-number", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CustomerSharesCapitalAccountViewModel.MemberNumber)
+                                </div>
+
+                                @*IsPrivateCustomer*@
+                                <div class="row form-group mt-3">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Is Private Customer")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.IsPrivateCustomer, new { @id = "is-private-customer", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*IsOtherSocietyMember*@
+                                <div class="row form-group mt-4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Is Other Society Member")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.CustomerSharesCapitalAccountViewModel.IsOtherSocietyMember, new { @id = "is-other-society-member", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Note")
+                                    @Html.TextAreaFor(m => m.Note, new { @id = "note-scheme", @class = "form-control deny-multiple-space default-none", @maxlength = 1500 })
+                                    @Html.ValidationMessageFor(m => m.Note)
+                                </div>
+                            </div>
+                        </div>
+
+                        @*======= Fourth Row - Accordians =======*@
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                    @*Accordian 1 - Address Details*@
+                                    <div id="address-details-card" class="card mt-3">
+                                        <div class="card-header p-3" id="collapse-address-details-validations" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-address-details" data-target="#collapse-address-details">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Address Details")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span id="person-address-error" class="error d-none"> Address Details Required Data, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-address-details" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-address-details" data-target="#collapse-address-details">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-address-details" class="collapse" aria-labelledby="heading-address-details" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <table id="tbl-person-address" class="table compact table-striped table-bordered" cellspacing="0" width="100">
+                                                    <thead class="text-center read-only">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check_all" style="margin-left:11px;" /></th>
+                                                            <th class="d-none">AddressTypeID</th>
+                                                            <th>AddressType</th>
+                                                            <th>FlatDoorNo</th>
+                                                            <th>FlatDoorNo</th>
+                                                            <th>NameOfBuilding</th>
+                                                            <th>NameOfBuilding</th>
+                                                            <th>NameOfRoad</th>
+                                                            <th>NameOfRoad</th>
+                                                            <th>NameOfArea</th>
+                                                            <th>NameOfArea</th>
+                                                            <th class="d-none">CityID</th>
+                                                            <th>City</th>
+                                                            <th class="d-none">ResidenceTypeID</th>
+                                                            <th>ResidenceType</th>
+                                                            <th class="d-none">OwnershipTypeId</th>
+                                                            <th>NameOfOwnershipType</th>
+                                                            <th>IsVerified</th>
+                                                            <th>Note</th>
+                                                            <th>TransNote</th>
+                                                            <th class="d-none">ReasonForModification</th>
+                                                            <th class="d-none">PersonAddressPrmKey</th>
+                                                            <th class="d-none">CustomerAccountPrmKey</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center read-only">
+                                                        @{
+                                                            IEnumerable<PersonAddressViewModel> personAddressViewModelList = (IEnumerable<PersonAddressViewModel>)HttpContext.Current.Session["CustomerAccountAddressDetail"];
+
+                                                            foreach (PersonAddressViewModel viewModel in personAddressViewModelList)
+                                                            {
+                                                                <tr>
+                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                    <td class="d-none">@viewModel.AddressTypeId</td>
+                                                                    <td>@viewModel.NameOfAddressType</td>
+                                                                    <td>@viewModel.FlatDoorNo</td>
+                                                                    <td>@viewModel.TransFlatDoorNo</td>
+                                                                    <td>@viewModel.NameOfBuilding</td>
+                                                                    <td>@viewModel.TransNameOfBuilding</td>
+                                                                    <td>@viewModel.NameOfRoad</td>
+                                                                    <td>@viewModel.TransNameOfRoad</td>
+                                                                    <td>@viewModel.NameOfArea</td>
+                                                                    <td>@viewModel.TransNameOfArea</td>
+                                                                    <td class="d-none">@viewModel.CityId</td>
+                                                                    <td>@viewModel.NameOfCenter</td>
+                                                                    <td class="d-none">@viewModel.ResidenceTypeId</td>
+                                                                    <td>@viewModel.NameOfResidenceType</td>
+                                                                    <td class="d-none">@viewModel.OwnershipTypeId</td>
+                                                                    <td>@viewModel.NameOfOwnershipType</td>
+                                                                    <td>@viewModel.IsVerified</td>
+                                                                    <td>@viewModel.Note</td>
+                                                                    <td>@viewModel.TransNote</td>
+                                                                    <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                    <td class="d-none">@viewModel.PersonAddressPrmKey</td>
+                                                                    <td class="d-none">@viewModel.CustomerAccountPrmKey</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 2 - Person Contact Detail*@
+                                    <div id="contact-details-card" class="card mt-3">
+                                        <div class="card-header p-3" id="collapse-contact-details-validations" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-contact-details" data-target="#collapse-contact-details">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Contact Detail")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span id="contact-error" class="error d-none">Person Contact Detail Required Data, Please Add Valid Data.</span>
+
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-contact-details" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-contact-details" data-target="#collapse-contact-details">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-contact-details" class="collapse" aria-labelledby="heading-contact-details" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <table id="tbl-contact" class="table compact  table-striped table-bordered" width="100">
+                                                            <thead class="text-center read-only">
+                                                                <tr>
+                                                                    <th><input type="checkbox" name="check_all" id="selectAll" /></th>
+                                                                    <th class="d-none">ContactTypeId</th>
+                                                                    <th>ContactType</th>
+                                                                    <th>FieldValue</th>
+                                                                    <th>IsVerified</th>
+                                                                    <th>VerificationCode</th>
+                                                                    <th>Note</th>
+                                                                    <th class="d-none">ReasonForModification</th>
+                                                                    <th class="d-none">ContactDetailPrmKey</th>
+                                                                    <th class="d-none">CustomerAccountPrmKey</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="text-center read-only">
+                                                                @{
+                                                                    IEnumerable<PersonContactDetailViewModel> personContactDetailViewModelsList = (IEnumerable<PersonContactDetailViewModel>)HttpContext.Current.Session["CustomerAccountContactDetail"];
+
+                                                                    foreach (PersonContactDetailViewModel viewModel in personContactDetailViewModelsList)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                            <td class="d-none">@viewModel.ContactTypeId</td>
+                                                                            <td>@viewModel.NameOfContactType</td>
+                                                                            <td>@viewModel.FieldValue</td>
+                                                                            <td>@viewModel.IsVerified</td>
+                                                                            <td>@viewModel.VerificationCode</td>
+                                                                            <td>@viewModel.Note</td>
+                                                                            <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                            <td class="d-none">@viewModel.PersonContactDetailPrmKey</td>
+                                                                            <td class="d-none">@viewModel.CustomerAccountPrmKey</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 3 - Customer Account Joint Account Holder*@
+                                    <div id="joint-account-card" class="card mt-3 joint-account">
+                                        <div class="card-header " id="collapse-account-Joint-holder-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-joint-account" data-target="#collapse-joint-account">
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Joint Accounts")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <span id="joint-account-accordion-error" class="error d-none"> This Is Required, Please Add Valid Data.</span>
+                                                    <span id="joint-account-accordion-min-max-error" class="error d-none"> </span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-joint-account" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-joint-account" data-target="#collapse-joint-account">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="collapse-joint-account" class="collapse" aria-labelledby="heading-joint-account" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="card-body">
+                                                            <div class="table-responsive" style="min-height:200px;">
+                                                                <table id="tbl-joint-account" class="table compact  table-striped table-bordered" width="100">
+                                                                    <thead class="text-center read-only">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check-all" id="select-all-joint-account" /></th>
+                                                                            <th class="d-none">PersonId</th>
+                                                                            <th>NameOfPerson</th>
+                                                                            <th class="d-none">JointAccountHolderId</th>
+                                                                            <th>JointAccountHolderType</th>
+                                                                            <th>SequenceNumber</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th>Note</th>
+                                                                            <th class="d-none">ReasonForModification</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center read-only">
+                                                                        @{
+                                                                            IEnumerable<CustomerJointAccountHolderViewModel> customerJointAccountHolderViewModelList = (IEnumerable<CustomerJointAccountHolderViewModel>)HttpContext.Current.Session["CustomerJointAccountHolder"];
+
+                                                                            foreach (CustomerJointAccountHolderViewModel viewModel in customerJointAccountHolderViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.PersonId</td>
+                                                                                    <td>@viewModel.FullName</td>
+                                                                                    <td class="d-none">@viewModel.JointAccountHolderTypeId</td>
+                                                                                    <td>@viewModel.NameOfJointAccountHolderType</td>
+                                                                                    <td>@viewModel.SequenceNumber</td>
+                                                                                    <td>@viewModel.ActivationDate.ToString("yyyy-MM-dd")</td>
+                                                                                    <td>@(viewModel.ExpiryDate == null ? "" : Convert.ToDateTime(viewModel.ExpiryDate).ToString("yyyy-MM-dd"))</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                    <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 4 - Customer Account Nominee*@
+                                    <div id="account-nominee-card" class="card mt-3 account-nominee">
+                                        <div class="card-header " id="collapse-account-Customer-nominee-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-account-nominee" data-target="#collapse-account-nominee">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Nominee Details")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span id="account-nominee-error" class="error d-none">Customer Account Nominee Required Data, Please Add Valid Data. </span>
+
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-account-nominee" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-account-nominee" data-target="#collapse-account-nominee">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-account-nominee" class="collapse" aria-labelledby="heading-account-nominee" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="card-body">
+                                                            <div class="table-responsive" style="min-height:200px;">
+                                                                <table id="tbl-account-nominee" class="table compact  table-striped table-bordered" width="100">
+                                                                    <thead class="text-center read-only">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check-all" /></th>
+                                                                            <th class="d-none">CustomerId</th>
+                                                                            <th>Customer</th>
+                                                                            <th>NominationNumber</th>
+                                                                            <th>NominationDate</th>
+                                                                            <th class="d-none">SequenceNumber</th>
+                                                                            <th>NameOfNominee</th>
+                                                                            <th>TransNameOfNominee</th>
+                                                                            <th class="d-none">PersonInformationNumber</th>
+                                                                            <th>PersonInformationNumber</th>
+                                                                            <th>BirthDate</th>
+                                                                            <th>FullAddressDetails</th>
+                                                                            <th>TransFullAddress</th>
+                                                                            <th>ContactDetails</th>
+                                                                            <th>TransContactDetails</th>
+                                                                            <th class="d-none">RelationId</th>
+                                                                            <th>NameOfRelation</th>
+                                                                            <th>HoldingPercentage</th>
+                                                                            <th>ProportionateAmountForEachNominee</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                            <th>TransNote</th>
+                                                                            <th class="d-none">ReasonForModification</th>@*24*@
+                                                                            <th>GuardianFullName</th>
+                                                                            <th>TransGuardianFullName</th>
+                                                                            <th class="d-none">GuardianNomineePersonInformationNumber</th>
+                                                                            <th>GuardianNomineePersonInformationNumber</th>
+                                                                            <th class="d-none">GuardianTypeId</th>
+                                                                            <th>NameOfGuardianType</th>
+                                                                            <th>GuardianNomineeBirthDate</th>
+                                                                            <th>GuardianNomineeFullAddress</th>
+                                                                            <th>TransGuardianNomineeFullAddress</th>
+                                                                            <th>GuardianNomineeContactDetails</th>
+                                                                            <th>TransGuardianNomineeContactDetails</th>
+                                                                            <th class="d-none">AgeProofSubmissionStatusOfTheMinor</th>
+                                                                            <th>AgeProofSubmissionStatusOfTheMinorText</th>
+                                                                            <th>AppointedDateOfContact</th>
+                                                                            <th>AppointedTimeOfContact</th>
+                                                                            <th>GuardianNomineeNote</th>
+                                                                            <th>TransGuardianNomineeNote</th>
+                                                                            <th class="d-none">ReasonForModification</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody class="text-center read-only">
+                                                                        @{
+                                                                            IEnumerable<CustomerAccountNomineeViewModel> customerAccountNomineeViewModelList = (IEnumerable<CustomerAccountNomineeViewModel>)HttpContext.Current.Session["CustomerAccountNominee"];
+
+                                                                            foreach (CustomerAccountNomineeViewModel viewModel in customerAccountNomineeViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.CustomerId</td>
+                                                                                    <td>@viewModel.NameOfCustomer</td>
+                                                                                    <td>@viewModel.NominationNumber</td>
+                                                                                    <td>@viewModel.NominationDate.ToString("yyyy-MM-dd")</td>
+                                                                                    <td class="d-none">@viewModel.SequenceNumber</td>
+                                                                                    <td>@viewModel.NameOfNominee</td>
+                                                                                    <td>@viewModel.TransNameOfNominee</td>
+                                                                                    <td class="d-none">@viewModel.NomineePersonInformationNumber</td>
+                                                                                    <td>@viewModel.NameOfPersonInformationNumber</td>
+                                                                                    <td>@viewModel.BirthDate.ToString("yyyy-MM-dd")</td>
+                                                                                    <td>@viewModel.FullAddressDetails</td>
+                                                                                    <td>@viewModel.TransFullAddressDetails</td>
+                                                                                    <td>@viewModel.ContactDetails</td>
+                                                                                    <td>@viewModel.TransContactDetails</td>
+                                                                                    <td class="d-none">@viewModel.RelationId</td>
+                                                                                    <td>@viewModel.NameOfRelation</td>
+                                                                                    <td>@viewModel.HoldingPercentage</td>
+                                                                                    <td>@viewModel.ProportionateAmountForEachNominee</td>
+                                                                                    <td>@viewModel.ActivationDate.ToString("yyyy-MM-dd")</td>
+                                                                                    <td>@(viewModel.ExpiryDate == null ? "" : Convert.ToDateTime(viewModel.ExpiryDate).ToString("yyyy-MM-dd"))</td>
+                                                                                    <td class="d-none">@(viewModel.CloseDate == null ? "" : Convert.ToDateTime(viewModel.CloseDate).ToString("yyyy-MM-dd"))</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                    <td>@viewModel.TransNote</td>
+                                                                                    <td class="d-none">@viewModel.ReasonForModification</td>
+
+                                                                                    @if (viewModel.CustomerAccountNomineeGuardianViewModelList.Count() > 0)
+                                                                                    {
+                                                                                        foreach (CustomerAccountNomineeGuardianViewModel viewModel1 in viewModel.CustomerAccountNomineeGuardianViewModelList)
+                                                                                        {
+                                                                                            if (viewModel.NominationNumber == viewModel1.NominationNumber)
+                                                                                            {
+                                                                                                <td>@viewModel1.FullName</td>
+                                                                                                <td>@viewModel1.TransFullName</td>
+                                                                                                <td class="d-none">@viewModel1.PersonInformationNumber</td>
+                                                                                                <td>@viewModel1.NameOfGuardianPersonInformationNumber</td>
+                                                                                                <td class="d-none">@viewModel1.GuardianTypeId</td>
+                                                                                                <td>@viewModel1.NameOfGuardianType</td>
+                                                                                                <td>@viewModel1.BirthDate.ToString("yyyy-MM-dd")</td>
+                                                                                                <td>@viewModel1.FullAddress</td>
+                                                                                                <td>@viewModel1.TransFullAddress</td>
+                                                                                                <td>@viewModel1.ContactDetails</td>
+                                                                                                <td>@viewModel1.TransContactDetails</td>
+                                                                                                <td class="d-none">@viewModel1.AgeProofSubmissionStatusOfTheMinor</td>
+                                                                                                <td>@viewModel1.AgeProofSubmissionStatusOfTheMinorText</td>
+                                                                                                <td>@viewModel1.AppointedDateOfContact.ToString("yyyy-MM-dd")</td>
+                                                                                                <td>@viewModel1.AppointedTimeOfContact</td>
+                                                                                                <td>@viewModel1.Note</td>
+                                                                                                <td>@viewModel1.TransNote</td>
+                                                                                                <td class="d-none">@viewModel1.ReasonForModification</td>
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td class="d-none"></td>
+                                                                                        <td></td>
+                                                                                        <td class="d-none"></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td class="d-none"></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td class="d-none"></td>
+                                                                                    }
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*  EnableTurnOverLimit*@
+                                    <div class="row form-group mt-4 ml-1 read-only">
+                                        <div class="col-10">
+                                            @Html.CustomLabel("Enable Turn Over Limit")
+                                        </div>
+                                        <div class="col-2 read-only ">
+                                            <div class="text-left">
+
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.EnableTurnOverLimit, new { @id = "enable-turn-over-limit", @class = "form-control switch-input" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 5 - Customer Account Turn Over Limit*@
+                                    <div id="turn-over-limit-block" class="card mt-3 turn-over-limit-accordian">
+                                        <div class="card-header" id="collapse-customer-account-turn-over-limit" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-turn-over-limit" data-target="#collapse-turn-over-limit">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Turn Over Limit")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span id="turn-over-limit-error" class="error d-none">Customer Account Turn Over Limit, Please Add Valid Data. </span>
+
+                                                </div>
+                                                <div class="col-2 read-only">
+                                                    <a href="#collapse-turn-over-limit" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-turn-over-limit" data-target="#collapse-turn-over-limit">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="collapse-turn-over-limit" class="collapse" aria-labelledby="heading-turn-over-limit" data-parent="#accordion">
+                                            <div class="card-body ">
+                                                <div class="row">
+                                                    <div class="col-12">
+
+                                                        <div class="card-body read-only">
+                                                            <div class="table-responsive" style="min-height:200px;">
+                                                                <table id="tbl-turn-over-limit" class="table compact  table-striped table-bordered" width="100">
+                                                                    <thead class="text-center read-only">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check-all" /></th>
+                                                                            <th class="d-none">FrequencyId</th>
+                                                                            <th>Frequency</th>
+                                                                            <th class="d-none">TransactionTypeId</th>
+                                                                            <th>Transaction Type</th>
+                                                                            <th>Amount</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th>Note</th>
+                                                                            <th class="d-none">ReasonForModification</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @{
+                                                                            IEnumerable<CustomerAccountTurnOverLimitViewModel> customerAccountTurnOverLimitViewModels = (IEnumerable<CustomerAccountTurnOverLimitViewModel>)HttpContext.Current.Session["CustomerAccountTurnOverLimit"];
+
+                                                                            foreach (CustomerAccountTurnOverLimitViewModel viewModel in customerAccountTurnOverLimitViewModels)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.FrequencyId</td>
+                                                                                    <td>@viewModel.NameOfFrequency</td>
+                                                                                    <td class="d-none">@viewModel.TransactionTypeId</td>
+                                                                                    <td>@viewModel.NameOfTransactionType</td>
+                                                                                    <td>@viewModel.Amount</td>
+                                                                                    <td>@viewModel.ActivationDate.ToString("yyyy-MM-dd")</td>
+                                                                                    <td>@(viewModel.ExpiryDate == null ? "" : Convert.ToDateTime(viewModel.ExpiryDate).ToString("yyyy-MM-dd"))</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                    <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 6 - Customer Account SMS Service Detail*@
+                                    <div id="customer-account-sms-service-card" class="card mt-3 customer-account-sms-service">
+                                        <div class="card-header" id="collapse-customer-account-sms-service-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-customer-account-sms-service" data-target="#collapse-customer-account-sms-service">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("SMS Service Detail")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span id="sms-service-accordion-error" class="error d-none">SMS Service Detail Required Data, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-customer-account-sms-service" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-customer-account-sms-service" data-target="#collapse-customer-account-sms-service">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="collapse-customer-account-sms-service" class="collapse" aria-labelledby="heading-customer-account-sms-service" data-parent="#accordion">
+                                            <div class="card-body read-only">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        @*@* ====  EnableAllService---*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Enable All Service")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.CustomerSharesCapitalAccountViewModel.EnableAllservices, new { @id = "enable-all-service", @class = "form-control switch-input", required = "required" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @* ====  EnableCreditTransaction---*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Enable Credit Transaction")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.CustomerAccountSmsServiceViewModel.EnableCreditTransaction, new { @id = "enable-credit-transaction-sms", @class = "form-control switch-input enable-service", required = "required" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @* ====  EnableDebitTransaction---*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Enable Debit Transaction")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.CustomerAccountSmsServiceViewModel.EnableDebitTransaction, new { @id = "enable-debit-transaction-sms", @class = "form-control switch-input enable-service", required = "required" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @* ====  EnableInsufficientBalance---*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Enable Insufficient Balance")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.CustomerAccountSmsServiceViewModel.EnableInsufficientBalance, new { @id = "enable-insufficient-balance-sms", @class = "form-control switch-input enable-service", required = "required" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @*ActivationDate*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Activation Date")
+                                                            @Html.TextBoxFor(m => m.CustomerAccountSmsServiceViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-sms", @class = "form-control mandatory-mark deny-past-date", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CustomerAccountSmsServiceViewModel.ActivationDate)
+                                                        </div>
+
+                                                        @*ExpiryDate*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Expiry Date")
+                                                            @Html.TextBoxFor(m => m.CustomerAccountSmsServiceViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-sms", @class = "form-control deny-past-date-from-reference-date" })
+                                                            @Html.ValidationMessageFor(m => m.CustomerAccountSmsServiceViewModel.ExpiryDate)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 7 - Customer Account Email Service Detail*@
+                                    <div id="customer-account-email-service-card" class="card mt-3 customer-account-email-service">
+                                        <div class="card-header" id="collapse-customer-account-email-service-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-customer-account-email-service" data-target="#collapse-customer-account-email-service">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Email Service")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span id="email-service-accordion-error" class="error d-none">Email Service Detail Required Data, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-customer-account-email-service" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-customer-account-email-service" data-target="#collapse-customer-account-email-service">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="collapse-customer-account-email-service" class="collapse" aria-labelledby="heading-customer-account-email-service" data-parent="#accordion">
+                                            <div class="card-body read-only">
+                                                <div class="row">
+                                                    <div class="col-12">
+
+                                                        @*@* ====  EnableAllService---*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Enable All Service")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.CustomerSharesCapitalAccountViewModel.EnableAllservices, new { @id = "enable-all-email-service", @class = "form-control switch-input", required = "required" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Enable Credit Transaction")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.CustomerAccountEmailServiceViewModel.EnableCreditTransaction, new { @id = "enable-credit-transaction-email", @class = "form-control switch-input enable-email-service", required = "required" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @* ====  EnableDebitTransaction---*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Enable Debit Transaction")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.CustomerAccountEmailServiceViewModel.EnableDebitTransaction, new { @id = "enable-debit-transaction-email", @class = "form-control switch-input enable-email-service", required = "required" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @* ====  EnableInsufficientBalance---*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Enable Insufficient Balance")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.CustomerAccountEmailServiceViewModel.EnableInsufficientBalance, new { @id = "enable-insufficient-balance-email", @class = "form-control switch-input enable-email-service", required = "required" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @* ====  EnableStatement---*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Enable Statement")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.CustomerAccountEmailServiceViewModel.EnableStatement, new { @id = "enable-statement-email", @class = "form-control switch-input enable-email-service", required = "required" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+
+                                                        @*StatementFrequency Option *@
+                                                        <div class="form-group ">
+                                                            @Html.CustomLabel("Statement Frequency")
+                                                            <div class="row mt-2">
+                                                                <div class="col-12 col-md-4">
+                                                                    <div class="form-check form-check-inline font-weight-bold">
+                                                                        @Html.RadioButtonFor(m => m.CustomerAccountEmailServiceViewModel.StatementFrequency, "DLY", new { @name = "CustomerAccountEmailServiceViewModel.StatementFrequency", @class = "statement-frequency email-service-radio-input" })
+                                                                        <label class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Daily")</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 col-md-4">
+                                                                    <div class="form-check form-check-inline font-weight-bold">
+                                                                        @Html.RadioButtonFor(m => m.CustomerAccountEmailServiceViewModel.StatementFrequency, "WKL", new { @name = "CustomerAccountEmailServiceViewModel.StatementFrequency", @class = "statement-frequency email-service-radio-input" })
+                                                                        <label class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Weekly")</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 col-md-4">
+                                                                    <div class="form-check form-check-inline font-weight-bold">
+                                                                        @Html.RadioButtonFor(m => m.CustomerAccountEmailServiceViewModel.StatementFrequency, "MON", new { @name = "CustomerAccountEmailServiceViewModel.StatementFrequency", @class = "statement-frequency email-service-radio-input" })
+                                                                        <label class="form-check-label pl-2 font-weight-bold">@Html.TextWithRegionalLanguage("Monthly")</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mt-2">
+                                                                <div class="col-12 col-md-4">
+                                                                    <div class="form-check form-check-inline font-weight-bold">
+                                                                        @Html.RadioButtonFor(m => m.CustomerAccountEmailServiceViewModel.StatementFrequency, "QRT", new { @name = "CustomerAccountEmailServiceViewModel.StatementFrequency", @class = "statement-frequency email-service-radio-input" })
+                                                                        <label class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Quarterly")</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 col-md-4">
+                                                                    <div class="form-check form-check-inline font-weight-bold">
+                                                                        @Html.RadioButtonFor(m => m.CustomerAccountEmailServiceViewModel.StatementFrequency, "SAN", new { @name = "CustomerAccountEmailServiceViewModel.StatementFrequency", @class = "statement-frequency email-service-radio-input" })
+                                                                        <label class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Semi Annually")</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 col-md-4">
+                                                                    <div class="form-check form-check-inline font-weight-bold">
+                                                                        @Html.RadioButtonFor(m => m.CustomerAccountEmailServiceViewModel.StatementFrequency, "ANL", new { @name = "CustomerAccountEmailServiceViewModel.StatementFrequency", @class = "statement-frequency email-service-radio-input" })
+                                                                        <label class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Annually")</label>
+                                                                    </div>
+                                                                </div>
+                                                                @Html.ValidationMessageFor(m => m.CustomerAccountEmailServiceViewModel.StatementFrequency)
+                                                            </div>
+                                                        </div>
+
+                                                        @*ActivationDate*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Activation Date")
+                                                            @Html.TextBoxFor(m => m.CustomerAccountEmailServiceViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-email", @class = "form-control mandatory-mark deny-past-date", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CustomerAccountEmailServiceViewModel.ActivationDate)
+                                                        </div>
+
+                                                        @*ExpiryDate*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Expiry Date")
+                                                            @Html.TextBoxFor(m => m.CustomerAccountEmailServiceViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-email", @class = "form-control deny-past-date-from-reference-date" })
+                                                            @Html.ValidationMessageFor(m => m.CustomerAccountEmailServiceViewModel.ExpiryDate)
+                                                        </div>
+
+                                                        @*CloseDate*@
+                                                        <div class="form-group d-none">
+                                                            @Html.CustomLabel("Close Date")
+                                                            @Html.TextBoxFor(m => m.CustomerAccountEmailServiceViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-email", @class = "form-control deny-past-date-from-reference-date" })
+                                                            @Html.ValidationMessageFor(m => m.CustomerAccountEmailServiceViewModel.CloseDate)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 8 - Notice Schedule *@
+                                    <div id="notice-schedule-card" class="card mt-3 ">
+                                        <div id="notice-schedule-validation" class="card-header" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-notice-schedule" data-target="#collapse-notice-schedule">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Notice Schedule")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <span id="notice-data-table-error" class="error d-none">Notice Schedule Data Table Required Data, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-notice-schedule" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-notice-schedule" data-target="#collapse-notice-schedule">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="collapse-notice-schedule" class="collapse" aria-labelledby="heading-notice-schedule" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        @*Notice Schedule Parameter Data Table*@
+                                                        <div class="card-body">
+                                                            <table id="tbl-notice-schedule" class="table compact table-striped table-bordered " width="100">
+                                                                <thead class="text-center read-only">
+                                                                    <tr>
+                                                                        <th><input type="checkbox" name="select-all" /></th>
+                                                                        <th class="d-none">NoticeTypeId</th>
+                                                                        <th>NameOfNoticeType</th>
+                                                                        <th class="d-none">CommunicationMediaId</th>
+                                                                        <th>NameOfCommunicationMedia</th>
+                                                                        <th class="d-none">ScheduleId</th>
+                                                                        <th>Schedule</th>
+                                                                        <th>Note</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="text-center read-only">
+                                                                    @{
+                                                                        IEnumerable<CustomerAccountNoticeScheduleViewModel> customerAccountNoticeScheduleViewModelList = (IEnumerable<CustomerAccountNoticeScheduleViewModel>)HttpContext.Current.Session["CustomerAccountNoticeSchedule"];
+
+                                                                        if (customerAccountNoticeScheduleViewModelList != null)
+                                                                        {
+                                                                            foreach (CustomerAccountNoticeScheduleViewModel viewModel in customerAccountNoticeScheduleViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.NoticeTypeId</td>
+                                                                                    <td>@viewModel.NameOfNoticeType</td>
+                                                                                    <td class="d-none">@viewModel.CommunicationMediaId</td>
+                                                                                    <td>@viewModel.NameOfCommunicationMedia</td>
+                                                                                    <td class="d-none">@viewModel.ScheduleId</td>
+                                                                                    <td>@viewModel.NameOfSchedule</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*NameOfUser*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Name Of User")
+                            @Html.TextBoxFor(m => m.NameOfUser, new { @class = "form-control" })
+                        </div>
+
+                        @*EntryDateTime*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Entry Date Time")
+                            @Html.TextBoxFor(m => m.EntryDateTime, new { @class = "form-control" })
+                        </div>
+
+                        @*Hiddent Field For CustomerAccountPrmKey*@
+                        @Html.HiddenFor(m => m.CustomerAccountPrmKey)
+
+                        @*Hiddent Field For CustomerAccountModificationPrmKey*@
+                        @Html.HiddenFor(m => m.CustomerAccountModificationPrmKey)
+
+                        @*Hiddent Field For CustomerAccountDetailPrmKey*@
+                        @Html.HiddenFor(m => m.CustomerAccountDetailViewModel.CustomerAccountDetailPrmKey)
+
+                        @*Hiddent Field For CustomerJointAccountHolderPrmKey*@
+                        @Html.HiddenFor(m => m.CustomerJointAccountHolderViewModel.CustomerJointAccountHolderPrmKey)
+
+                        @*Hiddent Field For CustomerAccountNomineePrmKey*@
+                        @Html.HiddenFor(m => m.CustomerAccountNomineeViewModel.CustomerAccountNomineePrmKey)
+
+                        @*Hiddent Field For CustomerAccountNomineeTranslationPrmKey*@
+                        @Html.HiddenFor(m => m.CustomerAccountNomineeViewModel.CustomerAccountNomineeTranslationPrmKey)
+
+                        @*Hiddent Field For CustomerAccountNomineeGuardianPrmKey*@
+                        @Html.HiddenFor(m => m.CustomerAccountNomineeViewModel.CustomerAccountNomineeGuardianViewModel.CustomerAccountNomineeGuardianPrmKey)
+
+                        @*Hiddent Field For CustomerAccountNomineeGuardianTranslationPrmKey*@
+                        @Html.HiddenFor(m => m.CustomerAccountNomineeViewModel.CustomerAccountNomineeGuardianViewModel.CustomerAccountNomineeGuardianTranslationPrmKey)
+
+                        @*Hiddent Field For CustomerAccountTurnOverLimitPrmKey*@
+                        @Html.HiddenFor(m => m.CustomerAccountTurnOverLimitViewModel.CustomerAccountTurnOverLimitPrmKey)
+
+                        @*Hiddent Field For CustomerSharesCapitalAccountPrmKey*@
+                        @Html.HiddenFor(m => m.CustomerSharesCapitalAccountViewModel.CustomerSharesCapitalAccountPrmKey)
+
+                        @*Hiddent Field For CustomerAccountSmsPrmkey*@
+                        @Html.HiddenFor(m => m.CustomerAccountSmsServiceViewModel.CustomerAccountSmsServicePrmKey)
+
+                        @*Hiddent Field For CutomerAccountEmailPrmKety *@
+                        @Html.HiddenFor(m => m.CustomerAccountEmailServiceViewModel.CustomerAccountEmailServicePrmKey)
+
+                    </div>
+
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Verify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    var customerAccountDataTable = "@Url.Action("CustomerAccountSaveDataTables", "CustomerSharesCapitalAccount")";
+</script>
+<script src="~/Scripts/Custom/CustomerSharesCapitalAccount.js"></script>

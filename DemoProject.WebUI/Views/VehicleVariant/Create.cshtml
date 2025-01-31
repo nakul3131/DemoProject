@@ -1,0 +1,256 @@
+﻿@model  DemoProject.Services.ViewModel.Account.Master.VehicleVariantViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Master
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Master
+
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    StateDetailViewModel stateDetailViewModel = new StateDetailViewModel();
+
+    VehicleVariantViewModel model = new VehicleVariantViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("VHLCRT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Vehicle Variant - Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Create</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*Name Of Variant*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of Variant")
+                                            @Html.TextBoxFor(m => m.NameOfVariant, null, new { @id = "name-of-variant", @class = "form-control mandatory-mark", @placeholder = "Enter Name Of Vehicle Make", required = "required", @maxlength = 100, onkeyup = "ToTextCapitalize()", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfVariant)
+                                        </div>
+
+                                        @*TransNameOfVehicleMake*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOfVariantInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNameOfVariant, new { @id = "trans-name-of-variant", @class = "form-control default-none deny-multiple-space", @placeholder = model.NameOfVariantPlaceHolderInRegionalLanguage, @maxlength = 100, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfVariant)
+                                        </div>
+
+                                        @*VehicleModel*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Vehicle Model")
+                                            @Html.DropDownListFor(m => m.VehicleModelId, new SelectList(personDetailViewModel.VehicleModelDropdownList, "Value", "Text", 0), "--- Select Vehicle Model--- ", new { @id = "vehicle-body-id", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.VehicleModelId)
+                                        </div>
+
+                                        @*AliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control default-none", @placeholder = "Enter Alias Name", @maxlength = 10, onkeyup = "ToTextCapitalize()", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.AliasNameInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransAliasName, new { @id = "trans-alias-name", @class = "form-control default-none deny-multiple-space", @placeholder = model.AliasNamePlaceHolderInRegionalLanguage, @maxlength = 10 })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Name On Report ")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control default-none", @placeholder = "Enter Name On Report", @maxlength = 100, onkeyup = "ToTextCapitalize()", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOnReportInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNameOnReport, new { @id = "trans-name-on-report", @class = "form-control default-none deny-multiple-space", @placeholder = model.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = 100, })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*@*EngineType*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Engine Type")
+                                            <div>
+                                                @Html.ValidationMessageFor(m => m.EngineType)
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-12">
+                                                    <div class="form-check col-2 form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.EngineType, "PTR", new { @id = "engine-type-ptr", @name = "EngineType", @class = "engine-type", required = "required" })
+                                                        <label for="engine-type-ptr" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Petrol")</label>
+                                                    </div>
+                                                    <div class="form-check col-2 form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.EngineType, "DSL", new { @id = "engine-type-dsl", @name = "EngineType", @class = "engine-type", required = "required" })
+                                                        <label for="engine-type-dsl" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Diesel")</label>
+                                                    </div>
+                                                    <div class="form-check col-2 form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.EngineType, "HYB", new { @id = "engine-type-hyb", @name = "EngineType", @class = "engine-type", required = "required" })
+                                                        <label for="engine-type-hyb" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Hybrid")</label>
+                                                    </div>
+                                                    <div class="form-check col-2 form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.EngineType, "ELC", new { @id = "engine-type-elc", @name = "EngineType", @class = "engine-type", required = "required" })
+                                                        <label for="engine-type-elc" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Electric")</label>
+                                                    </div>
+                                                    <div class="form-check col-2 form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.EngineType, "GAS", new { @id = "engine-type-gas", @name = "EngineType", @class = "engine-type", required = "required" })
+                                                        <label for="engine-type-gas" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Gas")</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EngineCapacity*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Engine Capacity")
+                                            @Html.TextBoxFor(m => m.EngineCapacity, new { @id = "engine-capacity", @class = "form-control mandatory-mark", @placeholder = "Enter Engine Capacity", @type = "number", @min = 50, @max = 29999 })
+                                            @Html.ValidationMessageFor(m => m.EngineCapacity)
+                                        </div>
+
+                                        @*@*Transmission*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Transmission")
+                                            <div>
+                                                @Html.ValidationMessageFor(m => m.Transmission)
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-12 col-md-4 col-xl-4">
+                                                    <div class="form-check col-4 form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.Transmission, "MNL", new { @id = "transmission-mnl", @name = "Transmission", @class = "transmission-type loan-against-transmission-radio-input", required = "required" })
+                                                        <label for="transmission-mnl" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Manual")</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-4 col-xl-4">
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.Transmission, "AUT", new { @id = "transmission-aut", @name = "Transmission", @class = "transmission-type loan-against-transmission-radio-input", required = "required" })
+                                                        <label for="transmission-aut" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Automatic")</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-4 col-xl-4">
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.Transmission, "SMA", new { @id = "transmission-sma", @name = "Transmission", @class = "transmission-type loan-against-transmission-radio-input", required = "required" })
+                                                        <label for="transmission-sma" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Semi-Automatic")</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-12 col-md-4 col-xl-4">
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.Transmission, "CNV", new { @id = "transmission-cnv", @name = "Transmission", @class = "transmission-type loan-against-transmission-radio-input", required = "required" })
+                                                        <label for="transmission-cnv" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Continuously Variable")</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-4 col-xl-4">
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.Transmission, "DUC", new { @id = "transmission-duc", @name = "Transmission", @class = "transmission-type loan-against-transmission-radio-input", required = "required" })
+                                                        <label for="transmission-duc" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Dual Clutch")</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-4 col-xl-4">
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.Transmission, "TIP", new { @id = "transmission-tip", @name = "Transmission", @class = "transmission-type loan-against-transmission-radio-input", required = "required" })
+                                                        <label for="transmission-tip" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Tiptronic")</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*Activation Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark activation-date deny-past-date deny-next-financial-year-date set-current-date department-input", @Type = "date", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*Expiry Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control expiry-date allow-future-date-upto-50y department-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control deny-multiple-space default-none", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(personDetailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none deny-multiple-space", @placeholder = personDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1500, })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                    </div>
+                                </div>
+                                @*Hiddent Field For PrmKey*@
+                                @Html.HiddenFor(m => m.PrmKey)
+
+                                @Html.HiddenFor(m => m.VehicleModelPrmKey)
+                                
+                                @Html.HiddenFor(m => m.VehicleVariantId)
+
+                                @Html.HiddenFor(m => m.UserProfilePrmKey)
+                                
+                                @Html.HiddenFor(m => m.VehicleVariantPrmKey)
+
+                                @Html.HiddenFor(m => m.VehicleVariantModificationPrmKey)
+
+                                @Html.HiddenFor(m => m.VehicleVariantTranslationPrmKey)
+
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Create", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

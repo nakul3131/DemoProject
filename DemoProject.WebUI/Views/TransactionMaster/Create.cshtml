@@ -1,0 +1,665 @@
+﻿@model DemoProject.Services.ViewModel.Account.Transaction.TransactionViewModel
+@using DemoProject.Services.ViewModel.Account.Transaction
+@using DemoProject.Services.ViewModel.Account.Layout
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    TransactionViewModel model = new TransactionViewModel();
+    TransactionMasterViewModel transactionMasterViewModel = new TransactionMasterViewModel();
+    TransactionCustomerAccountViewModel transactionCustomerAccountViewModel = new TransactionCustomerAccountViewModel();
+    TransactionGeneralLedgerViewModel transactionGeneralLedgerViewModel = new TransactionGeneralLedgerViewModel();
+    TransactionCashDenominationViewModel transactionCashDenominationViewModel = new TransactionCashDenominationViewModel();
+    SharesTransactionViewModel sharesTransactionViewModel = new SharesTransactionViewModel();
+    SchemeOtherFundSubscriptionViewModel schemeOtherFundSubscriptionViewModel = new SchemeOtherFundSubscriptionViewModel();
+    TransactionDetailViewModel transactionDetailViewModel = new TransactionDetailViewModel();
+    SharesCessationTransactionViewModel sharesCessationTransactionViewModel = new SharesCessationTransactionViewModel();
+    //SharesCapitalTransactionViewModel sharesCapitalTransactionViewModel = new SharesCapitalTransactionViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("TRNCRT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Transaction-Create</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Create", "TransactionMaster", FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", @autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+
+                        @*======= First Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title, Translation =======*@
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Create</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @*======= Third Row - Data Entry Page =======*@
+                        <div class="row" id="container">
+                            <div class="col">
+                                @*TransactionDate*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Transaction Date")
+                                    @Html.TextBoxFor(m => m.TransactionDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark back-denied-date", @type = "date" })
+                                    @Html.ValidationMessageFor(m => m.TransactionDate)
+                                </div>
+                            </div>
+                            @*CustomerName*@
+                            <div class="col">
+                                <div class="form-group">
+                                    @Html.CustomLabel("Customer Name")
+                                    @Html.TextBox("person", null, new { @type = "search", @id = "person-id", @class = "form-control mandatory-mark deny-multiple-space text-capitalize", @placeholder = "Search for...Customer Number,Name,DateOfBirth", required = "required" })
+                                    @Html.TextBoxFor(m => m.PersonId, new { @type = "search", @id = "person-id1", @class = "form-control mandatory-mark text-capitalize d-none", @placeholder = "Search for...Customer Number,Name,DateOfBirth", required = "required" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="byhand">
+                            <div class="col-6">
+                                @*TransactionTypeId*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Transaction Type")
+                                    @Html.DropDownListFor(m => m.TransactionTypeId, new SelectList(transactionDetailViewModel.TransactionTypeDropdownList, "Value", "Text", 0), "--- Select Transaction Type ---", new { @id = "transaction-type-id", @class = "form-control mandatory-mark", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.TransactionTypeId)
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                @*ByHand*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("By Hand")
+                                    @Html.TextBoxFor(m => m.ByHand, new { @id = "by-hand", @class = "form-control text-capitalize mandatory-mark alpha", @placeholder = "Enter By Hand", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.ByHand)
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                @*Purpose*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Purpose")
+                                    @Html.TextBoxFor(m => m.Purpose, new { @id = "purpose", @class = "form-control text-capitalize alpha mandatory-mark", @placeholder = "Enter Purpose", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Purpose)
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row amountcard" style="display:none;">
+                            <div class="col-12">
+                                <div class="card ">
+                                    <div class="card-header">
+                                        <div class="row justify-content-center justify-content-md-center align-items-center mr-5 " id="deff-amount" style="margin-left:-2%">
+                                            <h4 class="mr-5 text-danger font-weight-bold " id="diff-amount"> Difference Amount &nbsp;:</h4><i class="fa fa-inr text-white fa-2x mr-2 text-danger" aria-hidden="true" style="font-size:25px;margin-left:-2%;margin-top:-3px;"></i>
+                                            <span class="text-white text-danger font-weight-bold " id="total-amount" data-id="0" style="font-size:25px;margin-top:-2px;">0.00</span><br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row model11">
+                            <div class="col-6 credit-block">
+                                <div class="row mt-3">
+                                    <div class="col-12 ">
+                                        @*Credit*@
+                                        <div id="credit-card" class="card">
+                                            <div class="card-header bg-success">
+                                                <div class="row">
+                                                    <div class="col-sm-4 col-md-2">
+                                                        <a class="card-link">
+                                                            <div class="row">
+                                                                <b class="ml-2 mt-2 text-white">@Html.TextWithRegionalLanguage("Credit")</b>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 ">
+                                                        <span class=" text-white ml-2 credit-amount font-weight-bold" style="font-size:16px;"></span>
+                                                    </div>
+                                                    <div class="col-sm-4 col-md-4">
+                                                        <div class="row justify-content-center justify-content-md-end align-items-center mr-1">
+                                                            <i class="fa fa-inr text-white fa-2x mr-2 " aria-hidden="true" style="font-size:23px;"></i>
+                                                            <span class="text-white mb-1" id="credit-amount" data-id="0" style="font-size:23px;">0.00</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="collapse-credit" class="collapse show" aria-labelledby="heading-credit" data-parent="#accordion">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="import float-right" id="import-credit" style="z-index:100!important;margin-top:-3% !important"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="modal fade model1" id="credit-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom ui-front modal-lg" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header bg-success text-white">
+                                                                            <h4 class="modal-title text-center" id="credit-text">Credit</h4>
+                                                                            <button type="button" id="close-credit" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+
+                                                                        <div class="card-body" id="modal-body">
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Customer Name")
+                                                                                @Html.TextBox("person", null, new { @type = "search", @id = "credit-person", @class = "form-control mandatory-mark deny-multiple-space text-capitalize", @placeholder = "Search for...Customer Number,Name,DateOfBirth", required = "required" })
+                                                                                @Html.TextBoxFor(m => m.TransactionCustomerAccountViewModel.PersonId, new { @type = "search", @id = "credit-person1", @class = "form-control mandatory-mark text-capitalize d-none", @placeholder = "Search for...Customer Number,Name,DateOfBirth", required = "required" })
+                                                                            </div>
+
+                                                                            @*BranchName*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Branch Name")
+                                                                                @Html.DropDownListFor(m => m.TransactionCustomerAccountViewModel.BusinessOfficeId, new SelectList(transactionDetailViewModel.BusinessOfficeDropdownList, "Value", "Text"), "--- Please Select Business Office ---", new { @id = "credit-business-office-id", @class = "form-control mandatory-mark", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.TransactionGeneralLedgerViewModel.BusinessOfficeId)
+                                                                            </div>
+
+                                                                            @*GeneralLedgerId*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("General Ledger")
+                                                                                @Html.DropDownListFor(m => m.TransactionCustomerAccountViewModel.TransactionGeneralLedgerViewModel.GeneralLedgerId, Enumerable.Empty<SelectListItem>(), "--- Please Select General Ledger ---", new { @id = "credit-general-ledger-id", @class = "form-control mandatory-mark", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.TransactionGeneralLedgerViewModel.GeneralLedgerId)
+                                                                            </div>
+                                                                            @*AccountNumber*@
+                                                                            <div class="form-group">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-8">
+                                                                                        @Html.CustomLabel("Account Number")
+                                                                                    </div>
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="amount-badge-text"></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                @Html.DropDownListFor(m => m.TransactionCustomerAccountViewModel.TransactionCustomerAccountId, Enumerable.Empty<SelectListItem>(), "Please Select", new { @id = "credit-customer-account-id", @class = "form-control mandatory-mark customer-account" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.TransactionCustomerAccountId)
+                                                                            </div>
+                                                                            @*SharesFaceValue*@
+                                                                        <div class="shares-capital-credit">
+                                                                            @*Admission Fees For Membership*@
+                                                                            <div id="member-admission-fee-input" class="form-group d-none">
+                                                                                @Html.CustomLabel("Admission Fees For Membership")
+                                                                                @Html.TextBoxFor(m => transactionDetailViewModel.AdmissionFeesForMembershipAmount, new { @id = "member-admission-fee", @class = "form-control mandatory-mark modal-input read-only", @placeholder = "Enter admissionfees for membership Amount", required = "required", @type = "number", @min = 1, @max = 999999999999999 })
+                                                                                @Html.ValidationMessageFor(m => transactionDetailViewModel.AdmissionFeesForMembershipAmount)
+                                                                            </div>
+
+                                                                            <div class="form-group read-only">
+                                                                                @Html.CustomLabel("Shares Face Value")
+                                                                                @Html.TextBoxFor(m => m.TransactionCustomerAccountViewModel.SharesTransactionViewModel.SharesFaceValue, new { @id = "credit-shares-face-value", @class = "form-control readonly mandatory-mark  ", @placeholder = "Enter Transaction Amount", @type = "number", required = "required", @min = "1", @max = "9999999999999999" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.SharesTransactionViewModel.SharesFaceValue)
+                                                                            </div>
+
+                                                                            @*NumberOfShares*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Number Of Shares")
+                                                                                @Html.TextBoxFor(m => m.TransactionCustomerAccountViewModel.SharesTransactionViewModel.NumberOfShares, new { @Value = transactionDetailViewModel.NumberOfShares, @id = "credit-number-of-shares", @class = "form-control readonly mandatory-mark ", @placeholder = "Enter Number Of Shares", @type = "number", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.SharesTransactionViewModel.NumberOfShares)
+                                                                            </div>
+                                                                        </div>
+                                                                            <div id="fund-amount"></div>
+                                                                            @*TransactionAmount*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Transaction Amount")
+                                                                                @Html.TextBoxFor(m => m.TransactionCustomerAccountViewModel.Amount, new { @id = "credit-transaction-amount", @class = "form-control real-number mandatory-mark", @min = transactionDetailViewModel.CreditMinimumTransactionAmountLimit, @max = transactionDetailViewModel.CreditMaximumTransactionAmountLimit, @placeholder = "Enter Transaction Amount", @type = "number" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.Amount)
+                                                                            </div>
+
+                                                                        <div id="shares-certificate-input">
+                                                                            @*StartCertificationNumber*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Start Certification Number")
+                                                                                @Html.TextBoxFor(m => m.TransactionCustomerAccountViewModel.SharesTransactionViewModel.StartSharesCertificateNumber, new { @id = "credit-start-certificate-number", @class = "form-control alpha-numeric real-number mandatory-mark", @placeholder = "Enter Start Certificate Number", required = "required", @type = "number", @min = "1" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.SharesTransactionViewModel.StartSharesCertificateNumber)
+                                                                            </div>
+
+                                                                            @*EndCertificationNumber*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("End Certification Number")
+                                                                                @Html.TextBoxFor(m => m.TransactionCustomerAccountViewModel.SharesTransactionViewModel.EndSharesCertificateNumber, new { @id = "credit-end-certificate-number", @class = "form-control alpha-numeric real-number mandatory-mark", @placeholder = "Enter End Certificate Number", required = "required", @type = "number", @max = "999999999" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.SharesTransactionViewModel.EndSharesCertificateNumber)
+                                                                            </div>
+                                                                        </div>
+
+                                                                            @*Note*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Note")
+                                                                                @Html.TextBoxFor(m => m.Note, new { @id = "credit-note", @class = "form-control title-case deny-multiple-space ", @placeholder = "Enter Note", @maxlength = "1200" })
+                                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                                            </div>
+                                                                            @*Narration*@
+                                                                            <div class="form-group read-only">
+                                                                                @Html.CustomLabel("Narration")
+                                                                                @Html.TextBoxFor(m => m.Narration, new { @id = "credit-narration", @class = "form-control mandatory-mark deny-multiple-space", @placeholder = "Enter Narration", @maxlength = "1200", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.Narration)
+                                                                            </div>
+
+                                                                            <div class="form-group">
+                                                                                <label id="shares-holding-limit" data-sharesLimit="@sharesTransactionViewModel.MaximumIndividualSharesHoldingLimit" hidden></label>
+                                                                            </div>
+
+                                                                            <div class="form-group">
+                                                                                <label id="previous-certificate-number" data-previousCertificateNumber="@sharesTransactionViewModel.PreviousCertificateNumber" hidden></label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" id="btn-add-credit-modal" class="btn btn-success ">Add</button>
+                                                                            <button type="button" id="btn-update-credit-modal" class="btn btn-primary ">Update</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="table-responsive" style="min-height:200px;">
+                                                                    <table id="tbl-credit" min="2" max="4" class="table compact  table-striped table-bordered" width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th class="100"><input type="checkbox" name="check-all" id="select-all-credit" class="disabled" /></th>
+                                                                                <th class="d-none">PersonId</th>
+                                                                                <th>CustomerName</th>
+                                                                                <th class="d-none">businessOfficeId</th>
+                                                                                <th>BranchName</th>
+                                                                                <th class="d-none">GeneralLedgerId</th>
+                                                                                <th>NameOfGeneralLedger</th>
+                                                                                <th class="d-none">AccountNumberId</th>
+                                                                                <th>AccountNumber</th>
+                                                                                <th>PrincipleAmount</th>
+                                                                                <th>InterestAmount</th>
+                                                                                <th>FineInterestAmount</th>
+                                                                                <th>ProvisionAmount</th>
+                                                                                <th>AdmissionFeesForMembership</th>
+                                                                                <th>Other</th>
+                                                                                <th>Total</th>
+                                                                                <th class="d-none">SharesFaceValue</th>
+                                                                                <th class="d-none">NumberOfShares</th>
+                                                                                <th class="d-none">TransactionAmount</th>
+                                                                                <th class="d-none">GeneralLedgerPrmKey</th>
+                                                                                <th class="d-none">StartCertificationNumber</th>
+                                                                                <th class="d-none">EndCertificationNumber</th>
+                                                                                <th class="d-none">Note</th>
+                                                                                <th class="">Narration</th>
+                                                                                <th class="">Gl1PrmKey</th>
+                                                                                <th class="">Gl2PrmKey</th>
+                                                                                <th class="">Gl3PrmKey</th>
+                                                                                <th class="">Gl4PrmKey</th>
+                                                                                <th class="">Gl5PrmKey</th>
+                                                                                <th class="">NameOfGL1</th>
+                                                                                <th class="">NameOfGL2</th>
+                                                                                <th class="">NameOfGL3</th>
+                                                                                <th class="">NameOfGL4</th>
+                                                                                <th class="d-none">NameOfGL5</th>
+
+                                                                            </tr>
+                                                                        </thead>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Debit*@
+                            <div class="col-6 debit-block">
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        @*Debit*@
+                                        <div id="debit-card" class="card">
+                                            <div class="card-header bg-success">
+                                                <div class="row">
+                                                    <div class="col-sm-4 col-md-2">
+                                                        <a class="card-link">
+                                                            <div class="row">
+                                                                <b class="ml-2 mt-2 text-white">@Html.TextWithRegionalLanguage("Debit")</b>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12 ">
+                                                        <span class=" text-white ml-2 debit-amount font-weight-bold" style="font-size:16px;"></span>
+                                                    </div>
+
+                                                    <div class="col-sm-4 col-md-4">
+                                                        <div class="row justify-content-center justify-content-md-end align-items-center mr-1">
+                                                            <i class="fa fa-inr text-white fa-2x mr-2 " aria-hidden="true" style="font-size:23px;"></i>
+                                                            <span class="text-white mb-1" id="debit-amount" data-id="0" style="font-size:23px;">0.00</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="collapse-debit" class="collapse show" aria-labelledby="heading-debit" data-parent="#accordion">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="import float-right" id="import-debit" style="z-index:100!important;margin-top:-3% !important"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="modal fade debit-modal model1" id="debit-modal" tabindex="-1" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header bg-danger text-white">
+                                                                            <h4 class="modal-title text-center" id="debit-text">Debit</h4>
+                                                                            <button type="button" id="close-debit" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="card-body">
+
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Customer Name")
+                                                                                @Html.TextBox("person", null, new { @type = "search", @id = "debit-person", @class = "form-control mandatory-mark deny-multiple-space text-capitalize", @placeholder = "Search for...Customer Number,Name,DateOfBirth", required = "required" })
+                                                                                @Html.TextBoxFor(m => m.TransactionCustomerAccountViewModel.PersonId, new { @type = "search", @id = "debit-person1", @class = "form-control mandatory-mark text-capitalize d-none", @placeholder = "Search for...Customer Number,Name,DateOfBirth", required = "required" })
+                                                                            </div>
+
+                                                                            @*BranchName*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Branch Name")
+                                                                                @Html.DropDownListFor(m => m.TransactionCustomerAccountViewModel.BusinessOfficeId, new SelectList(transactionDetailViewModel.BusinessOfficeDropdownList, "Value", "Text"), "--- Please Select Business Office ---", new { @id = "debit-business-office-id", @class = "form-control mandatory-mark", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.TransactionGeneralLedgerViewModel.BusinessOfficeId)
+                                                                            </div>
+
+                                                                            @*GeneralLedgerId*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("General Ledger")
+                                                                                @Html.DropDownListFor(m => m.TransactionCustomerAccountViewModel.TransactionGeneralLedgerViewModel.GeneralLedgerId, Enumerable.Empty<SelectListItem>(), "--- Please Select General Ledger ---", new { @id = "debit-general-ledger-id", @class = "form-control mandatory-mark", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.TransactionGeneralLedgerViewModel.GeneralLedgerId)
+                                                                            </div>
+                                                                            @*AccountNumber*@
+                                                                            <div class="form-group">
+                                                                                <div class="amount-badge-text"></div>
+                                                                                @Html.CustomLabel("Account Number")
+                                                                                @Html.DropDownListFor(m => m.TransactionCustomerAccountViewModel.TransactionCustomerAccountId, Enumerable.Empty<SelectListItem>(), "Please Select", new { @id = "debit-customer-account-id", @class = "form-control mandatory-mark customer-account" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.TransactionCustomerAccountId)
+                                                                            </div>
+
+                                                                            <div class="shares-capital-debit">
+                                                                                @*MinuteOfMeetingAgenda*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Minute Of Meeting Agenda")
+                                                                                    @Html.DropDownListFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.MinuteOfMeetingAgendaId, new SelectList(sharesCessationTransactionViewModel.MinuteOfMeetingAgendaDropdownList, "Value", "Text"), new { @id = "minute-of-meeting-agenda-id", @class = "form-control mandatory-mark", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.MinuteOfMeetingAgendaId)
+                                                                                </div>
+
+                                                                                @*CessionReason*@
+                                                                                <div class="form-group" id="Shares-Cession-Reason">
+                                                                                    @Html.CustomLabel("Cession Reason")
+                                                                                    <div class="row">
+                                                                                        <div class="col-12">
+                                                                                            <div class="mt-1 d-flex justify-content-between">
+                                                                                                <div class="form-check form-check-inline">
+                                                                                                    @Html.RadioButtonFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.CessionReason, "RSG", new { id = "cession-reason-rsg", @class = "cession-reason modal-input-radio" })
+                                                                                                    <label for="cession-reason-rsg" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Resigned")</label>
+                                                                                                </div>
+                                                                                                <div class="form-check form-check-inline checked">
+                                                                                                    @Html.RadioButtonFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.CessionReason, "DOM", new { id = "cession-reason-dom", @class = "cession-reason modal-input-radio" })
+                                                                                                    <label for="cession-reason-dom" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Death Of Member")</label>
+                                                                                                </div>
+                                                                                                <div class="form-check form-check-inline">
+                                                                                                    @Html.RadioButtonFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.CessionReason, "INS", new { id = "cession-reason-ins", @class = "cession-reason modal-input-radio" })
+                                                                                                    <label for="cession-reason-ins" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Insolvent")</label>
+                                                                                                </div>
+                                                                                                <div class="form-check form-check-inline">
+                                                                                                    @Html.RadioButtonFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.CessionReason, "EXP", new { id = "cession-reason-exp", @class = "cession-reason modal-input-radio" })
+                                                                                                    <label for="cession-reason-exp" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Expulsion")</label>
+                                                                                                </div>
+                                                                                                <div class="form-check form-check-inline CessionReason-oth d-none">
+                                                                                                    @Html.RadioButtonFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.CessionReason, "OTH", new { id = "cession-reason-oth", @class = "cession-reason modal-input-radio" })
+                                                                                                    <label for="cession-reason-oth" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Other")</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            @Html.ValidationMessageFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.CessionReason)
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                @*SharesFaceValue*@
+                                                                                <div class="form-group read-only">
+                                                                                    @Html.CustomLabel("Shares Face Value")
+                                                                                    @Html.TextBoxFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.SharesFaceValue, new { @id = "debit-shares-face-value", @class = "form-control mandatory-mark", @placeholder = "Enter Shares Face Value", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.SharesFaceValue)
+                                                                                </div>
+                                                                                @*NumberOfSharesCessation*@
+                                                                                <div class="form-group debit-number-of-shares read-only">
+                                                                                    @Html.CustomLabel("Number Of Shares Withdrawal")
+                                                                                    @Html.TextBoxFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.NumberOfSharesCessation, new { @id = "debit-number-of-shares", @class = "form-control real-number mandatory-mark", @placeholder = "Enter Number Of Shares Cessation", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.NumberOfSharesCessation)
+                                                                                </div>
+                                                                                @*CeasedSharesCertificateNumbers*@
+                                                                                <div class="form-group read-only">
+                                                                                    @Html.CustomLabel("Ceased Shares Certificate Numbers")
+                                                                                    @Html.TextAreaFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.CeasedSharesCertificateNumbers, new { @id = "ceased-shares-certificate-numbers", @class = "form-control mandatory-mark", @placeholder = "Enter Ceased Shares Certificate Numbers", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => transactionGeneralLedgerViewModel.SharesCessationTransactionViewModel.CeasedSharesCertificateNumbers)
+                                                                                </div>
+                                                                            </div>
+                                                                            @*TransactionAmount*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Transaction Amount")
+                                                                                @Html.TextBoxFor(m => m.TransactionCustomerAccountViewModel.Amount, new { @id = "debit-transaction-amount", @class = "form-control alpha-numeric real-number mandatory-mark", @placeholder = "Enter Transaction Amount", required = "required", @type = "number", @min = transactionCustomerAccountViewModel.DebitMinimumTransactionAmountLimit, @max = transactionCustomerAccountViewModel.DebitMaximumTransactionAmountLimit })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCustomerAccountViewModel.Amount)
+                                                                            </div>
+                                                                            @*IsCloseAccount*@
+                                                                            <div class="row form-group mt-4 is-close-account d-none">
+                                                                                <div class="col-10">
+                                                                                    @Html.CustomLabel("Is Close Account")
+                                                                                </div>
+                                                                                <div class="col-2">
+                                                                                    <div class="text-right">
+                                                                                        <label class="switch switch-left-right">
+                                                                                            @Html.CheckBoxFor(m => m.IsCloseAccount, new { @id = "is-close-account", @class = "form-control switch-input" })
+                                                                                            <span class="slider round">
+                                                                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                                            </span>
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div id='debit-fd'></div>
+                                                                            @*Note*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Note")
+                                                                                @Html.TextBoxFor(m => m.Note, new { @id = "debit-note", @class = "form-control title-case deny-multiple-space", @placeholder = "Enter Note", required = "required", @maxlength = "1200" })
+                                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                                            </div>
+                                                                            @*Narration*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Narration")
+                                                                                @Html.TextBoxFor(m => m.Narration, new { @id = "debit-narration", @class = "form-control mandatory-mark ", @placeholder = "Enter Narration", @maxlength = "500", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.Narration)
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" id="btn-add-debit-modal" class="btn btn-success ">Add</button>
+                                                                            <button type="button" id="btn-update-debit-modal" class="btn btn-primary ">Update</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="table-responsive" style="min-height:200px;">
+                                                                    <table id="tbl-debit" class="table compact table-striped table-bordered" width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th class="100"><input type="checkbox" name="check-all" id="select-all-debit" class="disabled" /></th>
+                                                                                <th class="d-none">PersonId</th>
+                                                                                <th>CustomerName</th>
+                                                                                <th class="d-none">businessOfficeId</th>
+                                                                                <th>BranchName</th>
+                                                                                <th class="d-none">GeneralLedgerId</th>
+                                                                                <th>NameOfGeneralLedger</th>
+                                                                                <th class="d-none">AccountNumberId</th>
+                                                                                <th>AccountNumber</th>
+                                                                                <th>TransactionAmount</th>
+                                                                                <th>MinuteOfMeetingAgendaId</th>
+                                                                                <th>MinuteOfmeetingAgendaText</th>
+                                                                                <th>CessionReason</th>
+                                                                                <th>debitSharesFacevalue</th>
+                                                                                <th>debitNumberofShares</th>
+                                                                                <th>CeasedSharesCertificateNumbers</th>
+                                                                                <th>Note</th>
+                                                                                <th>Narration</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*Cash Denomination*@
+                        <div id="denomination-block" class="row cash-denomination">
+                            <div class="col-12">
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        @*Cash Denomination*@
+                                        <div id="cash-denomination-card" class="card mt-3">
+                                            <div class="card-header bg-success">
+                                                <div class="row">
+                                                    <div class="col-sm-4 col-md-3 mt-2">
+                                                        <b class="ml-2 mt-2 text-white">@Html.TextWithRegionalLanguage("Cash Denomination")</b>
+                                                    </div>
+                                                    <div class="col-lg-5 col-md-4 col-sm-4 col-xs-12 ">
+                                                        <span class=" text-white ml-2 denomination-amount font-weight-bold" style="font-size:18px;"></span>
+                                                    </div>
+                                                    <div class="col-sm-4 col-md-4">
+                                                        <div class="row justify-content-center justify-content-md-end align-items-center mr-1">
+                                                            <i class="fa fa-inr text-white fa-2x mr-2 " aria-hidden="true" style="font-size:23px;"></i>
+                                                            <span class="text-white  mb-1" id="denomination-amount" data-id="0" style="font-size:23px;">0.00</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="collapse-denomination" class="collapse show" aria-labelledby="heading-denomination" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="modal fade" id="denomination-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title text-center" id="denomination-text">Add</h4>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="card-body">
+                                                                            @*DenominationId*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Denomination")
+                                                                                @Html.DropDownListFor(m => m.TransactionCashDenominationViewModel.DenominationId, new SelectList(transactionDetailViewModel.DenominationDropdownList, "Value", "Text", 0), "Please Select", new { @id = "denomination-id", @class = "form-control mandatory-mark" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCashDenominationViewModel.DenominationId)
+                                                                            </div>
+
+                                                                            @*Pieces*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Pieces")
+                                                                                @Html.TextBoxFor(m => m.TransactionCashDenominationViewModel.Pieces, new { @id = "pieces-cash-denomination", @class = "form-control mandatory-mark", @placeholder = "Enter Pieces", required = "required", @type = "number" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCashDenominationViewModel.Pieces)
+                                                                            </div>
+
+                                                                            @*Note*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Note")
+                                                                                @Html.TextBoxFor(m => m.TransactionCashDenominationViewModel.Note, new { @id = "note-cash-denomination", @class = "form-control", @placeholder = "Enter Note" })
+                                                                                @Html.ValidationMessageFor(m => m.TransactionCashDenominationViewModel.Note)
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" id="btn-add-denomination-modal " class="btn btn-success  ">Add</button>
+                                                                            <button type="button" id="btn-update-denomination-modal" class="btn btn-primary ">Update</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="table-responsive" style="min-height:200px;">
+                                                                    <table id="tbl-denomination" class="table compact  table-striped table-bordered" width="100">
+                                                                        <thead class="text-center ">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="check-all" id="denomination-select-all" class="float-left mb-1" /></th>
+                                                                                <th class="d-none">DenominationId</th>
+                                                                                <th>Denomination</th>
+                                                                                <th>Pieces</th>
+                                                                                <th>Totalamount</th>
+                                                                                <th>Note</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Create", "Exit", "Cancel", "None")
+
+
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Alert Box Modal -->
+    <div class="modal fade" id="myModal"> </div>
+</body>
+</html>
+<script>
+    var SharesFaceValue = @Html.Raw(Json.Encode(sharesTransactionViewModel.NumberOfShares));
+    var UserPastDaysPermissionForTransaction = @Html.Raw(Json.Encode(model.UserPastDaysPermissionForTransaction));
+    var GetGetAccountNumberUrl = "@Url.Action("GetPersonAutoCompleteList", "TransactionChildAction")";
+    var GetGetAccountNumberUrl2 = "@Url.Action("AutoCompleteByHand", "TransactionMaster")";
+    var GetSchemeId = "@Url.Action("GetSchemeId", "TransactionParameter")";
+    var saveDataTableUrl = "@Url.Action("SaveDataTables", "TransactionMaster")";
+</script>
+<script src="~/Scripts/Custom/datatable.js"></script>
+<script src="~/Scripts/Custom/TransactionDatatableCalculation.js"></script>
+<script src="~/Scripts/Custom/TransactionNew.js"></script>

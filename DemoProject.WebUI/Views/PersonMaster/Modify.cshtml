@@ -1,0 +1,1712 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonMasterViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PRSMOD");
+
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Master - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+
+                        @*======= First Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title =======*@
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Modify</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @{
+                            <h5 class="mt-4 text-left font-weight-bold">
+                                @Model.FullName
+                            </h5>
+                        }
+
+
+                        @*Person Information Number*@
+                        <div class="form-group @(ViewBag.PersonInformationParameter.EnableAutoGeneratePersonInformationNumber ? "d-none": "" )" disabled>
+                            @Html.CustomLabel("Person Information Number")
+                            @Html.TextBoxFor(m => m.PersonInformationNumber, new { @id = "person-information-number", @class = "form-control title-case mandatory-mark", @placeholder = "Enter Person Information Number", @type = "number", required = "required" })
+                            @Html.ValidationMessageFor(m => m.PersonInformationNumber)
+                            <span id="person-information-number-error" class="error d-none">Person Information Number is already exist. </span>
+                        </div>
+
+                        @*PrefixId*@
+                        <div class="form-group mt-4">
+                            @Html.CustomLabel("Prefix")
+                            @Html.DropDownListFor(m => m.PersonPrefixViewModel.PrefixId, new SelectList(personDetailViewModel.PrefixDropdownList, "Value", "Text", 0), "--- Select Prefix ---", new { @id = "prefix", @class = "form-control mandatory-mark", required = "required" })
+                            @Html.ValidationMessageFor(m => m.PersonPrefixViewModel.PrefixId)
+                        </div>
+
+                        @*FirstName*@
+                        <div class="form-group">
+                            @Html.CustomLabel("First Name")
+                            @Html.TextBoxFor(m => m.FirstName, new { @id = "first-name", @class = "form-control mandatory-mark title-case alpha-with-single-space", @placeholder = "Enter First Name", @minlength = 2, @maxlength = 50, onkeydown = "Maketranslation()", required = "required" })
+                            @Html.ValidationMessageFor(m => m.FirstName)
+                        </div>
+
+                        @*TransFirstName*@
+                        <div class="form-group">
+                            @Html.CustomLabel(personDetailViewModel.FirstNameInRegionalLanguage)
+                            @Html.TextBoxFor(m => m.TransFirstName, null, new { @id = "trans-first-name", @class = "form-control deny-multiple-space mandatory-mark", @placeholder = personDetailViewModel.FirstNamePlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 50, required = "required" })
+                            @Html.ValidationMessageFor(m => m.TransFirstName)
+                        </div>
+
+                        @*MiddleName*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Middle Name")
+                            @Html.TextBoxFor(m => m.MiddleName, new { @id = "middle-name", @class = "form-control mandatory-mark title-case alpha-with-single-space", @placeholder = "Enter Middle Name", @minlength = 2, @maxlength = 50, onkeydown = "Maketranslation()", required = "required" })
+                            @Html.ValidationMessageFor(m => m.MiddleName)
+                        </div>
+
+                        @*TransMiddleName*@
+                        <div class="form-group">
+                            @Html.CustomLabel(personDetailViewModel.MiddleNameInRegionalLanguage)
+                            @Html.TextBoxFor(m => m.TransMiddleName, null, new { @id = "trans-middle-name", @class = "form-control deny-multiple-space mandatory-mark", @placeholder = personDetailViewModel.MiddleNamePlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 50, required = "required" })
+                            @Html.ValidationMessageFor(m => m.TransMiddleName)
+                        </div>
+
+                        @*LastName*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Last Name")
+                            @Html.TextBoxFor(m => m.LastName, new { @id = "last-name", @class = "form-control mandatory-mark title-case alpha-with-single-space", @placeholder = "Enter Last Name", @minlength = 2, @maxlength = 50, onkeydown = "Maketranslation()", required = "required" })
+                            @Html.ValidationMessageFor(m => m.LastName)
+                        </div>
+
+                        @*TransLastName*@
+                        <div class="form-group">
+                            @Html.CustomLabel(personDetailViewModel.LastNameInRegionalLanguage)
+                            @Html.TextBoxFor(m => m.TransLastName, null, new { @id = "trans-last-name", @class = "form-control deny-multiple-space trans mandatory-mark", @placeholder = personDetailViewModel.LastNamePlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 50, required = "required" })
+                            @Html.ValidationMessageFor(m => m.TransLastName)
+                        </div>
+
+                        @*DateOfBirth*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Date Of Birth")
+                            @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { id = "birth-date", @class = "form-control mandatory-mark deny-future-date allow-past-date-upto-150y", @Type = "date", required = "required" })
+                            @Html.ValidationMessageFor(m => m.DateOfBirth)
+                        </div>
+
+                        @*DateOfBirthOnDocument*@
+                        <div class="form-group checked">
+                            @Html.CustomLabel("Date Of Birth On Document")
+                            @Html.TextBoxFor(m => m.DateOfBirthOnDocument, "{0:yyyy-MM-dd}", new { id = "document-birth-date", @class = "form-control mandatory-mark", @Type = "date", required = "required" })
+                            <span id="document-birth-date-error" class="text-c-orenge d-none"><i class="fas fa-exclamation-triangle">&nbsp;&nbsp;Selected Date Of Birth On Your Document Appears To Be Significantly Different From Your Original Birthdate, Please Confirm If This Is Correct.</i></span>
+                            @Html.ValidationMessageFor(m => m.DateOfBirthOnDocument)
+                        </div>
+
+                        @*MotherName*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Mother Name")
+                            @Html.TextBoxFor(m => m.MotherName, new { @id = "mother-name", @class = "form-control mandatory-mark title-case alpha-with-single-space", @placeholder = "Enter Mother Name", @minlength = 2, @maxlength = 50, onkeydown = "Maketranslation()", required = "required" })
+                            @Html.ValidationMessageFor(m => m.MotherName)
+                        </div>
+
+                        @*TransMotherName*@
+                        <div class="form-group">
+                            @Html.CustomLabel(personDetailViewModel.MotherNameInRegionalLanguage)
+                            @Html.TextBoxFor(m => m.TransMotherName, null, new { @id = "trans-mother-name", @class = "form-control deny-multiple-space trans mandatory-mark", @placeholder = personDetailViewModel.MotherNamePlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 50, required = "required" })
+                            @Html.ValidationMessageFor(m => m.TransMotherName)
+                        </div>
+
+                        @*MothersMaidenName*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Mothers Maiden Name")
+                            @Html.TextBoxFor(m => m.MothersMaidenName, new { @id = "mothers-maiden-name", @class = "form-control title-case mandatory-mark alpha", @placeholder = "Enter Mothers Maiden Name", @minlength = 2, @maxlength = 50, onkeydown = "Maketranslation()", required = "required" })
+                            @Html.ValidationMessageFor(m => m.MothersMaidenName)
+                        </div>
+
+                        @*TransMothersMaidenName*@
+                        <div class="form-group">
+                            @Html.CustomLabel(personDetailViewModel.MothersMaidenNameInRegionalLanguage)
+                            @Html.TextBoxFor(m => m.TransMothersMaidenName, null, new { @id = "trans-mothers-maiden-name", @class = "form-control deny-multiple-space mandatory-mark", @placeholder = personDetailViewModel.MothersMaidenNamePlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 50, required = "required" })
+                            @Html.ValidationMessageFor(m => m.TransMothersMaidenName)
+                        </div>
+
+                        @*ActivationDate*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Activation Date")
+                            @Html.TextBoxFor(m => m.PersonPrefixViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-person-prefix", @class = "form-control activation-date mandatory-mark deny-next-financial-year-date deny-past-date", @type = "date", required = "required" })
+                            @Html.ValidationMessageFor(m => m.PersonPrefixViewModel.ActivationDate)
+                        </div>
+
+                        @*Note*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Note")
+                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control title-case deny-multiple-space default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeydown = "Maketranslation()" })
+                            @Html.ValidationMessageFor(m => m.Note)
+                        </div>
+
+                        @*TransNote*@
+                        <div class="form-group">
+                            @Html.CustomLabel(personDetailViewModel.NoteInRegionalLanguage)
+                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control deny-multiple-space default-none", @placeholder = personDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1300, })
+                            @Html.ValidationMessageFor(m => m.TransNote)
+                        </div>
+                        @* ======= Third Row - Data Entry Page ======= *@
+
+                        @*======= Fourth Row - Accordians =======*@
+                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+
+                            @*Accordian 1 - Address Details*@
+                            <div id="heading-address-details" class="card mt-3">
+                                <div class="card-header p-3" id="collapse-address-details-validations" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-address-details" data-target="#collapse-address-details">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <a class="card-title" href="#">
+                                                <b>@Html.TextWithRegionalLanguage("Address Details")</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <span id="address-details-accordion-error" class="error accordion-title-error d-none">This Is Required, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-address-details" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-address-details" data-target="#collapse-address-details">
+                                                <i class="fa fa-angle-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-address-details" class="collapse" aria-labelledby="heading-address-details" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="modal fade" id="person-address-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title text-center">Add</h4>
+                                                                <button type="button" class="close-person-address-modal" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                @*AddressTypePrmKey*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Address Type")
+                                                                    @Html.DropDownListFor(m => m.PersonAddressViewModel.AddressTypeId, new SelectList(personDetailViewModel.AddressTypeDropdownList, "Value", "Text", 0), "--- Select Address Type ---", new { @id = "address-type-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.AddressTypeId)
+                                                                    <span id="address-type-id-error" class="error modal-input-error d-none">Please Select Valid Address Type. </span>
+                                                                </div>
+
+                                                                @*FlatDoorNo*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Flat Door No")
+                                                                    @Html.TextBoxFor(m => m.PersonAddressViewModel.FlatDoorNo, new { @id = "flat-door-no", @class = "form-control mandatory-mark title-case alpha-numeric modal-input", @placeholder = "Enter Flat Door No", @minlength = 3, @maxlength = 50, onkeydown = "Maketranslation()", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.FlatDoorNo)
+                                                                    <span id="flat-door-no-error" class="error modal-input-error d-none">Please Enter Valid Flat Door No. </span>
+                                                                </div>
+
+                                                                @*TransFlatDoorNo*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel(personDetailViewModel.FlatDoorNoInRegionalLanguage)
+                                                                    @Html.TextBoxFor(m => m.PersonAddressViewModel.TransFlatDoorNo, null, new { @id = "trans-flat-door-no", @class = "form-control deny-multiple-space mandatory-mark modal-input", @placeholder = personDetailViewModel.FlatDoorNoPlaceHolderInRegionalLanguage, @minlength = 3, @maxlength = 50, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.TransFlatDoorNo)
+                                                                    <span id="trans-flat-door-no-error" class="error modal-input-error d-none">Please Enter Valid Flat Door No. </span>
+                                                                </div>
+
+                                                                @*NameOfBuilding*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Name Of Building")
+                                                                    @Html.TextBoxFor(m => m.PersonAddressViewModel.NameOfBuilding, new { @id = "building-name", @class = "form-control mandatory-mark title-case alpha-numeric modal-input", @placeholder = "Enter Name Of Building", @minlength = 3, @maxlength = 100, onkeydown = "Maketranslation()", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.NameOfBuilding)
+                                                                    <span id="building-name-error" class="error modal-input-error d-none">Please Enter Valid Name Of Building. </span>
+                                                                </div>
+
+                                                                @*TransNameOfBuilding*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel(personDetailViewModel.NameOfBuildingInRegionalLanguage)
+                                                                    @Html.TextBoxFor(m => m.PersonAddressViewModel.TransNameOfBuilding, new { @id = "trans-building-name", @class = "form-control deny-multiple-space mandatory-mark modal-input", @placeholder = personDetailViewModel.NameOfBuildingPlaceHolderInRegionalLanguage, @minlength = 3, @maxlength = 100, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.TransNameOfBuilding)
+                                                                    <span id="trans-building-name-error" class="error modal-input-error d-none">Please Enter Valid Name Of Building. </span>
+                                                                </div>
+
+                                                                @*NameOfRoad*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Name Of Road")
+                                                                    @Html.TextBoxFor(m => m.PersonAddressViewModel.NameOfRoad, new { @id = "road-name", @class = "form-control mandatory-mark title-case alpha-numeric modal-input", @placeholder = "Enter Name Of Road", @minlength = 3, @maxlength = 100, onkeydown = "Maketranslation()", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.NameOfRoad)
+                                                                    <span id="road-name-error" class="error modal-input-error d-none">Please Enter Valid Name Of Road. </span>
+                                                                </div>
+
+                                                                @*TransNameOfRoad*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel(personDetailViewModel.NameOfRoadInRegionalLanguage)
+                                                                    @Html.TextBoxFor(m => m.PersonAddressViewModel.TransNameOfRoad, new { @id = "trans-road-name", @class = "form-control deny-multiple-space mandatory-mark modal-input", @placeholder = personDetailViewModel.NameOfRoadPlaceHolderInRegionalLanguage, @minlength = 3, @maxlength = 100, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.TransNameOfRoad)
+                                                                    <span id="trans-road-name-error" class="error modal-input-error d-none">Please Enter Valid Name Of Road. </span>
+                                                                </div>
+
+                                                                @*NameOfArea*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Name Of Area")
+                                                                    @Html.TextBoxFor(m => m.PersonAddressViewModel.NameOfArea, new { @id = "area-name", @class = "form-control mandatory-mark title-case alpha-numeric modal-input", @placeholder = "Enter Name Of Area", @minlength = 3, @maxlength = 100, onkeydown = "Maketranslation()", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.NameOfArea)
+                                                                    <span id="area-name-error" class="error modal-input-error d-none">Please Enter Valid Name Of Area. </span>
+                                                                </div>
+
+                                                                @*TransNameOfArea*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel(personDetailViewModel.NameOfAreaInRegionalLanguage)
+                                                                    @Html.TextBoxFor(m => m.PersonAddressViewModel.TransNameOfArea, new { @id = "trans-area-name", @class = "form-control deny-multiple-space mandatory-mark modal-input", @placeholder = personDetailViewModel.NameOfAreaPlaceHolderInRegionalLanguage, @minlength = 3, @maxlength = 100, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.TransNameOfArea)
+                                                                    <span id="trans-area-name-error" class="error modal-input-error d-none">Please Enter Valid Name Of Area. </span>
+                                                                </div>
+
+                                                                @*City*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("City")
+                                                                    @Html.DropDownListFor(m => m.PersonAddressViewModel.CityId, new SelectList(personDetailViewModel.CityDropdownList, "Value", "Text", 0), "--- Select City ---", new { @id = "city-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.CityId)
+                                                                    <span id="city-id-error" class="error modal-input-error d-none">Please Select Valid City. </span>
+                                                                </div>
+
+                                                                @*ResidenceType*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Residence Type")
+                                                                    @Html.DropDownListFor(m => m.PersonAddressViewModel.ResidenceTypeId, new SelectList(personDetailViewModel.ResidenceTypeDropdownList, "Value", "Text", 0), "--- Select Residence Type ---", new { @id = "residence-type-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.ResidenceTypeId)
+                                                                    <span id="residence-type-id-error" class="error modal-input-error d-none">Please Select Valid Residence Type. </span>
+                                                                </div>
+
+                                                                @*ResidenceOwnership*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Ownership Type")
+                                                                    @Html.DropDownListFor(m => m.PersonAddressViewModel.OwnershipTypeId, new SelectList(personDetailViewModel.OwnershipTypeDropdownList, "Value", "Text", 0), " --- Select Ownership Type ---", new { @id = "ownership-type-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.OwnershipTypeId)
+                                                                    <span id="ownership-type-id-error" class="error modal-input-error d-none">Please Select Valid Ownership Type.</span>
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.PersonAddressViewModel.Note, new { @id = "note-address", @class = "form-control modal-input title-case deny-multiple-space default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeydown = "Maketranslation()" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.Note)
+                                                                </div>
+
+                                                                @*TransNote*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel(personDetailViewModel.NoteInRegionalLanguage)
+                                                                    @Html.TextAreaFor(m => m.PersonAddressViewModel.TransNote, new { @id = "trans-note-address", @class = "form-control modal-input deny-multiple-space default-none", @placeholder = personDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1300 })
+                                                                    @Html.ValidationMessageFor(m => m.PersonAddressViewModel.TransNote)
+                                                                </div>
+
+                                                                @*ReasonForModification*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Reason For Modification")
+                                                                    @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-address", @class = "form-control default-none title-case modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300 })
+                                                                    @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" id="btn-add-person-address-modal" class="btn btn-success ">Add</button>
+                                                                <button type="button" id="btn-update-person-address-modal" class="btn btn-primary">Update</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card-body">
+
+                                                    <table id="tbl-person-address" class="table compact table-striped table-bordered" cellspacing="0" width="100">
+                                                        <thead class="text-center">
+                                                            <tr>
+                                                                <th><input type="checkbox" name="check_all" id="select-all-person-address" style="margin-left:11px;" /></th>
+                                                                <th class="d-none">AddressTypeID</th>
+                                                                <th>AddressType</th>
+                                                                <th>FlatDoorNo</th>
+                                                                <th>TransFlatDoorNo</th>
+                                                                <th>NameOfBuilding</th>
+                                                                <th>TransNameOfBuilding</th>
+                                                                <th>NameOfRoad</th>
+                                                                <th>TransNameOfRoad</th>
+                                                                <th>NameOfArea</th>
+                                                                <th>TransNameOfArea</th>
+                                                                <th class="d-none">CityID</th>
+                                                                <th>City</th>
+                                                                <th class="d-none">ResidenceTypeID</th>
+                                                                <th>ResidenceType</th>
+                                                                <th class="d-none">OwnershipTypeId</th>
+                                                                <th>OwnershipType</th>
+                                                                <th>Note</th>
+                                                                <th>TransNote</th>
+                                                                <th>ReasonForModification</th>
+                                                                <th class="d-none">personAddressPrmKey</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="text-center">
+                                                            @{
+                                                                IEnumerable<PersonAddressViewModel> personAddressViewModelList = (IEnumerable<PersonAddressViewModel>)HttpContext.Current.Session["Address"];
+
+                                                                foreach (PersonAddressViewModel viewModel in personAddressViewModelList)
+                                                                {
+                                                                    <tr>
+                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                        <td class="d-none">@viewModel.AddressTypeId</td>
+                                                                        <td>@viewModel.NameOfAddressType</td>
+                                                                        <td>@viewModel.FlatDoorNo</td>
+                                                                        <td>@viewModel.TransFlatDoorNo</td>
+                                                                        <td>@viewModel.NameOfBuilding</td>
+                                                                        <td>@viewModel.TransNameOfBuilding</td>
+                                                                        <td>@viewModel.NameOfRoad</td>
+                                                                        <td>@viewModel.TransNameOfRoad</td>
+                                                                        <td>@viewModel.NameOfArea</td>
+                                                                        <td>@viewModel.TransNameOfArea</td>
+                                                                        <td class="d-none">@viewModel.CityId</td>
+                                                                        <td>@viewModel.NameOfCenter</td>
+                                                                        <td class="d-none">@viewModel.ResidenceTypeId</td>
+                                                                        <td>@viewModel.NameOfResidenceType</td>
+                                                                        <td class="d-none">@viewModel.OwnershipTypeId</td>
+                                                                        <td>@viewModel.NameOfOwnershipType</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.TransNote</td>
+                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                        <td class="d-none">@viewModel.PersonAddressPrmKey</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            @*Accordian 2 - Person Additional Details*@
+                            <div id="heading-person-additional-details" class="card mt-3">
+                                <div class="card-header" id="person-additional-details-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-person-additional-details" data-target="#collapse-person-additional-details">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <a class="card-title" href="#">
+                                                <b>@Html.TextWithRegionalLanguage("Additional Details")</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <span id="person-additional-details-accordion-error" class="error accordion-title-error d-none">This Is Required, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-person-additional-details" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-person-additional-details" data-target="#collapse-person-additional-details">
+                                                <i class="fa fa-angle-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-person-additional-details" class="collapse" aria-labelledby="heading-person-additional-details" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                @*PersonCategory*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Person Category")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.PersonCategoryId, new SelectList(personDetailViewModel.PersonCategoryDropdownList, "Value", "Text", 0), "--- Select Person Category ---", new { @id = "person-category-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.PersonCategoryId)
+                                                </div>
+
+                                                @*Gender*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Gender")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.GenderId, new SelectList(personDetailViewModel.GenderDropdownList, "Value", "Text"), "--- Select Gender ---", new { @id = "gender-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.GenderId)
+                                                </div>
+
+                                                @*BirthCity*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Birth City")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.BirthCityId, new SelectList(personDetailViewModel.VillageTownCityDropdownList, "Value", "Text", 0), "--- Select Birth City ---", new { @id = "birth-city-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.BirthCityId)
+                                                </div>
+
+                                                @*MaritalStatus*@
+                                                <div id="marital-status-input" class="form-group">
+                                                    @Html.CustomLabel("Marital Status")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.MaritalStatusId, new SelectList(personDetailViewModel.MaritalStatusDropdownList, "Value", "Text"), "--- Select Marital Status ---", new { @id = "marital-status-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.MaritalStatusId)
+                                                </div>
+
+                                                @*LifePartnerName*@
+                                                <div id="married-status-input" class="d-none">
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Life Partner Name")
+                                                        @Html.TextBoxFor(m => m.PersonAdditionalDetailViewModel.LifePartnerName, new { @id = "life-partner-name", @class = "form-control alpha title-case mandatory-mark additional-details-input", @placeholder = "Enter Life Partner Name", @minlength = 2, @maxlength = 50, onkeydown = "Maketranslation()", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.LifePartnerName)
+                                                    </div>
+
+                                                    @*TransLifePartnerName*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.LifePartnerNameInRegionalLanguage)
+                                                        @Html.TextBoxFor(m => m.PersonAdditionalDetailViewModel.TransLifePartnerName, null, new { @id = "trans-life-partner-name", @class = "form-control deny-multiple-space mandatory-mark additional-details-input", @placeholder = personDetailViewModel.LifePartnerNamePlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 50, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.TransLifePartnerName)
+                                                    </div>
+
+                                                    @*LifePartnerMaidenName*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Maiden Name")
+                                                        @Html.TextBoxFor(m => m.PersonAdditionalDetailViewModel.LifePartnerMaidenName, new { @id = "life-partner-maiden-name", @class = "form-control alpha mandatory-mark title-case additional-details-input", @placeholder = "Enter Life Partner Maiden Name", @minlength = 2, @maxlength = 50, onkeydown = "Maketranslation()", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.LifePartnerMaidenName)
+                                                    </div>
+
+                                                    @*TransLifePartnerMaidenName*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.LifePartnerMaidenNameInRegionalLanguage)
+                                                        @Html.TextBoxFor(m => m.PersonAdditionalDetailViewModel.TransLifePartnerMaidenName, null, new { @id = "trans-life-partner-maiden-name", @class = "form-control deny-multiple-space mandatory-mark additional-details-input", @placeholder = personDetailViewModel.LifePartnerMaidenNamePlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 50, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.TransLifePartnerMaidenName)
+                                                    </div>
+
+                                                    @*DateOfMarriage*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Date Of Marriage")
+                                                        @Html.TextBoxFor(m => m.PersonAdditionalDetailViewModel.DateOfMarriage, "{0:yyyy-MM-dd}", new { @id = "date-of-marriage", @class = "form-control mandatory-mark valid-marriage-date-range additional-details-input", required = "required", @Type = "date", onclick = "ValidMarriageDateRange('birth-date')" })
+                                                        @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.DateOfMarriage)
+                                                    </div>
+                                                </div>
+
+
+                                                @*IsResident*@
+                                                <div class="row form-group mt-4">
+                                                    <div class="col-10">
+                                                        @Html.CustomLabel("Is Resident")
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="text-left">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonAdditionalDetailViewModel.IsResident, new { @id = "is-resident", @class = "form-control switch-input" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*HasOtherCountryResidentStatus*@
+                                                <div class="row form-group">
+                                                    <div class="col-10">
+                                                        @Html.CustomLabel("Has Other Country Resident Status")
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="text-left">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonAdditionalDetailViewModel.HasOtherCountryResidentStatus, new { @id = "has-other-country-resident-status", @class = "form-control switch-input" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*BloodGroup*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Blood Group")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.BloodGroupId, new SelectList(personDetailViewModel.BloodGroupDropdownList, "Value", "Text", 0), "--- Select Blood Group ---", new { @id = "blood-group-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.BloodGroupId)
+                                                </div>
+
+                                                @*PovertyStatus*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Poverty Status")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.PovertyStatusId, new SelectList(personDetailViewModel.PovertyStatusDropdownList, "Value", "Text"), "--- Select Poverty Status ---", new { @id = "poverty-status-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.PovertyStatusId)
+                                                </div>
+
+                                                @*PhysicalStatus*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Physical Status")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.PhysicalStatusId, new SelectList(personDetailViewModel.PhysicalStatusDropdownList, "Value", "Text"), "--- Select Physical Status ---", new { @id = "physical-status-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.PhysicalStatusId)
+                                                </div>
+
+                                                @*CastCategoryPrmKey*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Cast Category")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.CastCategoryId, new SelectList(personDetailViewModel.CastCategoryDropdownList, "Value", "Text"), "--- Select Cast Category ---", new { @id = "cast-category-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.CastCategoryId)
+                                                </div>
+
+                                                @*EducationalQualificationPrmKey / Literacy of Client*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Educational Qualification")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.EducationalQualificationId, new SelectList(personDetailViewModel.EducationQualificationDropdownList, "Value", "Text"), "--- Select Educational Qualification ---", new { @id = "educational-qualification-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.EducationalQualificationId)
+                                                </div>
+
+                                                @*OccupationPrmKey*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Occupation")
+                                                    @Html.DropDownListFor(m => m.PersonAdditionalDetailViewModel.OccupationId, new SelectList(personDetailViewModel.OccupationDropdownList, "Value", "Text", 0), "--- Select Occupation ---", new { @id = "occupation-id", @class = "form-control mandatory-mark additional-details-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.OccupationId)
+                                                </div>
+
+                                                @*IsEmployee*@
+                                                <div id="is-employee-input" class="row form-group mt-4">
+                                                    <div class="col-10">
+                                                        @Html.CustomLabel("Is Employee")
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="text-left">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonAdditionalDetailViewModel.IsEmployee, new { @id = "enable-employee", @class = "form-control switch-input hide-block" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*Employer Details*@
+                                                <div id="employee-block" class="d-none">
+                                                    @*NameOfEmployer*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Name Of Employer")
+                                                        @Html.TextBoxFor(m => m.PersonEmploymentDetailViewModel.NameOfEmployer, new { @id = "employer-name", @class = "form-control mandatory-mark alpha employer-input title-case additional-details-input", @placeholder = "Enter Name Of Employer", @minlength = 2, @maxlength = 150, onkeydown = "Maketranslation()", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.NameOfEmployer)
+                                                    </div>
+
+                                                    @*TransNameOfEmployer*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.NameOfEmployerInRegionalLanguage)
+                                                        @Html.TextBoxFor(m => m.PersonEmploymentDetailViewModel.TransNameOfEmployer, null, new { @id = "trans-employer-name", @class = "form-control deny-multiple-space mandatory-mark employer-input additional-details-input", @placeholder = personDetailViewModel.NameOfEmployerPlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 150, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.TransNameOfEmployer)
+                                                    </div>
+
+                                                    @*DateOfIncorporation*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Date Of Incorporation")
+                                                        @Html.TextBoxFor(m => m.PersonEmploymentDetailViewModel.DateOfIncorporation, "{0:yyyy-MM-dd}", new { @id = "date-of-incorporation", @class = "form-control mandatory-mark deny-future-date allow-past-date-upto-100y employer-input additional-details-input", @type = "date", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.DateOfIncorporation)
+                                                    </div>
+
+                                                    @*EmploymentType*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Employment Type")
+                                                        @Html.DropDownListFor(m => m.PersonEmploymentDetailViewModel.EmploymentTypeId, new SelectList(personDetailViewModel.EmploymentTypeDropdownList, "Value", "Text", 0), "--- Select Employment Type ---", new { @id = "employment-type-id", @class = "form-control mandatory-mark employer-input additional-details-input", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.EmploymentTypeId)
+                                                    </div>
+
+                                                    @*NatureOfEmployerPrmKey*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Nature Of Employer")
+                                                        @Html.DropDownListFor(m => m.PersonEmploymentDetailViewModel.NatureOfEmployerId, new SelectList(personDetailViewModel.NatureOfEmployerDropdownList, "Value", "Text", 0), "--- Select Nature Of Employer ---", new { @id = "nature-of-employer-id", @class = "form-control mandatory-mark employer-input additional-details-input", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.NatureOfEmployerId)
+                                                    </div>
+
+                                                    @*EmployerNatureOtherDetails*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Employer Nature Other Details")
+                                                        @Html.TextAreaFor(m => m.PersonEmploymentDetailViewModel.EmployerNatureOtherDetails, new { @id = "employer-nature-other-details", @class = "form-control mandatory-mark alpha default-none employer-input additional-details-input", @placeholder = "Enter Employer Nature Other Details", @minlength = 2, @maxlength = 1300, onkeydown = "Maketranslation()", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.EmployerNatureOtherDetails)
+                                                    </div>
+
+                                                    @*TransEmployerNatureOtherDetails*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.EmployerNatureOtherDetailsInRegionalLanguage)
+                                                        @Html.TextAreaFor(m => m.PersonEmploymentDetailViewModel.TransEmployerNatureOtherDetails, new { @id = "trans-employer-nature-other-details", @class = "form-control deny-multiple-space mandatory-mark default-none employer-input additional-details-input", @placeholder = personDetailViewModel.EmployerNatureOtherDetailsPlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 1300, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.TransEmployerNatureOtherDetails)
+                                                    </div>
+
+                                                    @*EmployerAddressDetails*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Employer Address Details")
+                                                        @Html.TextAreaFor(m => m.PersonEmploymentDetailViewModel.EmployerAddressDetails, new { @id = "employer-address-details", @class = "form-control mandatory-mark default-none employer-input additional-details-input title-case", @placeholder = "Enter Employer Address Details", @minlength = 2, @maxlength = 1300, onkeydown = "Maketranslation()", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.EmployerAddressDetails)
+                                                    </div>
+
+                                                    @*TransEmployerAddressDetails*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.EmployerAddressDetailsInRegionalLanguage)
+                                                        @Html.TextAreaFor(m => m.PersonEmploymentDetailViewModel.TransEmployerAddressDetails, new { @id = "trans-employer-address-details", @class = "form-control deny-multiple-space mandatory-mark default-none employer-input additional-details-input", @placeholder = personDetailViewModel.EmployerAddressDetailsPlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 1300, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.TransEmployerAddressDetails)
+                                                    </div>
+
+                                                    @*Employer Contact Details*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Employer Contact Details")
+                                                        @Html.TextAreaFor(m => m.PersonEmploymentDetailViewModel.EmployerContactDetails, new { @id = "employer-contact-details", @class = "form-control mandatory-mark default-none employer-input additional-details-input title-case", @placeholder = "Enter Employer Contact Details", @minlength = 2, @maxlength = 400, onkeydown = "Maketranslation()", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.EmployerContactDetails)
+                                                    </div>
+
+                                                    @*TransEmployerContactDetails*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.EmployerContactDetailsInRegionalLanguage)
+                                                        @Html.TextAreaFor(m => m.PersonEmploymentDetailViewModel.TransEmployerContactDetails, new { @id = "trans-employer-contact-details", @class = "form-control deny-multiple-space mandatory-mark default-none employer-input additional-details-input", @placeholder = personDetailViewModel.EmployerContactDetailsPlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 400, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.TransEmployerContactDetails)
+                                                    </div>
+
+                                                    @*Employer City*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Employer City")
+                                                        @Html.DropDownListFor(m => m.PersonEmploymentDetailViewModel.CityId, new SelectList(personDetailViewModel.VillageTownCityDropdownList, "Value", "Text", 0), "--- Select Employer City ---", new { @id = "employer-city-id", @class = "form-control mandatory-mark employer-input additional-details-input", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.CityId)
+                                                    </div>
+
+                                                    @*DesignationPrmKey*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Designation")
+                                                        @Html.DropDownListFor(m => m.PersonEmploymentDetailViewModel.DesignationId, new SelectList(personDetailViewModel.DesignationDropdownList, "Value", "Text", 0), "--- Select Designation ---", new { @id = "designation-id", @class = "form-control mandatory-mark employer-input additional-details-input", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.DesignationId)
+                                                    </div>
+
+                                                    @*Annual Income*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Annual Income")
+                                                        @Html.TextBoxFor(m => m.PersonEmploymentDetailViewModel.AnnualIncome, new { @id = "annual-income", @class = "form-control mandatory-mark employer-input additional-details-input", @placeholder = "Enter Annual Income", @type = "number", @min = 1000, @max = 999999999, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.AnnualIncome)
+                                                    </div>
+
+                                                    @*EPF Number*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("EPF Number")
+                                                        @Html.TextBoxFor(m => m.PersonEmploymentDetailViewModel.EPFNumber, new { @id = "epf-number", @class = "form-control mandatory-mark deny-multiple-space upper-case employer-input additional-details-input", @placeholder = "Enter EPF Number", @minlength = 2, @maxlength = 22, onkeydown = "Maketranslation()", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.EPFNumber)
+                                                        <span id="epf-number-error" class="error d-none">Please Enter Valid EPF Number.(e.g., MH/BAN/0001234/5678901)</span>
+                                                    </div>
+
+                                                    @*TransEPFNumber*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.EPFNumberInRegionalLanguage)
+                                                        @Html.TextBoxFor(m => m.PersonEmploymentDetailViewModel.TransEPFNumber, new { @id = "trans-epf-number", @class = "form-control deny-multiple-space mandatory-mark employer-input additional-details-input", @placeholder = personDetailViewModel.EPFNumberPlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 22, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.TransEPFNumber)
+                                                    </div>
+
+                                                    @*Employed Since*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Employed Since")
+                                                        &nbsp;&nbsp;<span class="text-c-blue"><i class="fa fa-info-circle">&nbsp;&nbsp;Time Period In Month</i></span>
+                                                        @Html.TextBoxFor(m => m.PersonEmploymentDetailViewModel.EmployedSince, new { @id = "employed-since", @class = "form-control mandatory-mark real-number employer-input additional-details-input", @placeholder = "Enter Employed Since", @type = "number", @min = 0, @max = 999, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.EmployedSince)
+                                                    </div>
+
+                                                    @*Note*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Note")
+                                                        @Html.TextAreaFor(m => m.PersonEmploymentDetailViewModel.Note, new { @id = "note-employment-detail", @class = "form-control deny-multiple-space default-none employer-input title-case additional-details-input", @placeholder = "Enter Note", @maxlength = 1300, onkeydown = "Maketranslation()", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.Note)
+                                                    </div>
+
+                                                    @*TransNote*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.NoteInRegionalLanguage)
+                                                        @Html.TextAreaFor(m => m.PersonEmploymentDetailViewModel.TransNote, new { @id = "trans-note-employment-detail", @class = "form-control deny-multiple-space default-none employer-input additional-details-input", @placeholder = personDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1300, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonEmploymentDetailViewModel.TransNote)
+                                                    </div>
+                                                </div>
+
+                                                @*IsPolitician*@
+                                                <div class="row form-group mt-4">
+                                                    <div class="col-10">
+                                                        @Html.CustomLabel("Is Politician")
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="text-left">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonAdditionalDetailViewModel.IsPolitician, new { @id = "enable-politician", @class = "form-control switch-input show-block", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*Politicial Background Details*@
+                                                <div id="politician-block" class="d-none">
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Politicial Background Details")
+                                                        @Html.TextAreaFor(m => m.PersonAdditionalDetailViewModel.PoliticialBackgroundDetails, new { @id = "politicial-background-details", @class = "form-control mandatory-mark default-none title-case additional-details-input", @placeholder = "Enter Politicial Background Details", @minlength = 2, @maxlength = 1300, onkeydown = "Maketranslation()", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.PoliticialBackgroundDetails)
+                                                    </div>
+
+                                                    @*Trans Politicial Background Details*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.PoliticialBackgroundDetailsInRegionalLanguage)
+                                                        @Html.TextAreaFor(m => m.PersonAdditionalDetailViewModel.TransPoliticialBackgroundDetails, new { @id = "trans-politicial-background-details", @class = "form-control deny-multiple-space mandatory-mark default-none additional-details-input", @placeholder = personDetailViewModel.PoliticialBackgroundDetailsPlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 1300, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.TransPoliticialBackgroundDetails)
+                                                    </div>
+                                                </div>
+
+                                                @*VIP Rank*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("VIP Rank")
+                                                    &nbsp;&nbsp;<span class="text-c-blue"><i class="fa fa-info-circle">&nbsp;&nbsp;VIP Rank 0 For None</i></span>
+                                                    @Html.TextBoxFor(m => m.PersonAdditionalDetailViewModel.VIPRank, new { @id = "vip-rank", @class = "form-control real-number mandatory-mark additional-details-input", @placeholder = "Enter VIP Rank", @type = "number", @min = 0, @max = 10, required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.VIPRank)
+                                                </div>
+
+                                                @*VIP Background Details*@
+                                                <div class="vip-background-details">
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("VIP Background Details")
+                                                        @Html.TextAreaFor(m => m.PersonAdditionalDetailViewModel.VIPBackgroundDetails, new { @id = "vip-background-details", @class = "form-control default-none title-case", @placeholder = "Enter VIP Background Details", @minlength = 2, @maxlength = 1300, onkeydown = "Maketranslation()" })
+                                                        @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.VIPBackgroundDetails)
+                                                    </div>
+
+                                                    @*Trans VIP Background Details*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.VIPBackgroundDetailsInRegionalLanguage)
+                                                        @Html.TextAreaFor(m => m.PersonAdditionalDetailViewModel.TransVIPBackgroundDetails, new { @id = "trans-vip-background-details", @class = "form-control deny-multiple-space default-none", @placeholder = personDetailViewModel.VIPBackgroundDetailsPlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 1300 })
+                                                        @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.TransVIPBackgroundDetails)
+                                                    </div>
+                                                </div>
+
+                                                @*IsSubmitedForm60*@
+                                                <div class="row form-group mt-4">
+                                                    <div class="col-10">
+                                                        @Html.CustomLabel("Is Submited Form 16")
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="text-left">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonAdditionalDetailViewModel.IsSubmitedForm60, new { @id = "is-submited-form-60", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*IsIncomeTaxPayer*@
+                                                <div class="row form-group">
+                                                    <div class="col-10">
+                                                        @Html.CustomLabel("Is Income Tax Payer")
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="text-left">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonAdditionalDetailViewModel.IsIncomeTaxPayer, new { @id = "is-income-tax-payer", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*IsSubmitedForm15G*@
+                                                <div class="row form-group">
+                                                    <div class="col-10">
+                                                        @Html.CustomLabel("Is Submited Form 15G")
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="text-left">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonAdditionalDetailViewModel.IsSubmitedForm15G, new { @id = "is-submited-form-15g", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*IsSubmitedForm15H*@
+                                                <div class="row form-group">
+                                                    <div class="col-10">
+                                                        @Html.CustomLabel("Is Submited Form 15H")
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="text-left">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonAdditionalDetailViewModel.IsSubmitedForm15H, new { @id = "is-submited-form-15h", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*IsGSTTaxPayer*@
+                                                <div class="row form-group">
+                                                    <div class="col-10">
+                                                        @Html.CustomLabel("Is GST Tax Payer")
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="text-left">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonAdditionalDetailViewModel.IsGSTTaxPayer, new { @id = "is-gst-tax-payer", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*Note*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Note")
+                                                    @Html.TextAreaFor(m => m.PersonAdditionalDetailViewModel.Note, new { @id = "note-additional-detail", @class = "form-control deny-multiple-space title-case default-none", @placeholder = "Enter Note", @minlength = 2, @maxlength = 1300, onkeydown = "Maketranslation()" })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.Note)
+                                                </div>
+
+                                                @*TransNote*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel(personDetailViewModel.NoteInRegionalLanguage)
+                                                    @Html.TextAreaFor(m => m.PersonAdditionalDetailViewModel.TransNote, new { @id = "trans-note-additional-detail", @class = "form-control deny-multiple-space default-none", @placeholder = personDetailViewModel.NotePlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 1300 })
+                                                    @Html.ValidationMessageFor(m => m.PersonAdditionalDetailViewModel.TransNote)
+                                                </div>
+
+                                                @*ReasonForModification*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Reason For Modification")
+                                                    @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-additional", @class = "form-control title-case default-none", @placeholder = "Enter Reason For Modification", @minlength = 2, @maxlength = 1300 })
+                                                    @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Accordian 3 - Guardian Details*@
+                            <div id="guardian-detail-card" class="card mt-3">
+                                    <div class="card-header" id="guardian-details-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-guardian-details" data-target="#collapse-guardian-details">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <a class="card-title" href="#">
+                                                    <b>@Html.TextWithRegionalLanguage("Guardian Details")</b>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <span id="guardian-details-accordion-error" class="error accordion-title-error d-none">This Is Required, Please Add Valid Data.</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <a href="#collapse-guardian-details" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-guardian-details" data-target="#collapse-guardian-details">
+                                                    <i class="fa fa-angle-down toggle-icon"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="collapse-guardian-details" class="collapse" aria-labelledby="heading-guardian-details" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    @*GuardianPersonInformationNumber*@
+                                                    <div id="guardian-pin-input" class="form-group">
+                                                        @Html.CustomLabel("Person Information Number")
+                                                        @Html.TextBox("person", null, new { @type = "search", @id = "guardian-pin", @class = "form-control mandatory-mark deny-multiple-space guardian-details-input auto-complete", @placeholder = "Select Person Name", required = "required" })
+                                                        @Html.TextBoxFor(m => m.GuardianPersonViewModel.PersonInformationNumber, new { @id = "guardian-pin1", @class = "form-control mandatory-mark deny-multiple-space auto-complete d-none", @type = "search", @placeholder = "Select Person Name", required = "required" })
+                                                        @if (Model.GuardianPersonViewModel != null)
+                                                        {
+                                                            <span id="guardian-pin-value" class="@Model.GuardianPersonViewModel.PersonInformationNumberText"></span>
+                                                        }
+                                                        <span id="guardian-pin-error" class="error modal-input-error d-none">Please Enter Valid Person Information Number Or Guardian Details.</span>
+                                                    </div>
+
+                                                    <div id="guardian-detail">
+                                                        @*Guardian FullName*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Full Name")
+                                                            @Html.TextBoxFor(m => m.GuardianPersonViewModel.GuardianFullName, new { @id = "guardian-full-name", @class = "form-control alpha mandatory-mark guardian-input guardian-details-input", @placeholder = "Enter Full Name", @minlength = 2, @maxlength = 150, onkeydown = "Maketranslation()", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.GuardianPersonViewModel.GuardianFullName)
+                                                        </div>
+
+                                                        @*TransGuardianFullName*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel(personDetailViewModel.GuardianFullNameInRegionalLanguage)
+                                                            @Html.TextBoxFor(m => m.GuardianPersonViewModel.TransGuardianFullName, null, new { @id = "trans-guardian-full-name", @class = "form-control deny-multiple-space mandatory-mark guardian-input guardian-details-input", @placeholder = personDetailViewModel.GuardianFullNamePlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 150, required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.GuardianPersonViewModel.TransGuardianFullName)
+                                                        </div>
+
+                                                        @*Guardian FullAddress*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Full Address")
+                                                            @Html.TextAreaFor(m => m.GuardianPersonViewModel.FullAddress, new { @id = "full-address", @class = "form-control mandatory-mark title-case guardian-input default-none guardian-details-input", @placeholder = "Enter Full Address", @minlength = 2, @maxlength = 400, onkeydown = "Maketranslation()", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.GuardianPersonViewModel.FullAddress)
+                                                        </div>
+
+                                                        @*TransFullAddress*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel(personDetailViewModel.FullAddressInRegionalLanguage)
+                                                            @Html.TextAreaFor(m => m.GuardianPersonViewModel.TransFullAddress, new { @id = "trans-full-address", @class = "form-control deny-multiple-space mandatory-mark default-none guardian-input guardian-details-input", @placeholder = personDetailViewModel.FullAddressPlaceHolderInRegionalLanguage, @minlength = 2, @maxlength = 400, required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.GuardianPersonViewModel.TransFullAddress)
+                                                        </div>
+                                                    </div>
+
+                                                    @*Relation*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Relation")
+                                                        @Html.DropDownListFor(m => m.GuardianPersonViewModel.RelationId, new SelectList(personDetailViewModel.RelationDropdownList, "Value", "Text"), "--- Select Relation ---", new { @id = "guardian-relation-id", @class = "form-control mandatory-mark guardian-details-input", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.GuardianPersonViewModel.RelationId)
+                                                    </div>
+
+                                                    @*Age Proof Submission Status of the Minor*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Age Proof Submission Status of the Minor")
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="mt-1 d-flex justify-content-between">
+                                                                    <div class="form-check form-check-inline">
+                                                                        @Html.RadioButtonFor(m => m.GuardianPersonViewModel.AgeProofSubmissionStatusOfTheMinor, "N", new { @id = "age-proof-submission-status-n", @name = "AgeProofSubmissionStatusOfTheMinor", @class = "age-proof-submission-status guardian-details-radio-input", required = "required" })
+                                                                        <label for="age-proof-submission-status-n" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Not Required")</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline checked">
+                                                                        @Html.RadioButtonFor(m => m.GuardianPersonViewModel.AgeProofSubmissionStatusOfTheMinor, "P", new { @id = "age-proof-submission-status-p", @name = "AgeProofSubmissionStatusOfTheMinor", @class = "age-proof-submission-status guardian-details-radio-input", required = "required" })
+                                                                        <label for="age-proof-submission-status-p" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Pending")</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        @Html.RadioButtonFor(m => m.GuardianPersonViewModel.AgeProofSubmissionStatusOfTheMinor, "V", new { @id = "age-proof-submission-status-v", @name = "AgeProofSubmissionStatusOfTheMinor", @class = "age-proof-submission-status guardian-details-radio-input", required = "required" })
+                                                                        <label for="age-proof-submission-status-v" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Verified")</label>
+                                                                    </div>
+                                                                </div>
+                                                                @Html.ValidationMessageFor(m => m.GuardianPersonViewModel.AgeProofSubmissionStatusOfTheMinor)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*AppointedDateOfContact*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Appointed Date Of Contact")
+                                                        @Html.TextBoxFor(m => m.GuardianPersonViewModel.AppointedDateOfContact, "{0:yyyy-MM-dd}", new { @id = "appointed-date-of-contact", @class = "form-control set-current-date deny-next-financial-year-date deny-past-date guardian-details-input", @type = "date" })
+                                                        @Html.ValidationMessageFor(m => m.GuardianPersonViewModel.AppointedDateOfContact)
+                                                    </div>
+
+                                                    @*Note*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Note")
+                                                        @Html.TextAreaFor(m => m.GuardianPersonViewModel.Note, new { @id = "note-guardian", @class = "form-control default-none title-case guardian-details-input", @placeholder = "Enter Note", @maxlength = 1300, onkeydown = "Maketranslation()" })
+                                                        @Html.ValidationMessageFor(m => m.GuardianPersonViewModel.Note)
+                                                    </div>
+
+                                                    @*TransNote*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel(personDetailViewModel.NoteInRegionalLanguage)
+                                                        @Html.TextAreaFor(m => m.GuardianPersonViewModel.TransNote, new { @id = "trans-note-guardian", @class = "form-control default-none guardian-details-input", @placeholder = personDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1300 })
+                                                        @Html.ValidationMessageFor(m => m.GuardianPersonViewModel.TransNote)
+                                                    </div>
+
+                                                    @*ReasonForModification*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Reason For Modification")
+                                                        @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-guardian", @class = "form-control title-case default-none", @placeholder = "Enter Reason For Modification", @maxlength = 1300 })
+                                                        @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                            @*Accordian 4 - Person KYC Document*@
+                            <div id="heading-kyc-document" class="card mt-3 @((ViewBag.PersonInformationParameter.KYCDocumentUpload == "D") ? "d-none" : "")">
+                                <div class="card-header p-3" id="collapse-person-kyc-document-validations" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-person-kyc-document" data-target="#collapse-person-kyc-document">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <a class="card-title" href="#">
+                                                <b>@Html.TextWithRegionalLanguage("KYC Document")</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <span id="kyc-document-data-table-error" class="error accordion-title-error d-none">This Is Required, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-person-kyc-document" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-person-kyc-document" data-target="#collapse-person-kyc-document">
+                                                <i class="fa fa-angle-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-person-kyc-document" class="collapse" aria-labelledby="heading-person-kyc-document" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="modal fade" id="kyc-document-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title  text-center" id="kyc-text">Add</h4>
+                                                                <button type="button" class="close-kyc-document-modal" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="modal-body">
+                                                                @*DocumentTypeId*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Document Type")
+                                                                    @Html.DropDownListFor(m => m.PersonKYCDocumentViewModel.DocumentTypeId, new SelectList(personDetailViewModel.PersonDocumentTypeDropdownList, "Value", "Text", 0), "--- Select Document Type ---", new { @id = "kyc-document-type-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.DocumentTypeId)
+                                                                    <span id="kyc-document-type-id-error" class="error modal-input-error d-none">Please Select Valid Document Type. </span>
+                                                                </div>
+
+                                                                @*DocumentDocumentTypeId*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Document")
+                                                                    @Html.DropDownListFor(m => m.PersonKYCDocumentViewModel.DocumentId, new List<SelectListItem>(), new { @id = "kyc-document-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.DocumentId)
+                                                                    <span id="kyc-document-id-error" class="error modal-input-error d-none">Please Enter Unique Document. </span>
+                                                                </div>
+
+                                                                @*NameAsPerDocument*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Name As Per Document")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.NameAsPerDocument, new { @id = "kyc-document-name", @class = "form-control mandatory-mark title-case deny-multiple-space modal-input", @placeholder = "Enter Name As Per Document", @minlength = 5, @maxlength = 150, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.NameAsPerDocument)
+                                                                    <span id="kyc-document-name-error" class="error modal-input-error d-none">Please Enter Valid Name As Per Document. </span>
+                                                                </div>
+
+                                                                @*DocumentNumber*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Document Number")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.DocumentNumber, new { @id = "kyc-document-number", @class = "form-control mandatory-mark deny-multiple-space modal-input", @placeholder = "Enter Document Number", @minlength = 2, @maxlength = 50, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.DocumentNumber)
+                                                                    <span id="kyc-document-number-error1" class="error modal-input-error d-none"></span>
+                                                                </div>
+
+                                                                @*Sequence Number*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Sequence Number")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.SequenceNumber, new { @id = "kyc-document-sequence-number", @class = "form-control mandatory-mark real-number modal-input", @placeholder = "Enter Sequence Number", @type = "number", @min = 1, @max = 19, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.SequenceNumber)
+                                                                    <span id="kyc-document-sequence-number-error" class="error modal-input-error d-none">Please Enter Valid Sequence Number. </span>
+                                                                </div>
+
+                                                                @*Date Of Issue*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Issue")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.DateOfIssue, "{0:yyyy-MM-dd}", new { @id = "kyc-document-date-of-issue", @class = "form-control mandatory-mark deny-future-date allow-past-date-upto-50y modal-input", required = "required", @Type = "date" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.DateOfIssue)
+                                                                    <span id="kyc-document-date-of-issue-error" class="error modal-input-error d-none">Please Enter Valid Date Of Issue. </span>
+                                                                </div>
+
+                                                                @*Date Of Expiry*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Expiry")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.DateOfExpiry, "{0:yyyy-MM-dd}", new { @id = "kyc-document-date-of-expiry", @class = "form-control mandatory-mark deny-past-date allow-future-date-upto-50y modal-input", @Type = "date", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.DateOfExpiry)
+                                                                    <span id="kyc-document-date-of-expiry-error" class="error modal-input-error d-none">Please Enter Valid Date Of Expiry. </span>
+                                                                </div>
+
+                                                                @*Issuing Authority*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Issuing Authority")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.IssuingAuthority, new { @id = "kyc-document-issuing-authority", @class = "form-control mandatory-mark alpha-numeric title-case deny-multiple-space modal-input", @placeholder = "Enter Issuing Authority", @minlength = 3, @maxlength = 100, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.IssuingAuthority)
+                                                                    <span id="kyc-document-issuing-authority-error" class="error modal-input-error d-none">Please Select Valid Issuing Authority. </span>
+                                                                </div>
+
+                                                                @*Place Of Issue*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Place Of Issue")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.PlaceOfIssue, new { @id = "kyc-document-place-of-issue", @class = "form-control mandatory-mark alpha-numeric title-case deny-multiple-space modal-input", @placeholder = "Enter Place Of Issue", @minlength = 3, @maxlength = 100, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.PlaceOfIssue)
+                                                                    <span id="kyc-document-place-of-issue-error" class="error modal-input-error d-none">Please Select Valid Place Of Issue. </span>
+                                                                </div>
+
+                                                                @*Date Of Request*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Request")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.DateOfRequest, "{0:yyyy-MM-dd}", new { @id = "date-of-request", @class = "form-control mandatory-mark deny-past-date deny-next-financial-year-date modal-input", required = "required", @Type = "date" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.DateOfRequest)
+                                                                    <span id="date-of-request-error" class="error modal-input-error d-none">Please Select Valid Date Of Request. </span>
+                                                                </div>
+
+                                                                @*Date Of Expecting Submit*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Expecting Submit")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.DateOfExpectingSubmit, "{0:yyyy-MM-dd}", new { @id = "date-of-expecting-submit", @class = "form-control mandatory-mark deny-next-financial-year-date modal-input", required = "required", @Type = "date" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.DateOfExpectingSubmit)
+                                                                    <span id="date-of-expecting-submit-error" class="error modal-input-error d-none">Please Select Valid Date Of Expecting Submit. </span>
+                                                                </div>
+
+                                                                @*Date Of Submit*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Submit")
+                                                                    @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.DateOfSubmit, "{0:yyyy-MM-dd}", new { @id = "date-of-submit", @class = "form-control mandatory-mark deny-next-financial-year-date modal-input", required = "required", @Type = "date" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.DateOfSubmit)
+                                                                    <span id="date-of-submit-error" class="error modal-input-error d-none">Please Select Valid Date Of Submit. </span>
+                                                                </div>
+
+                                                                @*CenterCategoryPrmKey*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Document Upload Status")
+                                                                    <div class="mt-1 status">
+                                                                        <div class="form-check form-check-inline">
+                                                                            @Html.RadioButtonFor(m => m.PersonKYCDocumentViewModel.DocumentUploadStatus, "u", new { @id = "document-upload-status-u", @name = "DocumentUploadStatus", @class = "document-upload-status modal-input-radio" })
+                                                                            <label for="document-upload-status-u" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Uploaded")</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            @Html.RadioButtonFor(m => m.PersonKYCDocumentViewModel.DocumentUploadStatus, "p", new { @id = "document-upload-status-p", @name = "DocumentUploadStatus", @class = "document-upload-status modal-input-radio" })
+                                                                            <label for="document-upload-status-p" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Process")</label>
+                                                                        </div>
+                                                                        <div class="form-check form-check-inline">
+                                                                            @Html.RadioButtonFor(m => m.PersonKYCDocumentViewModel.DocumentUploadStatus, "n", new { @id = "document-upload-status-n", @name = "DocumentUploadStatus", @class = "document-upload-status modal-input-radio" })
+                                                                            <label for="document-upload-status-n" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Not Uploaded")</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.DocumentUploadStatus)
+                                                                    <span id="document-upload-status-error" class="error modal-input-error d-none">Please Select Valid Document Upload Status. </span>
+                                                                </div>
+
+                                                                <div class="@((ViewBag.PersonInformationParameter.KYCDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Photo")
+                                                                        <span id="kyc-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Photo. </span>
+                                                                        <div>
+                                                                            @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.PhotoPathKYC, new { @id = "kyc-file-uploader", @class = "form-control mandatory-mark doc-upload modal-input", type = "file", name = "PhotoPathKYC", required = "required" })
+                                                                            @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.PhotoPathKYC)
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr />
+                                                                    <div><img id="kyc-file-uploader-image-preview" class="modal-input-img-preview" src="" width="200" height="200" /></div>
+
+                                                                    @*FileCaption*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("File Caption")
+                                                                        @Html.TextBoxFor(m => m.PersonKYCDocumentViewModel.FileCaption, new { @id = "file-caption-kyc", @class = "form-control mandatory-mark deny-multiple-space title-case default-none modal-input", @placeholder = "Enter File Caption", @maxlength = 400, required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.PersonKYCDocumentViewModel.FileCaption)
+                                                                        <span id="file-caption-kyc-error" class="error modal-input-error d-none">Please Select Valid File Caption. </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.Note, new { @id = "note-kyc-document", @class = "form-control deny-multiple-space title-case modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300 })
+                                                                    @Html.ValidationMessageFor(m => m.Note)
+                                                                </div>
+
+                                                                @*ReasonForModification*@
+                                                                <div id="kyc-document-div" class="form-group">
+                                                                    @Html.CustomLabel("Reason For Modification")
+                                                                    @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-kyc-document", @class = "form-control default-none title-case modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300 })
+                                                                    @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" id="btn-add-kyc-document-modal" class="btn btn-success ">Add</button>
+                                                                <button type="button" id="btn-update-kyc-document-modal" class="btn btn-primary ">Update</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card-body">
+                                                    <table id="tbl-kyc-document" class="table compact table-striped table-bordered" width="100">
+                                                        <thead class="text-center">
+                                                            <tr>
+                                                                <th><input type="checkbox" name="select-all" id="select-all-kyc-document" /></th>
+                                                                <th class="d-none">DocumentTypeId</th>
+                                                                <th>DocumentType</th>
+                                                                <th class="d-none">DocumentId</th>
+                                                                <th>Document</th>
+                                                                <th>NameAsPerDocument</th>
+                                                                <th>DocumentNumber</th>
+                                                                <th>SequenceNumber</th>
+                                                                <th>DateOfIssue</th>
+                                                                <th>DateOfExpiry</th>
+                                                                <th>IssuingAuthority</th>
+                                                                <th>PlaceOfIssue</th>
+                                                                <th>DateOfRequest</th>
+                                                                <th>DateOfExpectingSubmit</th>
+                                                                <th>DateOfSubmit</th>
+                                                                <th class="d-none">DocumentUploadStatus</th>
+                                                                <th>DocumentUploadStatus</th>
+                                                                <th>Photopath</th>
+                                                                <th>Photo</th>
+                                                                <th>FileCaption</th>
+                                                                <th>Note</th>
+                                                                <th>ReasonForModification</th>
+                                                                <th class="d-none">FileName</th>
+                                                                <th class="d-none">PersonKycDocument</th>
+                                                                <th class="d-none">LocalStoragePath</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody class="text-center">
+                                                            @{
+                                                                IEnumerable<PersonKYCDocumentViewModel> personKYCDocumentViewModelList = (IEnumerable<PersonKYCDocumentViewModel>)HttpContext.Current.Session["KYCDocument"];
+                                                                if (personKYCDocumentViewModelList != null)
+                                                                {
+                                                                    foreach (PersonKYCDocumentViewModel viewModel in personKYCDocumentViewModelList)
+                                                                    {
+                                                                        counter += 1;
+                                                                        photoId = "photo-id" + counter.ToString();
+                                                                        fileUploaderId = "data-table-kyc-file-uploader" + counter.ToString();
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                            <td class="d-none">@viewModel.DocumentTypeId</td>
+                                                                            <td>@viewModel.NameOfDocumentType</td>
+                                                                            <td class="d-none">@viewModel.DocumentDocumentTypeId</td>
+                                                                            <td>@viewModel.NameOfDocument</td>
+                                                                            <td>@viewModel.NameAsPerDocument</td>
+                                                                            <td>@viewModel.DocumentNumber</td>
+                                                                            <td>@viewModel.SequenceNumber</td>
+                                                                            <td>@viewModel.DateOfIssue.ToString("yyyy-MM-dd")</td>
+                                                                            <td>@(viewModel.DateOfExpiry == null ? "" : Convert.ToDateTime(viewModel.DateOfExpiry).ToString("yyyy-MM-dd"))</td>
+                                                                            <td>@viewModel.IssuingAuthority</td>
+                                                                            <td>@viewModel.PlaceOfIssue</td>
+                                                                            <td>@(viewModel.DateOfRequest == null ? "" : Convert.ToDateTime(viewModel.DateOfRequest).ToString("yyyy-MM-dd"))</td>
+                                                                            <td>@(viewModel.DateOfExpectingSubmit == null ? "" : Convert.ToDateTime(viewModel.DateOfExpectingSubmit).ToString("yyyy-MM-dd"))</td>
+                                                                            <td>@(viewModel.DateOfSubmit == null ? "" : Convert.ToDateTime(viewModel.DateOfSubmit).ToString("yyyy-MM-dd"))</td>
+                                                                            <td class="d-none">@viewModel.DocumentUploadStatus</td>
+                                                                            @if (viewModel.DocumentUploadStatus.ToUpper() == "U")
+                                                                            {
+                                                                                <td>Uploaded</td>
+                                                                            }
+                                                                            else if (viewModel.DocumentUploadStatus.ToUpper() == "P")
+                                                                            {
+                                                                                <td>Process</td>
+                                                                            }
+                                                                            else if (viewModel.DocumentUploadStatus.ToUpper() == "N")
+                                                                            {
+                                                                                <td>Not Uploaded</td>
+                                                                            }
+
+                                                                            <td>
+                                                                                <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                            </td>
+                                                                            <td>
+                                                                                @if (viewModel.EnableKYCDocumentUploadInLocalStorage == true)
+                                                                                {
+                                                                                    <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.KYCDocumentLocalStoragePath + viewModel.PhotoPathKYC.FileName)" width="50" height="50" />
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                                    var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                                    <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                                    string filename = Path.GetFileName(imgsrc);
+                                                                                }
+                                                                            </td>
+                                                                            <td>@viewModel.FileCaption</td>
+                                                                            <td>@viewModel.Note</td>
+                                                                            <td>@viewModel.ReasonForModification</td>
+                                                                            <td class="d-none">@viewModel.NameOfFile</td>
+                                                                            <td class="d-none">@viewModel.PersonKYCDetailDocumentPrmKey</td>
+                                                                            <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*EnableGSTRegistrationDetails*@
+                            <div id="enable-gst-registration-details-input" class="row form-group mt-4 read-only">
+                                <div class="col-10">
+                                    @Html.CustomLabel("Enable GST Registration Details")
+                                </div>
+                                <div class="col-2">
+                                    <div class="text-left">
+                                        <label class="switch switch-left-right">
+                                            @Html.CheckBoxFor(m => m.EnableGSTRegistrationDetails, new { @id = "enable-gst-registration-details", @class = "form-control switch-input show-block" })
+                                            <span class="slider round">
+                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Accordian 5 - GST Registration Detail*@
+                            <div id="gst-registration-details-block" class="card mt-3 d-none is-gst-tax-payer @((bool)(ViewBag.PersonInformationParameter.EnableGSTRegistration) ? "" : "d-none")">
+                                <div class="card-header" id="gst-registration-details-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-gst-registration-details" data-target="#collapse-gst-registration-details">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <a class="card-title" href="#">
+                                                <b>@Html.TextWithRegionalLanguage("GST Registration Details")</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <span id="gst-registration-details-accordion-error" class="error accordion-title-error d-none">This Is Required, Please Add Valid Data.</span>
+                                            <span id="gst-registration-accordion-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-gst-registration-details" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-gst-registration-details" data-target="#collapse-gst-registration-details">
+                                                <i class="fa fa-angle-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-gst-registration-details" class="collapse" aria-labelledby="heading-gst-registration-details" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+
+                                                @*StateId*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("State")
+                                                    @Html.DropDownListFor(m => m.PersonGSTRegistrationDetailViewModel.StateId, new SelectList(personDetailViewModel.StateDropdownList, "Value", "Text", 0), "--- Select State --- ", new { @id = "state-id", @class = "form-control mandatory-mark gst-registration-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.StateId)
+                                                </div>
+
+                                                @*GSTRegistrationType*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("GST Registration Type")
+                                                    @Html.DropDownListFor(m => m.PersonGSTRegistrationDetailViewModel.GSTRegistrationTypeId, new SelectList(personDetailViewModel.GSTRegistrationTypeDropdownList, "Value", "Text", 0), "--- Select GST Registration Type --- ", new { @id = "gst-registration-type-id", @class = "form-control mandatory-mark gst-registration-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.GSTRegistrationTypeId)
+                                                </div>
+
+                                                @*ApplicableFrom*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Applicable From")
+                                                    @Html.TextBoxFor(m => m.PersonGSTRegistrationDetailViewModel.ApplicableFrom, "{0:yyyy-MM-dd}", new { @id = "applicable-from", @class = "form-control mandatory-mark deny-future-date gst-registration-input", required = "required", @Type = "date" })
+                                                    @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.ApplicableFrom)
+                                                </div>
+
+                                                @*GSTReturnPeriodicity*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("GST Return Periodicity")
+                                                    @Html.DropDownListFor(m => m.PersonGSTRegistrationDetailViewModel.GSTReturnPeriodicityId, new SelectList(personDetailViewModel.GSTReturnPeriodicityDropdownList, "Value", "Text", 0), "--- Select GST Return Periodicity --- ", new { @id = "gst-return-periodicity-id", @class = "form-control mandatory-mark gst-registration-input", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.GSTReturnPeriodicityId)
+                                                </div>
+
+                                                @*ThresholdLimit*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Threshold Limit")
+                                                    @Html.TextBoxFor(m => m.PersonGSTRegistrationDetailViewModel.ThresholdLimit, new { @id = "threshold-limit", @class = "form-control mandatory-mark gst-registration-input", @placeholder = "Enter Threshold Limit", @type = "number", @min = 2000000, @max = 4000000, required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.ThresholdLimit)
+                                                    @*<span id="threshold-limit-error" class="error modal-input-error d-none">Only 20 lakh or 40 lakh.</span>*@
+                                                </div>
+
+                                                @*RegistrationNumber*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Registration Number")
+                                                    @Html.TextBoxFor(m => m.PersonGSTRegistrationDetailViewModel.RegistrationNumber, new { @id = "gst-registration-number", @class = "form-control mandatory-mark gst-registration-input", @placeholder = "Enter Registration Number", required = "required", @minlength = 2, @maxlength = 15 })
+                                                    @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.RegistrationNumber)
+                                                    <span id="gst-registration-number-error" class="error modal-input-error d-none">Please Enter gst-registration Number, Which is Less Than 15.</span>
+                                                </div>
+
+                                                @*RegistrationDate*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Registration Date")
+                                                    @Html.TextBoxFor(m => m.PersonGSTRegistrationDetailViewModel.RegistrationDate, "{0:yyyy-MM-dd}", new { @id = "registrations-date", @class = "form-control mandatory-mark deny-future-date-from-reference-date deny-next-financial-year-date deny-future-date gst-registration-input", required = "required", @Type = "date", onclick = "DenyFutureDateFromReferenceDate('applicable-from')" })
+                                                    @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.RegistrationDate)
+                                                </div>
+
+                                                @*IsApplicableEWayBill*@
+                                                <div class="row form-group mt-4">
+                                                    <div class="col-8">
+                                                        @Html.CustomLabel("Is Applicable E Way Bill")
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonGSTRegistrationDetailViewModel.IsApplicableEWayBill, new { @id = "is-applicable-eway-bill", @class = "form-control switch-input" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @*UploadGSTReturnDocument*@
+                                                <div class="row form-group mt-4">
+                                                    <div class="col-8">
+                                                        @Html.CustomLabel("Upload GST Return Document")
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.PersonGSTRegistrationDetailViewModel.UploadGSTReturnDocument, new { @id = "enable-gst-return-document", @class = "form-control switch-input show-block", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="gst-return-document-block" class="d-none">
+                                                    <div class="modal fade" id="gst-registration-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title  text-center" id="asset-text">Add</h4>
+                                                                    <button type="button" class="close-gst-registration-modal" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    @*AssessmentYear*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Assessment Year")
+                                                                        @Html.TextBoxFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.AssessmentYear, new { @id = "assessment-year", @class = "form-control mandatory-mark modal-input real-number gst-registration-input", @placeholder = "Enter Assessment Year", required = "required", @max = DateTime.Now.Year, @type = "number" })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.AssessmentYear)
+                                                                        <span id="assessment-year-error" class="error modal-input-error d-none">Please Enter Valid Assessment Year. </span>
+                                                                    </div>
+
+                                                                    @*TaxAmount*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Tax Amount")
+                                                                        @Html.TextBoxFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.TaxAmount, new { @id = "tax-amount", @class = "form-control mandatory-mark gst-registration-input modal-input", @placeholder = "Enter Tax Amount", required = "required", @type = "number", @min = 0, @max = 999999999 })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.TaxAmount)
+                                                                        <span id="tax-amount-error" class="error modal-input-error d-none">Please Enter Valid Tax Amount. </span>
+                                                                    </div>
+
+                                                                    <div class="@((ViewBag.PersonInformationParameter.GSTDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                                        <div class="form-group">
+                                                                            @Html.CustomLabel("Photo")
+                                                                            <span id="gst-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Bank. </span>
+                                                                            @Html.TextBoxFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.PhotoPathGst, new { @id = "gst-file-uploader", @class = "form-control mandatory-mark doc-upload modal-input", type = "file", name = "PhotoPath", @placeholder = "Enter Photo" })
+                                                                            @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.PhotoPathGst)
+                                                                        </div>
+
+                                                                        <hr />
+                                                                        <div><img id="gst-file-uploader-image-preview" class="modal-input-img-preview" src="" width="200" height="200" /></div>
+                                                                        <hr />
+
+                                                                        @*FileCaption*@
+                                                                        <div class="form-group">
+                                                                            @Html.CustomLabel("FileCaption")
+                                                                            @Html.TextBoxFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.FileCaption, new { @id = "file-caption-gst", @class = "form-control modal-input mandatory-mark deny-multiple-space title-case default-none", @maxlength = 1300 })
+                                                                            @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.FileCaption)
+                                                                            <span id="file-caption-gst-error" class="error modal-input-error d-none">Please Select Valid Bank. </span>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                    @*Note*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Note")
+                                                                        @Html.TextAreaFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.Note, new { @id = "note-gst-document", @class = "form-control modal-input deny-multiple-space title-case default-none", @placeholder = "Enter Note", @maxlength = 1300 })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.Note)
+                                                                    </div>
+
+                                                                    @*ReasonForModification*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Reason For Modification")
+                                                                        @Html.TextAreaFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.ReasonForModification, new { @id = "reason-for-modification-gst-registration", @class = "form-control default-none title-case modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300 })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.ReasonForModification)
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button" id="btn-add-gst-registration-modal" class="btn btn-success ">Add</button>
+                                                                    <button type="button" id="btn-update-gst-registration-modal" class="btn btn-primary ">Update</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <table id="tbl-gst-registration" class="table compact table-striped table-bordered" width="100">
+                                                            <thead class="text-center">
+                                                                <tr>
+                                                                    <th><input type="checkbox" name="check_all" id="select-all-gst-registration" /></th>
+                                                                    <th>AssessmentYear</th>
+                                                                    <th>TaxAmount</th>
+                                                                    <th>Photopath</th>
+                                                                    <th>Photo</th>
+                                                                    <th>FileCaption</th>
+                                                                    <th>Note</th>
+                                                                    <th>ReasonForModification</th>
+                                                                    <th class="d-none">FileName</th>
+                                                                    <th class="d-none">PersonGSTReturnDocument</th>
+                                                                    <th class="d-none">LocalStoragePath</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody class="text-center">
+                                                                @{
+                                                                    IEnumerable<PersonGSTReturnDocumentViewModel> personGSTReturnDocumentViewModels = (IEnumerable<PersonGSTReturnDocumentViewModel>)HttpContext.Current.Session["GSTReturnDocument"];
+                                                                    if (personGSTReturnDocumentViewModels != null)
+                                                                    {
+                                                                        foreach (PersonGSTReturnDocumentViewModel viewModel in personGSTReturnDocumentViewModels)
+                                                                        {
+                                                                            counter += 1;
+                                                                            photoId = "photo-id" + counter.ToString();
+                                                                            fileUploaderId = "data-table-gst-file-uploader" + counter.ToString();
+                                                                            <tr>
+                                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                <td>@viewModel.AssessmentYear</td>
+                                                                                <td>@viewModel.TaxAmount</td>
+                                                                                <td>
+                                                                                    <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if (viewModel.EnableGSTDocumentUploadInLocalStorage == true)
+                                                                                    {
+                                                                                        <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.GSTDocumentLocalStoragePath + viewModel.PhotoPathGst.FileName)" width="50" height="50" />
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                                        var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                                        <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                                        string filename = Path.GetFileName(imgsrc);
+                                                                                    }
+                                                                                </td>
+                                                                                <td>@viewModel.FileCaption</td>
+                                                                                <td>@viewModel.Note</td>
+                                                                                <td>@viewModel.ReasonForModification</td>
+                                                                                <td class="d-none">@viewModel.NameOfFile</td>
+                                                                                <td class="d-none">@viewModel.PersonGSTReturnDocumentPrmKey</td>
+                                                                                <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                                @*Note*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Note")
+                                                    @Html.TextAreaFor(m => m.PersonGSTRegistrationDetailViewModel.Note, new { @id = "note-gst-registration", @class = "form-control deny-multiple-space title-case default-none", @placeholder = "Enter Note", @maxlength = 1300 })
+                                                    @Html.ValidationMessageFor(m => m.PersonGSTRegistrationDetailViewModel.Note)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        @*Hiddent Field For PrmKey*@
+                        @Html.HiddenFor(m => m.PrmKey)
+
+                        @*Hiddent Field For PersonPrmKey*@
+                        @Html.HiddenFor(m => m.PersonPrmKey)
+
+                        @*Hiddent Field For PersonId*@
+                        @Html.HiddenFor(m => m.PersonId)
+
+                        @*@*Hiddent Field For FullName*@
+                        @Html.HiddenFor(m => m.FullName, new { @id = "full-name" })
+
+                        @*Hiddent Field For FullName*@
+                        @Html.HiddenFor(m => m.TransFullName, new { @id = "trans-full-name" })
+
+                        @*Hiddent Field For PersonAddressPrmKey*@
+                        @Html.HiddenFor(m => m.PersonAddressViewModel.PersonAddressPrmKey)
+
+                        @*Hiddent Field For PersonAdditionalDetailPrmKey*@
+                        @Html.HiddenFor(m => m.PersonAdditionalDetailViewModel.PersonAdditionalDetailPrmKey)
+
+                        @*Hiddent Field For PersonAdditionalDetailPrmKey*@
+                        @Html.HiddenFor(m => m.PersonAdditionalDetailViewModel.PersonTypeId)
+
+                        @*Hiddent Field For PersonAdditionalDetailTranslationPrmKey*@
+                        @Html.HiddenFor(m => m.PersonAdditionalDetailViewModel.PersonAdditionalDetailTranslationPrmKey)
+
+                        @*Hiddent Field For PersonEmploymentDetailPrmKey*@
+                        @Html.HiddenFor(m => m.PersonEmploymentDetailViewModel.PersonEmploymentDetailPrmKey)
+
+                        @*Hiddent Field For PersonEmploymentDetailTranslationPrmKey*@
+                        @Html.HiddenFor(m => m.PersonEmploymentDetailViewModel.PersonEmploymentDetailTranslationPrmKey)
+
+                        @*Hiddent Field For GuardianPersonPrmKey*@
+                        @Html.HiddenFor(m => m.GuardianPersonViewModel.GuardianPersonPrmKey)
+
+                        @*Hiddent Field For GuardianPersonTranslationPrmKey*@
+                        @Html.HiddenFor(m => m.GuardianPersonViewModel.GuardianPersonTranslationPrmKey)
+
+                        @*Hiddent Field For PersonKYCDetailPrmKey*@
+                        @Html.HiddenFor(m => m.PersonKYCDocumentViewModel.PersonKYCDetailPrmKey)
+
+                        @*Hiddent Field For PersonKYCDetailDocumentPrmKey*@
+                        @Html.HiddenFor(m => m.PersonKYCDocumentViewModel.PersonKYCDetailDocumentPrmKey)
+
+                        @*Hiddent Field For PersonGSTRegistrationDetailPrmKey*@
+                        @Html.HiddenFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTRegistrationDetailPrmKey)
+
+                        @*Hiddent Field For PersonGSTReturnDocumentPrmKey*@
+                        @Html.HiddenFor(m => m.PersonGSTRegistrationDetailViewModel.PersonGSTReturnDocumentViewModel.PersonGSTReturnDocumentPrmKey)
+
+                        @*Hiddent Field For PersonModificationPrmKey*@
+                        @Html.HiddenFor(m => m.PersonModificationPrmKey)
+
+                        @*Hiddent Field For PersonPrefixPrmKey*@
+                        @Html.HiddenFor(m => m.PersonPrefixViewModel.PersonPrefixPrmKey)
+
+                        @*Hiddent Field For PersonTranslationPrmKey*@
+                        @Html.HiddenFor(m => m.PersonTranslationPrmKey)
+
+
+                        @*Hiddent Field For EnableKYCDocumentUploadInLocalStorage*@
+                        @Html.HiddenFor(m => personInformationParameterViewModel.EnableKYCDocumentUploadInLocalStorage, new { @id = "enable-kyc-document-upload" })
+
+                        @*Hiddent Field For KYCDocumentUpload*@
+                        @Html.HiddenFor(m => personInformationParameterViewModel.KYCDocumentUpload, new { @id = "kyc-document-upload" })
+
+                        @*Hiddent Field For GSTDocumentUpload*@
+                        @Html.HiddenFor(m => personInformationParameterViewModel.GSTDocumentUpload, new { @id = "gst-document-upload" })
+
+                        @*Hiddent Field For EnableGSTDocumentUploadInLocalStorage*@
+                        @Html.HiddenFor(m => personInformationParameterViewModel.EnableGSTDocumentUploadInLocalStorage, new { @id = "enable-gst-document-upload" })
+
+                    </div>
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Modify", "Exit", "Home", "None")
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var saveDataTableURL = '@Url.Action("PersonMasterSaveDataTables", "PersonMaster")';
+    var personImageDataTableURL = '@Url.Action("PersonMasterImageSaveDataTables", "PersonMaster")';
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+</script>
+<script src="~/Scripts/Custom/PersonMaster.js"></script>

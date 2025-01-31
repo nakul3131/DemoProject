@@ -1,0 +1,420 @@
+﻿@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.SystemEntity.Navigation
+@{
+    /**/
+
+    ViewBag.Title = "DashBoard";
+}
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    @Styles.Render("~/Content/css")
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/select2.min.js"></script>
+    <script src="~/Scripts/transliteration.I.js"></script>
+    <script type="text/javascript">google.load("elements", "1", { packages: "transliteration" });</script>
+    <script src="~/Scripts/translation.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css" rel="stylesheet" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+
+    <link href="https://rawgit.com/tempusdominus/bootstrap-4/master/build/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
+</head>
+<body id="main" onload="start()">
+    <div class="container-fluid">
+        @*First Row For Header*@
+
+        <div class="row " id="row1">
+            @*First Column For Company Logo*@
+            <div class="text-center logo">
+                <img src="~/Icons/DashBoard/CompanyLogo.png" class="logo-img" />
+            </div>
+
+            @*Second Column For Notification & Other Icon*@
+            <div class="rightnav">
+                <div class="row pt-1">
+                    @*Navbar Toggler Icon, Search box and Full Screen Icon*@
+                    <div class="col-7">
+                        <div class="row">
+                            <div class="col-1 text-center mt-2">
+                                <button id="sidebarToggleTop" class="btn btn-link rounded-circle">
+                                    <span><i class="fas fa-bars text-primary i-medium large_icon"></i></span>
+                                </button>
+                            </div>
+                            <div class="col-10 d-none d-md-block  mt-2">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light border-0" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-secondary" type="button">
+                                            <i class="fas fa-search fa-sm i-medium"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            @*Full Screen Icon*@
+                            <div class="col-1 text-center mt-3">
+                                <a href="javascript:void(0)" onclick="javascript:toggleFullScreen()">
+                                    <i class="fas fa-expand text-secondary i-medium d-none d-md-block" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* Column 7 --> 5 Icons*@
+                    <div class="col-5 mt-3">
+                        <div class="row">
+                            @*Notification Icon*@
+                            <div class="col-2 text-center">
+                                <a href="javascript:void(0)" onclick="window.location.href='#'">
+                                    <i class="fas fa-bell text-secondary i-medium d-none d-md-block" aria-hidden="true"></i>
+                                </a>
+
+
+                            </div>
+                            @*Envelope Icon*@
+                            <div class="col-2 text-center">
+                                <a href="javascript:void(0)" onclick="window.location.href='#'">
+                                    <i class="fas fa-envelope text-secondary i-medium d-none d-md-block" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                            @*th Icon*@
+                            <div class="col-2 text-center">
+                                <a href="javascript:void(0)" onclick="window.location.href='#'">
+                                    <i class="fas fa-th text-secondary i-medium d-none d-md-block" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                            @*Logged User Image*@
+                            <div class="col-2 text-center" style="margin-top:-1%;">
+                                @if (Session["imgurl"].ToString() != string.Empty)
+                                {
+                                    <img src="@String.Format("data:image/jpg;base64,{0}", Session["imgurl"])" width="35" height="35" class="rounded-circle d-none d-md-block mb-5" id="noti_Button1" />
+                                    <ul>
+
+                                        <li id="noti_Container1">
+                                            <div class="card text-center mt-2" id="notifications1">
+                                                <div class="top-card">
+                                                    <img src="@String.Format("data:image/jpg;base64,{0}", Session["imgurl"])" width="35" height="35" class="rounded-circle" id="noti_Button1" />
+                                                    <div class="mt-3">
+                                                        <h5>@Session["Username"]</h5>
+                                                        <a href="profile.html" class="btn btn-xs btn-secondary btn-sm mt-1">View Profile</a>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="card-body dropcard">
+                                                    <ul style="list-style-type:none;">
+                                                        <li style="list-style-type:none;">
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#">My Profile</a>
+                                                            <a class="dropdown-item" href="#">My Balance</a>
+                                                            <a class="dropdown-item" href="#">Inbox</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#">Account Setting</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#">Logout</a>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+
+                                        </li>
+
+                                    </ul>
+                                }
+                                else
+                                {
+                                    @*<img src="~/images/user.jpg" class="rounded-circle ml-2 img-fluid d-none d-md-block" width="35" height="45">*@
+                                    <i class="fa fa-user-circle text-secondary fa-2x i-medium d-none d-md-block" id="noti_Button1" aria-hidden="true"></i>
+                                    <ul>
+                                        <li id="noti_Container1">
+
+                                            <div class="card text-center mt-2" id="notifications1">
+
+
+                                                <div class="user-box mt-2">
+                                                    <i class="fa fa-user-circle text-secondary fa-3x i-medium  " aria-hidden="true"></i>
+
+                                                    <div class="mt-2">
+                                                        <h5>@Session["Username"]</h5>
+                                                        <a href="profile.html" class="btn btn-xs btn-secondary btn-sm mt-1">View Profile</a>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="card-body">
+                                                    <ul>
+                                                        <li>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#">My Profile</a>
+                                                            <a class="dropdown-item" href="#">My Balance</a>
+                                                            <a class="dropdown-item" href="#">Inbox</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#">Account Setting</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#">Logout</a>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </li>
+
+                                    </ul>
+                                }
+
+                            </div>
+                            @*Setting Image*@
+                            <div class="col-2 text-center">
+                                <a href="javascript:void(0)" class="text-decoration-none">
+                                    <i class="fas fa-cog text-secondary i-medium d-none d-md-block" id="menu-toggle"></i>
+                                </a>
+                            </div>
+                            @*Sign Out Image*@
+                            <div class="col-1 text-center">
+                                <a href="javascript:void(0)" onclick="window.location.href='@Url.Action("LogOut","Account")'">
+                                    <span class="rights"> <i class="fas fa-power-off text-secondary i-medium large_icon"></i></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Second Row For Body*@
+        <div class="row" id="row2">
+            @*First Column For Side Bar Menu*@
+            <div class="bg-light-black overflow-vertical-auto sidebar" id="slideOut">
+                <div class="sidebar-content">
+                    <div class="sidebar-menu side-nav menu">
+                        @*@CustomHtmlHelper.DashBoardMenu(HtmlHelper helper, Model);*@
+
+                        @*@Html.DashBoardMenu(Model)*@
+                        @Html.DashBoardMenu((List<MenuViewModel>)HttpContext.Current.Session["UserProfileMenu1"])
+                        @*<ul class="navbar-nav">
+                                @{
+                                    var mainprmkey = -1;
+                                    var submainprmkey = -1;
+                                    foreach (var dr in Model)
+                                    {
+                                        <li class="sidebar-dropdown nav-item">
+                                            @if (dr.ParentMenuPrmKey == 0)
+                                            {
+                                                <a href="javascript:void(0)" onclick="window.location.href='#'" class="@dr.MenuPrmKey" id="nav-link">
+                                                    <i class="@dr.IconImageClass"></i>
+                                                    <span>@dr.NameOfMenu</span>
+                                                </a>
+                                                mainprmkey = dr.MenuPrmKey;
+                                            }
+                                            @if (mainprmkey == dr.ParentMenuPrmKey)
+                                            {
+                                                <div class="sidebar-submenu submenu  @dr.ParentMenuPrmKey">
+                                                    <ul class="navbar-nav ml-4">
+                                                        <li class="sidebar-dropdown nav-item">
+                                                            <a href="javascript:void(0)" id="nav-link" class="@dr.MenuPrmKey" onclick="LoadPage('@dr.NameOfController','@dr.NameOfActionMethod')">
+                                                                <i class="@dr.IconImageClass"></i>
+                                                                <span>@dr.NameOfMenu</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                submainprmkey = dr.MenuPrmKey;
+                                            }
+                                            @if (submainprmkey == dr.ParentMenuPrmKey)
+                                            {
+                                                <div class="sidebar-submenu subsubmenu @dr.ParentMenuPrmKey">
+                                                    <ul class="navbar-nav">
+                                                        <li class="sidebar-dropdown nav-item">
+                                                            <a href="javascript:void(0)" id="nav-link" class="@dr.MenuPrmKey" onclick="LoadPage('@dr.NameOfController','@dr.NameOfActionMethod')">@dr.NameOfMenu</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </li>
+                                    }
+                                }
+                            </ul>*@
+                    </div>
+                </div>
+
+            </div>
+            <div id="wrapper">
+                <!-- Sidebar -->
+                <div id="sidebar-wrapper">
+                    <ul class="sidebar-nav">
+                        <li class="sidebar-brand"> <a href="#"> Start Bootstrap </a> </li>
+                        <li> <a href="#">Dashboard</a> </li>
+                        <li> <a href="#">Shortcuts</a> </li>
+                        <li> <a href="#">Overview</a> </li>
+                        <li> <a href="#">Events</a> </li>
+                        <li> <a href="#">About</a> </li>
+                        <li> <a href="#">Services</a> </li>
+                        <li> <a href="#">Contact</a> </li>
+                    </ul>
+                </div> <!-- /#sidebar-wrapper -->
+
+            </div> <!-- /#wrapper -->
+            @*Render Body Div*@
+            <div class="content">
+                @RenderBody()
+            </div>
+        </div>
+        @*Footer*@
+        <div class="row navbar navbar-dark py-0 bg-white  navbar-expand-lg  fixed-bottom py-md-2" style="box-shadow: 0px 2px 10px rgba(0, 0, 0, .25);">
+            <div class=" col-md-11 text-center ">
+                <strong>
+                    <span class="text-dark text-center py-0 ml-5"><small><strong>Copyright</strong></small>&copy;<small><strong>All Right Reserved 2021-22</strong></small></span>
+                </strong>
+            </div>
+            <div class=" col-md-2 logintime ml-1">
+                <div class=" bg-light item pt-1 pr-2" style=" height:30px;width:45%;   background: #eee;  box-shadow: 0px 2px 10px rgba(0, 0, 0, .25);">
+
+                    <strong>
+                        <span id="timer" data-placement="left" data-toggle="tooltip" title="Login Time Duration"> 00:00:00 </span>
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Placing scripts at the bottom of the <body> element improves the display speed,
+        because script interpretation slows down the display.*@
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jslib")
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="~/Scripts/Custom/datatable.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+
+    <script src="https://rawgit.com/tempusdominus/bootstrap-4/master/build/js/tempusdominus-bootstrap-4.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+    <script src="~/Scripts/Custom/CustomSweetAlert.js"></script>
+
+    @* Transaction Status *@
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            @TempData["TransactionStatus"] = null;
+        })
+         var status = '@TempData["TransactionStatus"]';
+         var sessionTimeoutWarning = @Session.Timeout - 1;
+    </script>
+    <script>
+        var lang = '@Session["RegionalLanguageInEnglish"]';
+    </script>
+
+    <script src="~/Scripts/translation.js"></script>
+    <script src="~/Scripts/transliteration.I.js"></script>
+    <script type="text/javascript">google.load("elements", "1", { packages: "transliteration" });</script>
+
+    @* Insert Immediately following Script After Above Code For Transaction Status Toast *@
+    <script src="~/Scripts/Custom/Custometoastr.js"></script>
+
+    <script type="text/javascript">
+        var sessionTimeoutWarning = @Session.Timeout - 1;
+
+    </script>
+
+    <script src="~/Scripts/Custom/CustomeDashboard.js"></script>
+    <script>
+
+        $(document).ready(function (event) {
+            debugger;
+            //alert(window.closed);
+
+
+            $("#menu-toggle").click(function (e) {
+
+                $("#wrapper").toggleClass("toggled");
+            });
+
+        })
+        $(document).click(function () {
+            $('#notifications3').hide();
+        })
+        $('#noti_Button1').click(function () {
+            debugger;
+            //$('#notifications').hide();
+            //$('#notifications1').hide();
+            //$('#notifications2').hide();
+            $('#notifications3').hide();
+            // TOGGLE (SHOW OR HIDE) NOTIFICATION WINDOW.
+            $('#notifications1').fadeToggle('slow', 'linear', function () {
+                if ($('#notifications1').is(':hidden')) {
+
+                }
+                // CHANGE BACKGROUND COLOR OF THE BUTTON.
+                else $('#noti_Button1').css('background-color', '#FFF');
+            });
+            $('#noti_Counter').fadeOut('slow');     // HIDE THE COUNTER.
+
+            return false;
+        })
+        $('[data-toggle="tooltip"]').tooltip();
+
+        var timer;
+        var startTime;
+        var span = $('#timer');
+        function start() {
+            var date = ('@Session["LoginTime"]');
+            startTime = date;
+            timer = setInterval(clockTick, 0);
+        }
+        function clockTick() {
+
+            var currentTime = Date.now(),
+                time = new Date(currentTime - startTime),
+                hours = time.getUTCHours(),
+                mins = time.getUTCMinutes(),
+                secs = time.getUTCSeconds(),
+                display = span;
+
+                display.html((hours < 10 ? "0" + hours : hours) + ":" + (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs));
+
+
+        };
+    </script>
+    <script>
+        $(document).ready(function () {
+            if (window.name != "popup_window") {
+                document.write("<p>Oops… Something Went Wrong. Please contact a System Administrator.</p>");
+                document.close();
+            }
+        });
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

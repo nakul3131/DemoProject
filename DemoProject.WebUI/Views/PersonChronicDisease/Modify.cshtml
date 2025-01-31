@@ -1,0 +1,172 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonChronicDiseaseViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.HtmlHelpers
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonChronicDiseaseViewModel model = new PersonChronicDiseaseViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PSCMOD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Chronic Disease - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="card-body ml-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="modal fade" id="chronic-disease-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+
+                                                            <h4 class="modal-title text-center" id="chronic-text">Add</h4>
+                                                            <button type="button" class="close-chronic-disease-modal" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @*Disease*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Disease")
+                                                                @Html.DropDownListFor(m => m.DiseaseId, new SelectList(personDetailViewModel.DiseaseDropdownList, "Value", "Text", 0), "--- Select Disease ---", new { @id = "disease-id", @class = "form-control mandatory-mark modal-input", required = "required", })
+                                                                @Html.ValidationMessageFor(m => m.DiseaseId)
+                                                                <span id="disease-id-error" class="error modal-input-error d-none">Please Select Valid Disease. </span>
+                                                            </div>
+
+                                                            @*OtherDetails*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Other Details")
+                                                                @Html.TextAreaFor(m => m.OtherDetails, new { @id = "other-detail", @class = "form-control mandatory-mark alpha-numeric default-none deny-multiple-space modal-input", @placeholder = "Enter Other Details", required = "required", @maxlength = 400 })
+                                                                @Html.ValidationMessageFor(m => m.OtherDetails)
+                                                                <span id="other-detail-error" class="error modal-input-error d-none">Please Enter Valid Other Details. </span>
+                                                            </div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Note")
+                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-chronic-disease", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                            </div>
+
+                                                            @*ReasonForModification*@
+                                                            <div id="chronic-div" class="form-group">
+                                                                @Html.CustomLabel("Reason For Modification")
+                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-chronic-disease", @class = "form-control default-none modal-input deny-multiple-space", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" id="btn-add-chronic-disease-modal" class="btn btn-success ">Add</button>
+                                                            <button type="button" id="btn-update-chronic-disease-modal" class="btn btn-primary ">Update</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <table id="tbl-chronic-disease" class="table compact table-striped table-bordered" width="100">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check_all" id="select-all-chronic-disease" /></th>
+                                                            <th class="d-none">DiseaseId</th>
+                                                            <th>Disease</th>
+                                                            <th>OtherDetails</th>
+                                                            <th>Note</th>
+                                                            <th>ReasonForModification</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable<PersonChronicDiseaseViewModel> chronicDiseaseViewModelList = (IEnumerable<PersonChronicDiseaseViewModel>)HttpContext.Current.Session["ChronicDisease"];
+                                                            if (chronicDiseaseViewModelList != null)
+                                                            {
+                                                                foreach (PersonChronicDiseaseViewModel viewModel in chronicDiseaseViewModelList)
+                                                                {
+                                                                    <tr class="text-center">
+                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                        <td class="d-none">@viewModel.DiseaseId</td>
+                                                                        <td>@viewModel.NameOfDisease</td>
+                                                                        <td>@viewModel.OtherDetails</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For PrmKey*@
+                                @Html.HiddenFor(m => m.PrmKey)
+
+                                @*Hiddent Field For PersonPrmKey*@
+                                @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                @*Hiddent Field For CenterOccupationPrmKey*@
+                                @Html.HiddenFor(m => m.PersonChronicDiseasePrmKey)
+
+                                @*Hiddent Field For PersonAddressTranslationPrmKey*@
+                                @Html.HiddenFor(m => m.PersonId)
+                            </div>
+                            //Save/Submit Button
+                            @Html.OperationFooter("Modify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var saveDataTableURL = "@Url.Action("SaveChronicDiseaseDataTable", "PersonChronicDisease")";
+</script>
+<script src="~/Scripts/Custom/PersonChronicDisease.js"></script>

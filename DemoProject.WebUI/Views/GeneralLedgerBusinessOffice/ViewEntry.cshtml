@@ -1,0 +1,148 @@
+﻿@model DemoProject.Services.ViewModel.Account.GL.GeneralLedgerBusinessOfficeViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.GL
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    GeneralLedgerDetailViewModel detailViewModel = new GeneralLedgerDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("GLBVET");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>GeneralLedger - ViewEntry</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">ViewEntry</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+
+
+                                @*======= Fourth Row - Accordians =======*@
+                                <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                    @*Accordian 1 - GeneralLedgerBusinessOffice*@
+                                    <div id="heading-business-office" class="card mt-3">
+                                        <div class="card-header" id="business-office-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office" data-target="#collapse-business-office">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Business Office")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="business-office-error" class="error d-none">Business Office Required Data, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-business-office" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office" data-target="#collapse-business-office">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-business-office" aria-labelledby="heading-business-office" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="card-body">
+                                                                <table id="tbl-business-office" class="table compact table-striped table-bordered read-only" width="100">
+                                                                    <thead class="text-center read-only">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-business-office" /></th>
+                                                                            <th class="d-none">BusinessOfficeId</th>
+                                                                            <th>NameOfBusinessOffice</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center read-only">
+                                                                        @{
+                                                                            IEnumerable<GeneralLedgerBusinessOfficeViewModel> generalLedgerBusinessOfficeViewModelList = (IEnumerable<GeneralLedgerBusinessOfficeViewModel>)HttpContext.Current.Session["GeneralLedgerBusinessOffice"];
+
+                                                                            foreach (GeneralLedgerBusinessOfficeViewModel viewModel in generalLedgerBusinessOfficeViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.BusinessOfficeId</td>
+                                                                                    <td>@viewModel.NameOfBusinessOffice</td>
+                                                                                    <td>@viewModel.ActivationDate</td>
+                                                                                    <td>@viewModel.ExpiryDate</td>
+                                                                                    <td class="d-none" id="transactionCloseDate">@viewModel.CloseDate</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Hiddent Field For GeneralLedgerPrmKey*@
+                                    @Html.HiddenFor(m => m.GeneralLedgerPrmKey)
+
+                                    @*Hiddent Field For GeneralLedgerBusinessOfficePrmKey*@
+                                    @Html.HiddenFor(m => m.GeneralLedgerBusinessOfficePrmKey)
+
+
+
+                                </div>
+                            </div>
+
+                            @*Footer*@
+                            @Html.OperationFooter("None", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/GeneralLedgerBusinessOffice.js"></script>
+
+

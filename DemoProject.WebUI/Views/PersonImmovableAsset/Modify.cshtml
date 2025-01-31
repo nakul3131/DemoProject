@@ -1,0 +1,410 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonImmovableAssetViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonImmovableAssetViewModel model = new PersonImmovableAssetViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PIAMOD");
+
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Immovable Asset - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="card-body ml-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="modal fade" id="immovable-asset-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title text-center" id="immovable-asset-text">Add</h4>
+                                                            <button type="button" class="close-immovable-asset-modal" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @*Survey Number*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Survey Number")
+                                                                @Html.TextBoxFor(m => m.SurveyNumber, new { @id = "survey-numbers", @class = "form-control mandatory-mark alpha-numeric-with-dash-slash upper-case deny-multiple-space modal-input", @placeholder = "Enter Survey Number", required = "required", @minlength = 3, @maxlength = 50 })
+                                                                @Html.ValidationMessageFor(m => m.SurveyNumber)
+                                                                <span id="survey-numbers-error" class="error modal-input-error d-none">Please Enter Valid Survey Number. </span>
+                                                            </div>
+
+                                                            @*City Survey Number*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("City Survey Number")
+                                                                @Html.TextBoxFor(m => m.CitySurveyNumber, new { @id = "city-survey-numbers", @class = "form-control mandatory-mark alpha-numeric-with-dash-slash upper-case deny-multiple-space modal-input", @placeholder = "Enter City Survey Number", required = "required", @minlength = 3, @maxlength = 50 })
+                                                                @Html.ValidationMessageFor(m => m.CitySurveyNumber)
+                                                                <span id="city-survey-numbers-error" class="error modal-input-error d-none">Please Enter Valid City Survey Number. </span>
+                                                            </div>
+
+                                                            @*OtherNumber*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Other Number")
+                                                                @Html.TextBoxFor(m => m.OtherNumber, new { @id = "number", @class = "form-control mandatory-mark deny-multiple-space upper-case modal-input", @placeholder = "Enter Other Number", required = "required", @minlength = 3, @maxlength = 50 })
+                                                                @Html.ValidationMessageFor(m => m.OtherNumber)
+                                                                <span id="number-error" class="error modal-input-error d-none">Please Enter Valid Other Number. </span>
+                                                            </div>
+
+                                                            @*Area Of Land*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Area Of Land(In Guntha)")
+                                                                @Html.TextBoxFor(m => m.AreaOfLand, new { @id = "area-of-land-immovable", @class = "form-control mandatory-mark real-number modal-input", @placeholder = "Enter Area Of Land(In Guntha)", @type = "number", @min = 1, @max = 9999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.AreaOfLand)
+                                                                <span id="area-of-land-immovable-error" class="error modal-input-error d-none">Please Enter Valid Area Of Land(In Guntha). </span>
+                                                            </div>
+
+                                                            @*Construction Area*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Construction Area")
+                                                                &nbsp;&nbsp;<span class="text-c-blue"><i class="fa fa-info-circle">&nbsp;&nbsp;Construction Area(In square feet)</i></span>
+                                                                @Html.TextBoxFor(m => m.ConstructionArea, new { @id = "construction-area", @class = "form-control mandatory-mark real-number modal-input", @placeholder = "Enter Construction Area", @type = "number", @min = 50, @max = 999999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.ConstructionArea)
+                                                                <span id="construction-area-error" class="error modal-input-error d-none">Please Enter Valid construction-area. </span>
+                                                            </div>
+
+                                                            @*Carpet Area*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Carpet Area")
+                                                                &nbsp;&nbsp;<span class="text-c-blue"><i class="fa fa-info-circle">&nbsp;&nbsp;Carpet Area(In square feet)</i></span>
+                                                                @Html.TextBoxFor(m => m.CarpetArea, new { @id = "carpet-area", @class = "form-control mandatory-mark real-number modal-input", @placeholder = "Enter Carpet Area", @type = "number", @min = 20, @max = 999999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.CarpetArea)
+                                                                <span id="carpet-area-error" class="error modal-input-error d-none">Please Enter Valid Carpet Area. </span>
+                                                            </div>
+
+                                                            @*Current Market Value*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Current Market Value")
+                                                                @Html.TextBoxFor(m => m.CurrentMarketValue, new { @id = "current-market-value-immovable", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Current Market Value", @type = "number", @min = 1, @max = 999999999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.CurrentMarketValue)
+                                                                <span id="current-market-value-immovable-error" class="error modal-input-error d-none">Please Enter Valid Current Market Value. </span>
+                                                            </div>
+
+                                                            @*Annual Rent Income*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Annual Rent Income")
+                                                                @Html.TextBoxFor(m => m.AnnualRentIncome, new { @id = "annual-rent-income", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Annual Rent Income", @type = "number", @min = 0, @max = 9999999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.AnnualRentIncome)
+                                                                <span id="annual-rent-income-error" class="error modal-input-error d-none">Please Enter Valid Annual Rent Income. </span>
+                                                            </div>
+
+                                                            @*Residence Type*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Residence Type")
+                                                                @Html.DropDownListFor(m => m.ResidenceTypeId, new SelectList(personDetailViewModel.ResidenceTypeDropdownList, "Value", "Text", 0), "--- Select Residence Type --- ", new { @id = "residence-types-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.ResidenceTypeId)
+                                                                <span id="residence-types-id-error" class="error modal-input-error d-none">Please Select Valid Residence Type. </span>
+                                                            </div>
+
+                                                            @*Ownership Type*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Ownership Type")
+                                                                @Html.DropDownListFor(m => m.OwnershipTypeId, new SelectList(personDetailViewModel.OwnershipTypeDropdownList, "Value", "Text", 0), "--- Select Ownership Type --- ", new { @id = "ownership-types-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.OwnershipTypeId)
+                                                                <span id="ownership-types-id-error" class="error modal-input-error d-none">Please Select Valid Ownership Type. </span>
+                                                            </div>
+
+                                                            @*Ownership Percentage*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Ownership Percentage")
+                                                                @Html.TextBoxFor(m => m.OwnershipPercentage, new { @id = "ownership-percentage-immovable-asset", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Ownership Percentage", @type = "number", @min = 1, @max = 100, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.OwnershipPercentage)
+                                                                <span id="ownership-percentage-immovable-asset-error" class="error modal-input-error d-none">Please Enter Valid Ownership Percentage. </span>
+                                                            </div>
+
+                                                            @*Is Constructed*@
+                                                            <div class="row form-group">
+                                                                <div class="col-9">
+                                                                    @Html.CustomLabel("Is Constructed")
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <div class="text-right">
+                                                                        <label class="switch switch-left-right">
+                                                                            @Html.CheckBoxFor(m => m.IsConstructed, new { @id = "is-constructed", @class = "form-control modal-switch-input" })
+                                                                            <span class="slider round">
+                                                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            @*Has Any Mortgage*@
+                                                            <div class="row form-group">
+                                                                <div class="col-9">
+                                                                    @Html.CustomLabel("Has Any Mortgage")
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <div class="text-right">
+                                                                        <label class="switch switch-left-right">
+                                                                            @Html.CheckBoxFor(m => m.HasAnyMortgage, new { @id = "has-any-mortgage-immovable", @class = "form-control modal-switch-input" })
+                                                                            <span class="slider round">
+                                                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            @*Is Ownership Deceased*@
+                                                            <div class="row form-group">
+                                                                <div class="col-9">
+                                                                    @Html.CustomLabel("Is Ownership Deceased")
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <div class="text-right">
+                                                                        <label class="switch switch-left-right">
+                                                                            @Html.CheckBoxFor(m => m.IsOwnershipDeceased, new { @id = "is-ownership-deceased-immovable", @class = "form-control modal-switch-input" })
+                                                                            <span class="slider round">
+                                                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="@((ViewBag.PersonInformationParameter.ImmovableAssetDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Photo")
+                                                                    <span id="immovable-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Photo. </span>
+                                                                    @Html.TextBoxFor(m => m.PhotoPathImmovable, new { @id = "immovable-file-uploader", @class = "form-control mandatory-mark modal-input doc-upload", type = "file", name = "PhotoPathImmovable", @placeholder = "Enter Photo", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PhotoPathImmovable)
+                                                                </div>
+                                                                <hr />
+                                                                <div><img id="immovable-file-uploader-image-preview" class="modal-input-img-preview" src="" width="200" height="200" /></div>
+                                                                <hr />
+
+                                                                @*FileCaption*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("File Caption")
+                                                                    @Html.TextBoxFor(m => m.FileCaption, new { @id = "file-caption-immovable", @class = "form-control default-none deny-multiple-space mandatory-mark title-case modal-input", @placeholder = "Enter File Caption", @maxlength = 400, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.FileCaption)
+                                                                    <span id="file-caption-immovable-error" class="error modal-input-error d-none">Please Enter File Caption. </span>
+                                                                </div>
+
+                                                                @*Hiddent Field For MovableAssetDocumentUpload*@
+                                                                @Html.HiddenFor(m => personInformationParameterViewModel.ImmovableAssetDocumentUpload, new { @id = "immovable-asset-upload" })
+
+                                                                @*Hiddent Field For EnableMovableAssetDocumentUploadInLocalStorage*@
+                                                                @Html.HiddenFor(m => personInformationParameterViewModel.EnableImmovableAssetDocumentUploadInLocalStorage, new { @id = "enable-immovable-asset-upload" })
+                                                            </div>
+
+                                                            @*Asset Full Description*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Asset Full Description")
+                                                                @Html.TextAreaFor(m => m.AssetFullDescription, new { @id = "asset-full-description", @class = "form-control default-none deny-multiple-space title-case modal-input", @placeholder = "Enter Asset Full Description", @maxlength = 4000 })
+                                                                @Html.ValidationMessageFor(m => m.AssetFullDescription)
+                                                            </div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Note")
+                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-immovable-asset", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                            </div>
+
+                                                            @*ReasonForModification*@
+                                                            <div id="immovable-div" class="form-group">
+                                                                @Html.CustomLabel("Reason For Modification")
+                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-immovable-asset", @class = "form-control deny-multiple-space default-none modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" id="btn-add-immovable-asset-modal" class="btn btn-success ">Add</button>
+                                                            <button type="button" id="btn-update-immovable-asset-modal" class="btn btn-primary ">Update</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <table id="tbl-immovable-asset" class="table compact table-striped table-bordered" width="100">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check_all" id="select-all-immovable-asset" /></th>
+                                                            <th>SurveyNumber</th>
+                                                            <th>CitySurveyNumber</th>
+                                                            <th>OtherNumber</th>
+                                                            <th>AreaOfLand</th>
+                                                            <th>ConstructionArea</th>
+                                                            <th>CarpetArea</th>
+                                                            <th>CurrentMarketValue</th>
+                                                            <th>AnnualRentIncome</th>
+                                                            <th class="d-none">ResidenceTypeId</th>
+                                                            <th>ResidenceType</th>
+                                                            <th class="d-none">OwnershipTypeId</th>
+                                                            <th>OwnershipType</th>
+                                                            <th>OwnershipPercentage</th>
+                                                            <th>IsConstructed</th>
+                                                            <th>HasAnyMortgage</th>
+                                                            <th>IsOwnershipDeceased</th>
+                                                            <th>Photopath</th>
+                                                            <th>Photo</th>
+                                                            <th>FileCaption</th>
+                                                            <th>AssetFullDescription</th>
+                                                            <th>Note</th>
+                                                            <th>ReasonForModification</th>
+                                                            <th class="d-none">FileName</th>
+                                                            <th class="d-none">PersonImmovableAssetDocument</th>
+                                                            <th class="d-none">LocalStoragePath</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable
+                                                            <PersonImmovableAssetViewModel>
+                                                                personImmovableAssetViewModelList = (IEnumerable<PersonImmovableAssetViewModel>
+                                                                    )HttpContext.Current.Session["ImmovableAsset"];
+                                                            if (personImmovableAssetViewModelList != null)
+                                                            {
+                                                                foreach (PersonImmovableAssetViewModel viewModel in personImmovableAssetViewModelList)
+                                                                {
+                                                                    counter += 1;
+                                                                    photoId = "photo-id" + counter.ToString();
+                                                                    fileUploaderId = "data-table-finance-file-uploader" + counter.ToString();
+                                                                    <tr>
+                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                        <td>@viewModel.SurveyNumber</td>
+                                                                        <td>@viewModel.CitySurveyNumber</td>
+                                                                        <td>@viewModel.OtherNumber</td>
+                                                                        <td>@viewModel.AreaOfLand</td>
+                                                                        <td>@viewModel.ConstructionArea</td>
+                                                                        <td>@viewModel.CarpetArea</td>
+                                                                        <td>@viewModel.CurrentMarketValue</td>
+                                                                        <td>@viewModel.AnnualRentIncome</td>
+                                                                        <td class="d-none">@viewModel.ResidenceTypeId</td>
+                                                                        <td>@viewModel.NameOfResidenceType</td>
+                                                                        <td class="d-none">@viewModel.OwnershipTypeId</td>
+                                                                        <td>@viewModel.NameOfOwnershipType</td>
+                                                                        <td>@viewModel.OwnershipPercentage</td>
+                                                                        <td>@viewModel.IsConstructed</td>
+                                                                        <td>@viewModel.HasAnyMortgage</td>
+                                                                        <td>@viewModel.IsOwnershipDeceased</td>
+                                                                        <td>
+                                                                            <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                        </td>
+                                                                        <td>
+                                                                            @if (viewModel.EnableImmovableAssetDocumentUploadInLocalStorage == true)
+                                                                            {
+                                                                                <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.ImmovableAssetDocumentLocalStoragePath + viewModel.PhotoPathImmovable.FileName)" width="50" height="50" />
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                                var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                                <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                                string filename = Path.GetFileName(imgsrc);
+                                                                            }
+                                                                        </td>
+                                                                        <td>@viewModel.FileCaption</td>
+                                                                        <td>@viewModel.AssetFullDescription</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                        <td class="d-none">@viewModel.NameOfFile</td>
+                                                                        <td class="d-none">@viewModel.PersonImmovableAssetDocumentPrmKey</td>
+                                                                        <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For PersonPrmKey*@
+                                @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                @*Hiddent Field For PersonImmovableAssetPrmKey*@
+                                @Html.HiddenFor(m => m.PersonImmovableAssetPrmKey)
+
+                                @*Hiddent Field For PersonImmovableAssetDocumentPrmKey*@
+                                @Html.HiddenFor(m => m.PersonImmovableAssetDocumentPrmKey)
+
+                                @*Hiddent Field For PersonId*@
+                                @Html.HiddenFor(m => m.PersonId)
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Modify", "SaveImmovableDataTables", "PersonImmovableAsset", "None")
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var saveDataTableURL = '@Url.Action("SaveImmovableDataTables", "PersonImmovableAsset")';
+    var GetDocumentValidationFields = '@Url.Action("GetDocumentValidationFields", "PersonImmovableAsset")';
+</script>
+<script src="~/Scripts/Custom/PersonImmovableAsset.js"></script>

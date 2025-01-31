@@ -1,0 +1,458 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonFinancialAssetViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+
+
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PFAAMN");
+
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Financial Asset - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark"> &nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+
+                                @{
+                                    <h5 class="ml-5 mt-5 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+
+                                @*CheckerRemark*@
+                                <div class="ml-5 mt-5 mr-5 form-group read-only">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+
+
+                                <div id="heading-financial-asset" class="ml-2 card-body">
+                                    <div class="row mt-5">
+                                        <div class="col-12">
+                                            <div class="modal fade" id="financial-asset-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title  text-center" id="asset-text">Add</h4>
+                                                            <button type="button" class="close-financial-asset-modal" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            @*FinancialOrganizationType*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Financial Organization Type")
+                                                                @Html.DropDownListFor(m => m.FinancialOrganizationTypeId, new SelectList(personDetailViewModel.FinancialOrganizationTypeDropdownList, "Value", "Text", 0), "--- Select Financial Organization Type --- ", new { @id = "financial-organization-type", @class = "form-control mandatory-mark modal-input" })
+                                                                @Html.ValidationMessageFor(m => m.FinancialOrganizationTypeId)
+                                                                <span id="financial-organization-type-error" class="error modal-input-error d-none">Please Select Valid Financial Organization Type. </span>
+                                                            </div>
+
+                                                            @*NameOfFinancialOrganization*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Name Of Financial Organization")
+                                                                @Html.TextBoxFor(m => m.NameOfFinancialOrganization, new { @id = "name-of-financial-organization", @class = "form-control alpha mandatory-mark modal-input", @placeholder = "Enter Name Of Financial Organization", required = "required", @minlength = 3, @maxlength = 150, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.NameOfFinancialOrganization)
+                                                                <span id="name-of-financial-organization-error" class="error modal-input-error d-none">Please Enter Valid Name Of Financial Organization. </span>
+                                                            </div>
+
+                                                            @*TransNameOfFinancialOrganization*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel(personDetailViewModel.NameOfFinancialOrganizationInRegionalLanguage)
+                                                                @Html.TextBoxFor(m => m.TransNameOfFinancialOrganization, null, new { @id = "trans-name-of-financial-organization", @class = "form-control mandatory-mark deny-multiple-space modal-input", @placeholder = personDetailViewModel.NameOfFinancialOrganizationPlaceHolderInRegionalLanguage, @maxlength = 150, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.TransNameOfFinancialOrganization)
+                                                                <span id="trans-name-of-financial-organization-error" class="error modal-input-error d-none">Please Enter Valid Name Of Financial Organization. </span>
+                                                            </div>
+
+                                                            @*NameOfBranch*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Name Of Branch")
+                                                                @Html.TextBoxFor(m => m.NameOfBranch, new { @id = "name-of-branch", @class = "form-control mandatory-mark alpha-numeric modal-input", @placeholder = "Enter Name Of Branch", required = "required", @minlength = 3, @maxlength = 50, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.NameOfBranch)
+                                                                <span id="name-of-branch-error" class="error modal-input-error d-none">Please Enter Valid Name Of Branch. </span>
+                                                            </div>
+
+                                                            @*TransNameOfBranch*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel(personDetailViewModel.NameOfBranchInRegionalLanguage)
+                                                                @Html.TextBoxFor(m => m.TransNameOfBranch, null, new { @id = "trans-name-of-branch", @class = "form-control mandatory-mark deny-multiple-space modal-input", @placeholder = personDetailViewModel.NameOfBranchPlaceHolderInRegionalLanguage, @maxlength = 50, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.TransNameOfBranch)
+                                                                <span id="trans-name-of-branch-error" class="error modal-input-error d-none">Please Enter Valid Name Of Branch. </span>
+                                                            </div>
+
+                                                            @*AddressDetails*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Address Details")
+                                                                @Html.TextAreaFor(m => m.AddressDetails, new { @id = "address-details", @class = "form-control deny-multiple-space mandatory-mark title-case default-none modal-input", @placeholder = "Enter Address Details", required = "required", @maxlength = 1300, onkeydown = "Maketranslation()" })
+                                                                @Html.ValidationMessageFor(m => m.AddressDetails)
+                                                                <span id="address-details-error" class="error modal-input-error d-none">Please Enter Valid Address Details. </span>
+                                                            </div>
+
+                                                            @*TransAddressDetails*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel(personDetailViewModel.AddressDetailsInRegionalLanguage)
+                                                                @Html.TextAreaFor(m => m.TransAddressDetails, new { @id = "trans-address-details", @class = "form-control mandatory-mark deny-multiple-space default-none modal-input", @placeholder = personDetailViewModel.AddressDetailsPlaceHolderInRegionalLanguage, @maxlength = 1300, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.TransAddressDetails)
+                                                                <span id="trans-address-details-error" class="error modal-input-error d-none">Please Enter Valid Address Details. </span>
+                                                            </div>
+
+                                                            @*ContactDetails*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Contact Details")
+                                                                @Html.TextAreaFor(m => m.ContactDetails, new { @id = "contact-details", @class = "form-control deny-multiple-space mandatory-mark title-case default-none modal-input", @placeholder = "Enter Contact Details", required = "required", @maxlength = 400, onkeydown = "Maketranslation()" })
+                                                                @Html.ValidationMessageFor(m => m.ContactDetails)
+                                                                <span id="contact-details-error" class="error modal-input-error d-none">Please Enter Valid Contact Details. </span>
+                                                            </div>
+
+                                                            @*TransContactDetails*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel(personDetailViewModel.ContactDetailsInRegionalLanguage)
+                                                                @Html.TextAreaFor(m => m.TransContactDetails, new { @id = "trans-contact-details", @class = "form-control mandatory-mark deny-multiple-space default-none modal-input", @placeholder = personDetailViewModel.ContactDetailsPlaceHolderInRegionalLanguage, @maxlength = 400, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.TransContactDetails)
+                                                                <span id="trans-contact-details-error" class="error modal-input-error d-none">Please Enter Valid Contact Details. </span>
+                                                            </div>
+
+                                                            @*OpeningDate*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Opening Date")
+                                                                @Html.TextBoxFor(m => m.OpeningDate, "{0:yyyy-MM-dd}", new { @id = "activation-opening-dates", @class = "form-control activation-date mandatory-mark deny-future-date allow-past-date-upto-50y modal-input", required = "required", @Type = "date" })
+                                                                @Html.ValidationMessageFor(m => m.OpeningDate)
+                                                                <span id="activation-opening-dates-error" class="error modal-input-error d-none">Please Enter Valid Opening Date. </span>
+                                                            </div>
+
+                                                            @*MaturityDate*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Maturity Date")
+                                                                @Html.TextBoxFor(m => m.MaturityDate, "{0:yyyy-MM-dd}", new { @id = "expiry-opening-dates", @class = "form-control expiry-date mandatory-mark allow-future-date-upto-30y modal-input", required = "required", @Type = "date"})
+                                                                @Html.ValidationMessageFor(m => m.MaturityDate)
+                                                                <span id="expiry-opening-dates-error" class="error modal-input-error d-none">Please Enter Valid Maturity Date. </span>
+                                                            </div>
+
+                                                            @*FinancialAssetType*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Financial Asset Type")
+                                                                @Html.DropDownListFor(m => m.FinancialAssetTypeId, new SelectList(personDetailViewModel.FinancialAssetTypeDropdownList, "Value", "Text", 0), "--- Select Financial Asset Type ---", new { @id = "financial-asset-type", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.FinancialAssetTypeId)
+                                                                <span id="financial-asset-type-error" class="error modal-input-error d-none">Please Select Valid Financial Asset Type. </span>
+                                                            </div>
+
+                                                            @*FinancialAssetDescription*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Financial Asset Description")
+                                                                @Html.TextAreaFor(m => m.FinancialAssetDescription, new { @id = "financial-asset-description", @class = "form-control deny-multiple-space mandatory-mark title-case default-none modal-input", @placeholder = "Enter Financial Asset Description", required = "required", @maxlength = 1300, onkeydown = "Maketranslation()" })
+                                                                @Html.ValidationMessageFor(m => m.FinancialAssetDescription)
+                                                                <span id="financial-asset-description-error" class="error modal-input-error d-none">Please Enter Valid Financial Asset Description. </span>
+                                                            </div>
+
+                                                            @*TransFinancialAssetDescription*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel(personDetailViewModel.FinancialAssetDescriptionInRegionalLanguage)
+                                                                @Html.TextAreaFor(m => m.TransFinancialAssetDescription, new { @id = "trans-financial-asset-description", @class = "form-control mandatory-mark deny-multiple-space default-none modal-input", @placeholder = personDetailViewModel.FinancialAssetDescriptionPlaceHolderInRegionalLanguage, @maxlength = 1300, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.TransFinancialAssetDescription)
+                                                                <span id="trans-financial-asset-description-error" class="error modal-input-error d-none">Please Enter Valid Financial Asset Description. </span>
+                                                            </div>
+
+                                                            @*ReferenceNumber*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Reference Number")
+                                                                @Html.TextBoxFor(m => m.ReferenceNumber, new { @id = "references-number", @class = "form-control alpha-numeric-with-dash-slash upper-case mandatory-mark modal-input", @placeholder = "Enter Reference Number", required = "required", @maxlength = 50, onkeydown = "Maketranslation()" })
+                                                                @Html.ValidationMessageFor(m => m.ReferenceNumber)
+                                                                <span id="references-number-error" class="error modal-input-error d-none">Please Enter Valid Reference Number. </span>
+                                                            </div>
+
+                                                            @*TransReferenceNumber*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel(personDetailViewModel.ReferenceNumberInRegionalLanguage)
+                                                                @Html.TextBoxFor(m => m.TransReferenceNumber, null, new { @id = "trans-references-number", @class = "form-control mandatory-mark deny-multiple-space modal-input", @placeholder = personDetailViewModel.ReferenceNumberPlaceHolderInRegionalLanguage, required = "required", @maxlength = 50 })
+                                                                @Html.ValidationMessageFor(m => m.TransReferenceNumber)
+                                                                <span id="trans-references-number-error" class="error modal-input-error d-none">Please Enter Valid Reference Number. </span>
+                                                            </div>
+
+                                                            @*InvestedAmount*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Invested Amount")
+                                                                @Html.TextBoxFor(m => m.InvestedAmount, new { @id = "invested-amount", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Invested Amount", @type = "number", @min = 1, @max = 999999999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.InvestedAmount)
+                                                                <span id="invested-amount-error" class="error modal-input-error d-none">Please Enter Valid Invested Amount. </span>
+                                                            </div>
+
+                                                            @*MonthlyInterestIncomeAmount*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Monthly Interest Income Amount")
+                                                                @Html.TextBoxFor(m => m.MonthlyInterestIncomeAmount, new { @id = "monthly-interest-income-amount", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Monthly Interest Income Amount", required = "required", @type = "number", @min = 0, @max = 999999999 })
+                                                                @Html.ValidationMessageFor(m => m.MonthlyInterestIncomeAmount)
+                                                                <span id="monthly-interest-income-amount-error" class="error modal-input-error d-none">Please Enter Valid Monthly Interest Income Amount.</span>
+                                                            </div>
+
+                                                            @*CurrentMarketValue*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Current Market Value")
+                                                                @Html.TextBoxFor(m => m.CurrentMarketValue, new { @id = "current-market-values", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Current Market Value", @type = "number", @min = 1, @max = 999999999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.CurrentMarketValue)
+                                                                <span id="current-market-values-error" class="error modal-input-error d-none">Please Enter Valid Current Market Value. </span>
+                                                            </div>
+
+                                                            @*Has Any Mortgage*@
+                                                            <div class="row form-group mt-5">
+                                                                <div class="col-8">
+                                                                    @Html.CustomLabel("Has Any Mortgage")
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <div class="text-right">
+                                                                        <label class="switch switch-left-right">
+                                                                            @Html.CheckBoxFor(m => m.HasAnyMortgage, new { @id = "has-any-mortgage-financial", @class = "form-control modal-switch-input" })
+                                                                            <span class="slider round">
+                                                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            @*Photo*@
+                                                            <div class="@((ViewBag.PersonInformationParameter.FinancialAssetDocumentUpload == "D" )? "d-none" :  "d-block")">
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Photo")
+                                                                    <span id="finance-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Photo. </span>
+                                                                    @Html.TextBoxFor(m => m.PhotoPathFinance, new { @id = "finance-file-uploader", @class = "form-control mandatory-mark doc-upload modal-input", type = "file", name = "PhotoPath", @placeholder = "Enter Photo", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PhotoPathFinance)
+                                                                </div>
+                                                                <hr />
+                                                                <div><img id="finance-file-uploader-image-preview" class="modal-input-img-preview" src="" width="200" height="200" /></div>
+
+                                                                @*FileCaption*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("File Caption")
+                                                                    @Html.TextBoxFor(m => m.FileCaption, new { @id = "file-caption-finance", @class = "form-control mandatory-mark default-none deny-multiple-space pfinanciald title-case modal-input", @placeholder = "Enter File Caption", @maxlength = 400, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.FileCaption)
+                                                                    <span id="file-caption-finance-error" class="error modal-input-error d-none">Please Enter File Caption. </span>
+                                                                </div>
+                                                            </div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Note")
+                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-financial-asset", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                            </div>
+
+                                                            @*TransNote*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel(personDetailViewModel.NoteInRegionalLanguage)
+                                                                @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note-financial-asset", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = personDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1300 })
+                                                                @Html.ValidationMessageFor(m => m.TransNote)
+                                                            </div>
+
+                                                            @*ReasonForModification*@
+                                                            <div id="financial-div" class="form-group">
+                                                                @Html.CustomLabel("Reason For Modification")
+                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-financial-asset", @class = "form-control deny-multiple-space default-none modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                            </div>
+
+                                                            @*Hiddent Field For MovableAssetDocumentUpload*@
+                                                            @Html.HiddenFor(m => personInformationParameterViewModel.FinancialAssetDocumentUpload, new { @id = "financial-asset-document-upload" })
+
+                                                            @*Hiddent Field For PersonFinancialAssetDocumentPrmKey*@
+                                                            @Html.HiddenFor(m => personInformationParameterViewModel.EnableFinancialAssetDocumentUploadInLocalStorage, new { @id = "enable-financial-asset-document-upload" })
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" id="btn-add-financial-asset-modal" class="btn btn-success ">Add</button>
+                                                            <button type="button" id="btn-update-financial-asset-modal" class="btn btn-primary ">Update</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <table id="tbl-financial-asset" class="table compact table-striped table-bordered" width="100">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check_all" id="select-all-financial-asset" /></th>
+                                                            <th class="d-none">FinancialOrganizationType</th>
+                                                            <th>FinancialOrganizationType</th>
+                                                            <th>FinancialOrganization</th>
+                                                            <th>TransNameOfFinancialOrganization</th>
+                                                            <th>NameOfBranch</th>
+                                                            <th>TransNameOfBranch</th>
+                                                            <th>AddressDetails</th>
+                                                            <th>TransAddressDetails</th>
+                                                            <th>ContactDetails</th>
+                                                            <th>TransContactDetails</th>
+                                                            <th>OpeningDate</th>
+                                                            <th>MaturityDate</th>
+                                                            <th class="d-none">FinancialAssetType</th>
+                                                            <th>NameOfFinancialAssetType</th>
+                                                            <th>FinancialAssetDescription</th>
+                                                            <th>TransFinancialAssetDescription</th>
+                                                            <th>ReferenceNumber</th>
+                                                            <th>TransReferenceNumber</th>
+                                                            <th>InvestedAmount</th>
+                                                            <th>MonthlyInterestIncomeAmount</th>
+                                                            <th>CurrentMarketValue</th>
+                                                            <th>HasAnyMortgage</th>
+                                                            <th>Photopath</th>
+                                                            <th>Photo</th>
+                                                            <th>FileCaption</th>
+                                                            <th>Note</th>
+                                                            <th>TransNote</th>
+                                                            <th>ReasonForModification</th>
+                                                            <th class="d-none">FileName</th>
+                                                            <th class="d-none">PersonFinancialAssetDocument</th>
+                                                            <th class="d-none">LocalStoragePath</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable<PersonFinancialAssetViewModel> personFinancialAssetViewModelList = (IEnumerable<PersonFinancialAssetViewModel>)HttpContext.Current.Session["FinancialAsset"];
+                                                            if (personFinancialAssetViewModelList != null)
+                                                            {
+                                                                foreach (PersonFinancialAssetViewModel viewModel in personFinancialAssetViewModelList)
+                                                                {
+                                                                    counter += 1;
+                                                                    photoId = "photo-id" + counter.ToString();
+                                                                    fileUploaderId = "data-table-finance-file-uploader" + counter.ToString();
+                                                                    <tr>
+                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                        <td class="d-none">@viewModel.FinancialOrganizationTypeId</td>
+                                                                        <td>@viewModel.NameOfFinancialOrganizationType</td>
+                                                                        <td>@viewModel.NameOfFinancialOrganization</td>
+                                                                        <td>@viewModel.TransNameOfFinancialOrganization</td>
+                                                                        <td>@viewModel.NameOfBranch</td>
+                                                                        <td>@viewModel.TransNameOfBranch</td>
+                                                                        <td>@viewModel.AddressDetails</td>
+                                                                        <td>@viewModel.TransAddressDetails</td>
+                                                                        <td>@viewModel.ContactDetails</td>
+                                                                        <td>@viewModel.TransContactDetails</td>
+                                                                        <td>@viewModel.OpeningDate.ToString("yyyy-MM-dd")</td>
+                                                                        <td>@viewModel.MaturityDate.ToString("yyyy-MM-dd")</td>
+                                                                        <td class="d-none">@viewModel.FinancialAssetTypeId</td>
+                                                                        <td>@viewModel.NameOfFinancialAssetType</td>
+                                                                        <td>@viewModel.FinancialAssetDescription</td>
+                                                                        <td>@viewModel.TransFinancialAssetDescription</td>
+                                                                        <td>@viewModel.ReferenceNumber</td>
+                                                                        <td>@viewModel.TransReferenceNumber</td>
+                                                                        <td>@viewModel.InvestedAmount</td>
+                                                                        <td>@viewModel.MonthlyInterestIncomeAmount</td>
+                                                                        <td>@viewModel.CurrentMarketValue</td>
+                                                                        <td>@viewModel.HasAnyMortgage</td>
+                                                                        <td>
+                                                                            <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                        </td>
+                                                                        <td>
+                                                                            @if (viewModel.EnableFinancialAssetDocumentUploadInLocalStorage == true)
+                                                                            {
+                                                                                <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.FinancialAssetDocumentLocalStoragePath + viewModel.PhotoPathFinance.FileName)" width="50" height="50" />
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                                var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                                <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                                string filename = Path.GetFileName(imgsrc);
+                                                                            }
+                                                                        </td>
+                                                                        <td>@viewModel.FileCaption</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.TransNote</td>
+                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                        <td class="d-none">@viewModel.NameOfFile</td>
+                                                                        <td class="d-none">@viewModel.PersonFinancialAssetDocumentPrmKey</td>
+                                                                        <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Hiddent Field For PrmKey*@
+                                    @Html.HiddenFor(m => m.PrmKey)
+
+                                    @*Hiddent Field For PersonPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                    @*Hiddent Field For PersonId*@
+                                    @Html.HiddenFor(m => m.PersonId)
+
+                                    @*Hiddent Field For PersonMachineryAssetPrmKey*@
+                                    @Html.HiddenFor(m => Model.PersonFinancialAssetPrmKey)
+
+                                </div>
+
+                                @*Save/Submit Button*@
+                                @Html.OperationFooter("Amend", "Exit", "Home", "None")
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var saveDataTableURL = "@Url.Action("SaveFinanceDataTables", "PersonFinancialAsset")";
+</script>
+<script src="~/Scripts/Custom/PersonFinancialAsset.js"></script>

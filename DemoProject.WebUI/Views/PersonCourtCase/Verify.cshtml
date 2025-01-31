@@ -1,0 +1,169 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonCourtCaseViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+
+@{
+    PersonCourtCaseViewModel model = new PersonCourtCaseViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PCCVRF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Person Court Case - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark">&nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*MakerRemark*@
+                                <div class="form-group mt-5 ml-5 mr-5">
+                                    @Html.CustomLabel("Maker Remark")
+                                    @Html.TextBoxFor(m => m.MakerRemark, new { @id = "maker-remark", @class = "form-control mandatory-mark read-only" })
+                                    @Html.ValidationMessageFor(m => m.MakerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row ml-2">
+                                    <div class="col-12">
+
+                                        <div class="card-body">
+                                            <table id="tbl-court-case" class="table compact table-striped table-bordered" width="100">
+                                                <thead class="text-center read-only">
+                                                    <tr>
+                                                        <th><input type="checkbox" name="check_all" id="select-all-court-case" /></th>
+                                                        <th class="d-none">CourtCaseTypeId</th>
+                                                        <th>NameOfCourtCaseType</th>
+                                                        <th>FilingDate</th>
+                                                        <th>FilingNumber</th>
+                                                        <th>RegistrationDate</th>
+                                                        <th>RegistrationNumber</th>
+                                                        <th>CNRNumber</th>
+                                                        <th>AmountOfDecree</th>
+                                                        <th>CollateralAmount</th>
+                                                        <th class="d-none">CourtCaseStageId</th>
+                                                        <th>NameOfCourtCaseStage</th>
+                                                        <th>Note</th>
+                                                        <th>ReasonForModification</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="text-center read-only">
+                                                    @{
+                                                        IEnumerable
+                                                        <PersonCourtCaseViewModel>
+                                                            personCourtCaseViewModelList = (IEnumerable<PersonCourtCaseViewModel>
+                                                                )HttpContext.Current.Session["CourtCase"];
+                                                        if (personCourtCaseViewModelList != null)
+                                                        {
+                                                            foreach (PersonCourtCaseViewModel viewModel in personCourtCaseViewModelList)
+                                                            {
+                                                                <tr>
+                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                    <td class="d-none">@viewModel.CourtCaseTypeId</td>
+                                                                    <td>@viewModel.NameOfCourtCaseType</td>
+                                                                    <td>@viewModel.FilingDate.ToString("yyyy-MM-dd")</td>
+                                                                    <td>@viewModel.FilingNumber</td>
+                                                                    <td>@viewModel.RegistrationDate.ToString("yyyy-MM-dd")</td>
+                                                                    <td>@viewModel.RegistrationNumber</td>
+                                                                    <td>@viewModel.CNRNumber</td>
+                                                                    <td>@viewModel.AmountOfDecree</td>
+                                                                    <td>@viewModel.CollateralAmount</td>
+                                                                    <td class="d-none">@viewModel.CourtCaseStageId</td>
+                                                                    <td>@viewModel.NameOfCourtCaseStage</td>
+                                                                    <td>@viewModel.Note</td>
+                                                                    <td>@viewModel.ReasonForModification</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        @*NameOfUser*@
+                                        <div class="form-group read-only">
+                                            @Html.CustomLabel("Name Of User")
+                                            @Html.TextBoxFor(m => m.NameOfUser, new { @class = "form-control" })
+                                        </div>
+
+                                        @*EntryDateTime*@
+                                        <div class="form-group read-only">
+                                            @Html.CustomLabel("Entry Date Time")
+                                            @Html.TextBoxFor(m => m.EntryDateTime, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For PrmKey*@
+                                @Html.HiddenFor(m => m.PrmKey)
+
+                                @*Hiddent Field For PersonPrmKey*@
+                                @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                @*Hiddent Field For PersonPrmKey*@
+                                @Html.HiddenFor(m => m.PersonId)
+
+                                @*Hiddent Field For PersonCourtCasePrmKey*@
+                                @Html.HiddenFor(m => m.PersonCourtCasePrmKey)
+
+                            </div>
+
+                            // Save/Submit Button
+                            @Html.OperationFooter("Verify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/PersonCourtCase.js"></script>

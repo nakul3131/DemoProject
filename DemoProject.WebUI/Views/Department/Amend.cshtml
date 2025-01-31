@@ -1,0 +1,175 @@
+﻿@model DemoProject.Services.ViewModel.Management.Master.DepartmentViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Master.General
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    DepartmentDetailViewModel detailViewModel = new DepartmentDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("DEPAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Department - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Amend", "Department", FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @class = "form-control read-only" })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*NameOfDepartment*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of Department")
+                                            @Html.TextBoxFor(m => m.NameOfDepartment, new { @id = "name-of-department", @class = "form-control mandatory-mark title-case", @placeholder = "Enter Name Of Department", required = "required", @maxlength = 100, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfDepartment)
+                                        </div>
+
+                                        @*TransNameOfDepartment*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOfDepartmentInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOfDepartment, new { @id = "trans-name-of-department", @class = "form-control mandatory-mark", @placeholder = detailViewModel.NameOfDepartmentPlaceHolderInRegionalLanguage, required = "required", @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfDepartment)
+                                        </div>
+
+                                        @*Alias Name*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control default-none title-case", @placeholder = "Enter Alias Name", @maxlength = 10, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, new { @id = "trans-alias-name", @class = "form-control default-none", @placeholder = detailViewModel.AliasNamePlaceHolderInRegionalLanguage })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name On Report")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control default-none title-case", @placeholder = "Enter Name On Report", required = "required", @maxlength = 100, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, new { @id = "trans-name-on-report", @class = "form-control default-none", @placeholder = detailViewModel.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*Objective*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Objective")
+                                            @Html.TextBoxFor(m => m.Objective, new { @id = "objective", @class = "form-control", @placeholder = "Enter Objective", @maxlength = 4000, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Objective)
+                                        </div>
+
+                                        @*TransObjective*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.ObjectiveInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransObjective, new { @id = "trans-objective", @class = "form-control", @placeholder =detailViewModel.ObjectivePlaceHolderInRegionalLanguage, @maxlength = 4000 })
+                                            @Html.ValidationMessageFor(m => m.TransObjective)
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control activation-date deny-past-date deny-next-financial-year-date mandatory-mark", @Type = "date", required = "required", onchange = "Activationdate()" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*ExpiryDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control expiry-date", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control title-case default-none", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none", @placeholder = detailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                        @*Hiddent Field For DepartmentPrmKey*@
+                                        @Html.HiddenFor(m => m.DepartmentPrmKey)
+
+                                        @*Hiddent Field For DepartmentModificationPrmKey*@
+                                        @Html.HiddenFor(m => m.DepartmentModificationPrmKey)
+
+                                        @*Hiddent Field For DepartmentTranslationPrmKey*@
+                                        @Html.HiddenFor(m => m.DepartmentTranslationPrmKey)
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Footer*@
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+        var url = "@Url.Action("GetUniqueDepartmentName", "Department")";
+</script>
+<script src="~/Scripts/Custom/Department.js"></script>

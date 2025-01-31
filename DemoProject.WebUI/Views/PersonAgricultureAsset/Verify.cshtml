@@ -1,0 +1,232 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonAgricultureAssetViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+@{
+    /*Review And Delete Those Variables*/
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+    /*Review And Delete Those Variables*/
+
+   
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+
+    PersonAgricultureAssetViewModel model = new PersonAgricultureAssetViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PAAAUT");
+}
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Agriculture Asset - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*MakerRemark*@
+                                <div class="form-group mt-5 ml-5 mr-5">
+                                    @Html.CustomLabel("Maker Remark")
+                                    @Html.TextBoxFor(m => m.MakerRemark, new { @id = "maker-remark", @class = "form-control mandatory-mark read-only" })
+                                    @Html.ValidationMessageFor(m => m.MakerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row ml-2">
+                                    <div class="col-12">
+
+                                        <div class="card-body">
+                                            <table id="tbl-agriculture-asset" class="table compact table-striped table-bordered" width="100">
+                                                <thead class="text-center read-only">
+                                                    <tr>
+                                                        <th><input type="checkbox" name="check_all" id="select-all-agriculture-asset" /></th>
+                                                        <th class="d-none">AgricultureLandType</th>
+                                                        <th>AgricultureLandType</th>
+                                                        <th>AgricultureLandDescription</th>
+                                                        <th>SurveyNumber</th>
+                                                        <th>GroupNumber</th>
+                                                        <th>AreaOfLand</th>
+                                                        <th>Volume</th>
+                                                        <th class="d-none">OwnershipType</th>
+                                                        <th>OwnershipType</th>
+                                                        <th>OwnershipPercentage</th>
+                                                        <th>CurrentMarketValue</th>
+                                                        <th>AnnualIncomeFromLand</th>
+                                                        <th>HasAnyCourtCase</th>
+                                                        <th>CourtCaseFullDetails</th>
+                                                        <th>IsOnlyRainFedTypeIrrigation</th>
+                                                        <th>HasCanalRiverIrrigationSource</th>
+                                                        <th>HasWellsIrrigationSource</th>
+                                                        <th>HasFarmLakeSource</th>
+                                                        <th>HasAnyMortgage</th>
+                                                        <th>IsOwnershipDeceased</th>
+                                                        <th>Photopath</th>
+                                                        <th>Photo</th>
+                                                        <th>FileCaption</th>
+                                                        <th>Note</th>
+                                                        <th>ReasonForModification</th>
+                                                        <th class="d-none">FileName</th>
+                                                        <th class="d-none">PersonAgricultureAssetDocument</th>
+                                                        <th class="d-none">LocalStoragePath</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="text-center read-only">
+                                                    @{
+
+                                                        IEnumerable<PersonAgricultureAssetViewModel> personAgricultureAssetViewModels = (IEnumerable<PersonAgricultureAssetViewModel>)HttpContext.Current.Session["AgricultureAsset"];
+                                                        if (personAgricultureAssetViewModels != null)
+                                                        {
+                                                            foreach (PersonAgricultureAssetViewModel viewModel in personAgricultureAssetViewModels)
+                                                            {
+                                                                counter += 1;
+                                                                photoId = "photo-id" + counter.ToString();
+                                                                fileUploaderId = "data-table-agriculture-file-uploader" + counter.ToString();
+                                                                <tr>
+                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                    <td class="d-none">@viewModel.AgricultureLandTypeId</td>
+                                                                    <td>@viewModel.NameOfAgricultureLandType</td>
+                                                                    <td>@viewModel.AgricultureLandDescription</td>
+                                                                    <td>@viewModel.SurveyNumber</td>
+                                                                    <td>@viewModel.GroupNumber</td>
+                                                                    <td>@viewModel.AreaOfLand</td>
+                                                                    <td>@viewModel.Volume</td>
+                                                                    <td class="d-none">@viewModel.OwnershipTypeId</td>
+                                                                    <td>@viewModel.NameOfOwnershipType</td>
+                                                                    <td>@viewModel.OwnershipPercentage</td>
+                                                                    <td>@viewModel.CurrentMarketValue</td>
+                                                                    <td>@viewModel.AnnualIncomeFromLand</td>
+                                                                    <td>@viewModel.HasAnyCourtCase</td>
+                                                                    <td>@viewModel.CourtCaseFullDetails</td>
+                                                                    <td>@viewModel.IsOnlyRainFedTypeIrrigation</td>
+                                                                    <td>@viewModel.HasCanalRiverIrrigationSource</td>
+                                                                    <td>@viewModel.HasWellsIrrigationSource</td>
+                                                                    <td>@viewModel.HasFarmLakeSource</td>
+                                                                    <td>@viewModel.HasAnyMortgage</td>
+                                                                    <td>@viewModel.IsOwnershipDeceased</td>
+                                                                    <td>
+                                                                        <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                    </td>
+                                                                    <td>
+                                                                        @if (viewModel.EnableAgricultureAssetDocumentUploadInLocalStorage == true)
+                                                                        {
+                                                                            <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.AgricultureAssetDocumentLocalStoragePath + viewModel.PhotoPathAgree.FileName)" width="50" height="50" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                            var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                            <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                            string filename = Path.GetFileName(imgsrc);
+                                                                        }
+                                                                    </td>
+                                                                    <td>@viewModel.FileCaption</td>
+                                                                    <td>@viewModel.Note</td>
+                                                                    <td>@viewModel.ReasonForModification</td>
+                                                                    <td class="d-none">@viewModel.NameOfFile</td>
+                                                                    <td class="d-none">@viewModel.PersonAgricultureAssetDocumentPrmKey</td>
+                                                                    <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    }
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+
+                                        @*NameOfUser*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of User")
+                                            @Html.TextBoxFor(m => m.NameOfUser, new { @class = "form-control read-only" })
+                                        </div>
+
+                                        @*EntryDateTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Entry Date Time")
+                                            @Html.TextBoxFor(m => m.EntryDateTime, new { @class = "form-control read-only" })
+                                        </div>
+
+                                    </div>
+
+                                    @*Hiddent Field For PrmKey*@
+                                    @Html.HiddenFor(m => m.PrmKey)
+
+                                    @*Hiddent Field For PersonPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                    @*Hiddent Field For PersonAgricultureAssetPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonAgricultureAssetPrmKey)
+
+                                    @*Hiddent Field For PersonAgricultureAssetDocumentPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonAgricultureAssetDocumentPrmKey)
+
+                                    @*Hiddent Field For PersonId*@
+                                    @Html.HiddenFor(m => m.PersonId)
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Verify", "SaveAgricultureDataTables", "PersonAgricultureAsset", "None")
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+</script>
+<script>
+    var GetDocumentValidationFields = '@Url.Action("GetDocumentValidationFields", "PersonAgricultureAsset")';
+</script>
+<script src="~/Scripts/Custom/PersonAgricultureAsset.js"></script>

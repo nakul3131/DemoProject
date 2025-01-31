@@ -1,0 +1,342 @@
+﻿@model DemoProject.Services.ViewModel.Account.Transaction.OpeningBalanceViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Transaction;
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("OPNCRT");
+    OpeningBalanceViewModel openingBalanceViewModel = new OpeningBalanceViewModel();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Opening Balance</title>
+    <style>
+        table.dataTable th.focus,
+        table.dataTable td.focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+        @using (Html.BeginForm())
+        {
+            //byte schemeType = 4;
+
+            byte schemeType = (byte)TempData.Peek("SchemeType");
+            switch (schemeType)
+            {
+                case 1:
+                    //Shares
+                    IEnumerable<OpeningBalanceViewModel> openingBalanceSharesViewModelList = (IEnumerable<OpeningBalanceViewModel>)HttpContext.Current.Session["OpeningBalance"];
+
+                    if (openingBalanceSharesViewModelList != null)
+                    {
+                        <div class="card">
+                            <div class="card-body no-footer">
+                                <table id="opening-balance-table" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100%">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th>SR.</th>
+                                            <th class="d-none">OpeningBalance PrmKey</th>
+                                            <th class="d-none">OpeningBalance SharesPrmKey</th>
+                                            <th>Customer AcNo.</th>
+                                            <th>Customer Name</th>
+                                            <th>Face Value Of Shares</th>
+                                            <th>Total Shares</th>
+                                            <th>Previous Year Balance Of Shares</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @{
+                                            foreach (OpeningBalanceViewModel item in openingBalanceSharesViewModelList)
+                                            {
+                                                <tr class="hoverlightblue">
+                                                    <td class="read-only"></td>
+                                                    <td class="read-only d-none">@item.OpeningBalancePrmKey</td>
+                                                    <td class="read-only d-none">@item.OpeningBalanceSharesPrmKey</td>
+                                                    <td class="read-only">@item.CustomerAccountPrmKey</td>
+                                                    <td class="read-only">@item.FullName</td>
+                                                    <td class="edit">@item.FaceValueOfShares</td>
+                                                    <td class="edit">@item.TotalShares</td>
+                                                    <td class="edit">@item.PreviousYearBalanceOfShares</td>
+                                                    <td class="edit">@item.Amount</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <tfoot class="table compact table-striped table-bordered text-nowrap text-center" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td></td>
+                                            <td class="d-none"></td>
+                                            <td class="d-none"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td class="d-none"></td>
+                                            <td class="d-none"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        @Html.OperationFooter("Create", "Exit", "Home", "None")
+                    }
+                    break;
+
+                case 2:
+                    //Investment
+                    IEnumerable<OpeningBalanceViewModel> openingBalanceInvestmentViewModelList = (IEnumerable<OpeningBalanceViewModel>)HttpContext.Current.Session["OpeningBalance"];
+
+                    if (openingBalanceInvestmentViewModelList != null)
+                    {
+                        <div class="card">
+                            <div class="card-body no-footer">
+                                <table id="opening-balance-table" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100%">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th>SR.</th>
+                                            <th class="d-none">OpeningBalance PrmKey</th>
+                                            <th class="d-none">OpeningBalance Investment PrmKey</th>
+                                            <th>Customer AcNo.</th>
+                                            <th>Customer Name</th>
+                                            <th>Provision Date</th>
+                                            <th>Provision Amount</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @{
+                                            foreach (OpeningBalanceViewModel item in openingBalanceInvestmentViewModelList)
+                                            {
+                                                <tr class="hoverlightblue">
+                                                    <td class="read-only"></td>
+                                                    <td class="read-only d-none">@item.OpeningBalancePrmKey</td>
+                                                    <td class="read-only d-none">@item.OpeningBalanceInvestmentPrmKey</td>
+                                                    <td class="read-only">@item.CustomerAccountPrmKey</td>
+                                                    <td class="read-only">@item.FullName</td>
+                                                    <td class="edit">@item.LastProvisionDateOfInvestment</td>
+                                                    <td class="edit">@item.ProvisionAmountOfInvestment</td>
+                                                    <td class="edit">@item.Amount</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <tfoot class="table compact table-striped table-bordered text-nowrap text-center" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td></td>
+                                            <td class="d-none"></td>
+                                            <td class="d-none"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td class="d-none"></td>
+                                            <td class="d-none"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        @Html.OperationFooter("Create", "Exit", "Home", "None")
+                    }
+                    break;
+
+                case 3:
+                    //Deposit
+                    IEnumerable<OpeningBalanceViewModel> openingBalanceDepositViewModelList = (IEnumerable<OpeningBalanceViewModel>)HttpContext.Current.Session["OpeningBalance"];
+
+                    if (openingBalanceDepositViewModelList != null)
+                    {
+                        <div class="card">
+                            <div class="card-body no-footer">
+                                <table id="opening-balance-table" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100%">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th>SR.</th>
+                                            <th class="d-none">OpeningBalance PrmKey</th>
+                                            <th class="d-none">OpeningBalance Deposit PrmKey</th>
+                                            <th>Customer AcNo.</th>
+                                            <th>Customer Name</th>
+                                            <th>LastProvisionDateOfDeposit</th>
+                                            <th>ProvisionAmountOfDeposit</th>
+                                            <th>ProductMinBalance</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @{
+                                            foreach (OpeningBalanceViewModel item in openingBalanceDepositViewModelList)
+                                            {
+                                                <tr class="hoverlightblue">
+                                                    <td class="read-only"></td>
+                                                    <td class="read-only d-none">@item.OpeningBalancePrmKey</td>
+                                                    <td class="read-only d-none">@item.OpeningBalanceDepositPrmKey</td>
+                                                    <td class="read-only">@item.CustomerAccountPrmKey</td>
+                                                    <td class="read-only">@item.FullName</td>
+                                                    <td class="edit">@item.LastProvisionDateOfDeposit</td>
+                                                    <td class="edit">@item.ProvisionAmountOfDeposit</td>
+                                                    <td class="edit">@item.ProductMinBalance</td>
+                                                    <td class="edit">@item.Amount</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <tfoot class="table compact table-striped table-bordered text-nowrap text-center" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td></td>
+                                            <td class="d-none"></td>
+                                            <td class="d-none"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td class="d-none"></td>
+                                            <td class="d-none"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        @Html.OperationFooter("Create", "Exit", "Home", "None")
+                    }
+                    break;
+
+                case 4:
+                    //Loan
+                    IEnumerable<OpeningBalanceViewModel> openingBalanceLoanViewModelList = (IEnumerable<OpeningBalanceViewModel>)HttpContext.Current.Session["OpeningBalance"];
+
+                    if (openingBalanceLoanViewModelList != null)
+                    {
+                        <div class="card">
+                            <div class="card-body no-footer">
+                                <table id="opening-balance-table" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100%">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th>SR.</th>
+                                            <th class="d-none">OpeningBalance PrmKey</th>
+                                            <th class="d-none">OpeningBalance Loan PrmKey</th>
+                                            <th>Customer AcNo.</th>
+                                            <th>Customer Name</th>
+                                            <th>PrevInterest Date<br /> Of Loan</th>
+                                            <th>PrevInstallment Date<br /> Of Loan</th>
+                                            <th>LastProvisionDate <br />OfLoan</th>
+                                            <th>ProvisionAmount<br />OfLoan</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @{
+                                            foreach (OpeningBalanceViewModel item in openingBalanceLoanViewModelList)
+                                            {
+                                                <tr class="hoverlightblue">
+                                                    <td class="read-only"></td>
+                                                    <td class="read-only d-none">@item.OpeningBalancePrmKey</td>
+                                                    <td class="read-only d-none">@item.OpeningBalanceLoanPrmKey</td>
+                                                    <td class="read-only">@item.CustomerAccountPrmKey</td>
+                                                    <td class="read-only">@item.FullName</td>
+                                                    <td class="edit">@item.PreviousInterestDateOfLoan</td>
+                                                    <td class="edit">@item.PreviousInstallmentDateOfLoan</td>
+                                                    <td class="edit">@item.LastProvisionDateOfLoan</td>
+                                                    <td class="edit">@item.ProvisionAmountOfLoan</td>
+                                                    <td class="edit">@item.Amount</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <tfoot class="table compact table-striped table-bordered text-nowrap text-center" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td></td>
+                                            <td class="d-none"></td>
+                                            <td class="d-none"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td class="d-none"></td>
+                                            <td class="d-none"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        @Html.OperationFooter("Create", "Exit", "Home", "None")
+                    }
+                    break;
+
+                default:
+                    @Html.OperationFooter("Create", "Exit", "Home", "None")
+                    break;
+
+            };
+        }
+    </div>
+</body>
+</html>
+<script>
+    debugger;
+    var url = '@Url.Action("SaveDataTables", "OpeningBalance")';
+    var schemeType = @TempData.Peek("SchemeType");
+</script>
+<script src="~/Scripts/Custom/OpeningBalance.js"></script>

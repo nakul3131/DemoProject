@@ -1,0 +1,245 @@
+﻿@model DemoProject.Services.ViewModel.Management.Conference.MeetingAllowanceViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Management.Conference
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    MeetingAllowanceViewModel model = new MeetingAllowanceViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("MTAMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Meeting Allowance - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*MeetingTypePrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Meeting Type")
+                                            @Html.DropDownListFor(m => m.MeetingTypeId, new SelectList(model.MeetingTypeDropdownList, "Value", "Text"), "Select Meeting Type", new { @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.MeetingTypeId)
+                                        </div>
+
+                                        @*NameOfAllowance*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of Allowance")
+                                            @Html.TextBoxFor(m => m.NameOfAllowance, new { @id = "name-of-allowance", @class = "form-control mandatory-mark", @placeholder = "Enter Name Of Allowance", required = "required", @maxlength = "100", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfAllowance)
+                                        </div>
+
+                                        @*TransNameOfAllowance*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOfAllowanceInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOfAllowance, new { @id = "trans-name-of-allowance", @class = "form-control mandatory-mark", @placeholder = model.NameOfAllowancePlaceHolderInRegionalLanguage, required = "required", @maxlength = "100", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfAllowance)
+                                        </div>
+
+                                        @*Alias Name*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control", @placeholder = "Enter Alias Name", @maxlength = "10", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, new { @id = "trans-alias-name", @class = "form-control", @placeholder = model.AliasNamePlaceHolderInRegionalLanguage, @maxlength = "10", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name On Report")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control", @placeholder = "Enter Name On Report", required = "required", @maxlength = "100", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, new { @id = "trans-name-on-report", @class = "form-control", @placeholder = model.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = "100", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*ShortDescription*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Short Description")
+                                            @Html.TextBoxFor(m => m.ShortDescription, new { @id = "short-description", @class = "form-control", @placeholder = "Enter Short Description", required = "required", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ShortDescription)
+                                        </div>
+
+                                        @*TransShortDescription*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.ShortDescriptionInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransShortDescription, new { @id = "trans-short-description", @class = "form-control", @placeholder = model.ShortDescriptionPlaceHolderInRegionalLanguage, @maxlength = "1500", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransShortDescription)
+                                        </div>
+
+                                        @*IsDailyAllowance*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Is Daily Allowance")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.IsDailyAllowance, new { @id = "is-daily-allowance", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*IsRequiredBill*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Is Required Bill")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.IsRequiredBill, new { @id = "is-required-bill", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*MinimumAllowanceAmount*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Minimum Allowance Amount")
+                                            @Html.TextBoxFor(m => m.MinimumAllowanceAmount, new { @id = "minimum-allowance-amount", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Allowance Amount", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.MinimumAllowanceAmount)
+                                        </div>
+
+                                        @*MaximumAllowanceAmount*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Maximum Allowance Amount")
+                                            @Html.TextBoxFor(m => m.MaximumAllowanceAmount, new { @id = "maximum-allowance-amount", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Allowance Amount", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.MaximumAllowanceAmount)
+                                        </div>
+
+                                        @*DefaultAllowanceAmount*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Default Allowance Amount")
+                                            @Html.TextBoxFor(m => m.DefaultAllowanceAmount, new { @id = "default-allowance-amount", @class = "form-control mandatory-mark", @placeholder = "Enter Default Allowance Amount", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.DefaultAllowanceAmount)
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark", @Type = "date", required = "required", onchange = "Activationdate()" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*ExpiryDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control", @Type = "date", onchange = "Expirydate()" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*CloseDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Close Date")
+                                            @Html.TextBoxFor(m => m.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date", @class = "form-control", @Type = "date", onchange = "Closedate()" })
+                                            @Html.ValidationMessageFor(m => m.CloseDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control", @placeholder = model.NotePlaceHolderInRegionalLanguage, @maxlength = "1500", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                        @*Hiddent Field For MeetingAllowancePrmKey*@
+                                        @Html.HiddenFor(m => m.MeetingAllowancePrmKey)
+                                    </div>
+                                </div>
+
+                                @*======= Fifth Row - Reason For Modification Input In Regional Language =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reason For Modification")
+                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                        </div>
+
+                                        @*TransReasonForModification*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.ReasonForModificationInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransReasonForModification, new { @id = "trans-reason-for-modification", @class = "form-control", @placeholder = model.ReasonForModificationPlaceHolderInRegionalLanguage, @maxlength = "1500", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransReasonForModification)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Modify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,165 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonCommoditiesAssetViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.HtmlHelpers
+@{
+    PersonCommoditiesAssetViewModel model = new PersonCommoditiesAssetViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PCAAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Commodities Asset - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-4 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+
+                                                    @*CheckerRemark*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Checker Remark")
+                                                        @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark read-only" })
+                                                        @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                                    </div>
+
+                                                    @*GoldOrnaments*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Gold Ornaments(In Grams)")
+                                                        @Html.TextBoxFor(m => m.GoldOrnaments, new { @id = "gold-ornaments", @class = "form-control mandatory-mark commodities-asset-input", @type = "number", required = "required", @placeholder = "Enter Gold Ornaments In Grams", @min = 0, @max = 999 })
+                                                        @Html.ValidationMessageFor(m => m.GoldOrnaments)
+                                                    </div>
+
+                                                    @*SilverOrnaments*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Silver Ornaments(In Grams)")
+                                                        @Html.TextBoxFor(m => m.SilverOrnaments, new { @id = "silver-ornaments", @class = "form-control mandatory-mark commodities-asset-input", @type = "number", required = "required", @placeholder = "Enter Silver Ornaments In Grams", @min = 0, @max = 999 })
+                                                        @Html.ValidationMessageFor(m => m.SilverOrnaments)
+                                                    </div>
+
+                                                    @*PlatinumOrnaments*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Platinum Ornaments(In Grams)")
+                                                        @Html.TextBoxFor(m => m.PlatinumOrnaments, new { @id = "platinum-ornaments", @class = "form-control mandatory-mark commodities-asset-input", @type = "number", required = "required", @placeholder = "Enter Platinum Ornaments In Grams", @min = 0, @max = 999 })
+                                                        @Html.ValidationMessageFor(m => m.PlatinumOrnaments)
+                                                    </div>
+
+                                                    @*NumberOfDiamondsInGoldOrnaments*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Number Of Diamonds In Ornaments")
+                                                        @Html.TextBoxFor(m => m.NumberOfDiamondsInGoldOrnaments, new { @id = "number-of-diamonds-in-gold-ornaments", @class = "form-control mandatory-mark real-number commodities-asset-input", required = "required", @type = "number", @placeholder = "Enter Number Of Diamonds In Ornaments", @min = 0, @max = 999 })
+                                                        @Html.ValidationMessageFor(m => m.NumberOfDiamondsInGoldOrnaments)
+                                                    </div>
+
+                                                    @*HasAnyMortgage*@
+                                                    <div class="row form-group mt-5">
+                                                        <div class="col-10">
+                                                            @Html.CustomLabel("Has Any Mortgage")
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <div class="text-left">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.HasAnyMortgage, new { @id = "has-any-mortgage-commodity", @class = "form-control switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*Note*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Note")
+                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-commodities-asset", @class = "form-control deny-multiple-space default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                    </div>
+
+                                                    @*ReasonForModification*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Reason For Modification")
+                                                        @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-commodities", @class = "form-control deny-multiple-space default-none", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                        @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                @*Hiddent Field For PrmKey*@
+                                @Html.HiddenFor(m => m.PrmKey)
+
+                                @*Hiddent Field For PersonPrmKey*@
+                                @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                @*Hiddent Field For CenterOccupationPrmKey*@
+                                @Html.HiddenFor(m => m.PersonCommoditiesAssetPrmKey)
+
+                                @*Hiddent Field For PersonId*@
+                                @Html.HiddenFor(m => m.PersonId)
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Amend", "SaveCommodityDataTables", "PersonCommoditiesAsset", "None")
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/PersonCommoditiesAsset.js"></script>

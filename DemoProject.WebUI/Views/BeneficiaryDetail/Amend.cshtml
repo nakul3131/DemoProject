@@ -1,0 +1,215 @@
+﻿@model DemoProject.Services.ViewModel.Account.Master.BeneficiaryDetailViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Master
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    BeneficiaryDetailViewModel model = new BeneficiaryDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("BNFAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>BeneficiaryDetail - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @class = "form-control read-only" })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*EffectiveDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Effective Date")
+                                            @Html.TextBoxFor(m => m.EffectiveDate, "{0:yyyy-MM-dd}", new { @id = "effective-date", @class = "form-control mandatory-mark", @Type = "date", required = "required", onchange = "Activationdate()" })
+                                            @Html.ValidationMessageFor(m => m.EffectiveDate)
+                                        </div>
+
+                                        @*Beneficiary Code*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Beneficiary Code")
+                                            @Html.TextBoxFor(m => m.BeneficiaryCode, new { @id = "beneficiary-code", @class = "form-control mandatory-mark", @placeholder = "Enter Beneficiary Code", @maxlength = 50, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.BeneficiaryCode)
+                                        </div>
+
+                                        @*NameOfBeneficiary*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of Beneficiary")
+                                            @Html.TextBoxFor(m => m.NameOfBeneficiary, new { @id = "name-of-beneficiary", @class = "form-control mandatory-mark", @placeholder = "Enter Name Of Beneficiary", required = "required", @maxlength = 100, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfBeneficiary)
+                                        </div>
+
+                                        @*ShortName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Short Name")
+                                            @Html.TextBoxFor(m => m.ShortName, new { @id = "short-name", @class = "form-control mandatory-mark", @placeholder = "Enter Short Name", @maxlength = 20, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ShortName)
+                                        </div>
+
+                                        @*CustomerAccountType*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Account Type")
+                                            @Html.DropDownListFor(m => m.CustomerAccountTypeId, new SelectList(model.CustomerAccountTypeDropdownList, "Value", "Text"), "--Please Select Account Type--", new { @id = "customer-account-type-id", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.CustomerAccountTypeId)
+                                        </div>
+
+                                        @*AccountNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Account Number")
+                                            @Html.TextBoxFor(m => m.AccountNumber, new { @id = "account-number", @class = "form-control mandatory-mark", @placeholder = "Enter Account Number", @maxlength = 50, @Type = "password", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.AccountNumber)
+                                        </div>
+
+                                        @*ConfirmAccountNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Confirm Account Number")
+                                            @Html.TextBoxFor(m => m.AccountNumber, new { @id = "confirm-account-number", @class = "form-control mandatory-mark", @placeholder = "Enter Confirm Account Number", @maxlength = 50, @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.AccountNumber)
+                                        </div>
+
+                                        @*IfscCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Ifsc Code")
+                                            @Html.TextBoxFor(m => m.IfscCode, new { @id = "ifsc-code", @class = "form-control mandatory-mark", @placeholder = "Enter Ifsc Code", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.IfscCode)
+                                        </div>
+
+                                        <div class="form-group d-none" id="show-card">
+                                            <div id="container" class="card">
+
+                                            </div>
+                                        </div>
+
+                                        @*BankName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Bank Name")
+                                            @Html.TextBoxFor(m => m.BankName, new { @id = "bank-name", @class = "form-control mandatory-mark", @placeholder = "Enter Bank Name", required = "required", @maxlength = 10, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.BankName)
+                                        </div>
+
+                                        @*Branch*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Branch")
+                                            @Html.TextBoxFor(m => m.Branch, new { @id = "branch", @class = "form-control mandatory-mark", @placeholder = "Enter Branch", required = "required", @maxlength = 50, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Branch)
+                                        </div>
+
+                                        @*City*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("City")
+                                            @Html.TextBoxFor(m => m.City, new { @id = "city", @class = "form-control mandatory-mark", @placeholder = "Enter City", required = "required", @maxlength = 10, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.City)
+                                        </div>
+
+                                        @*CustomerNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Customer Number")
+                                            @Html.TextBoxFor(m => m.CustomerNumber, new { @id = "customer-number", @class = "form-control mandatory-mark", @type = "number", @placeholder = "Enter CustomerNumber", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.CustomerNumber)
+                                        </div>
+
+                                        @*MobileNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Mobile Number")
+                                            @Html.TextBoxFor(m => m.MobileNumber, new { @id = "mobile-number", @class = "form-control mandatory-mark", @placeholder = "Enter MobileNumber", required = "required", @maxlength = 10, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.MobileNumber)
+                                        </div>
+
+                                        @*EmailId*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Email Address")
+                                            @Html.TextBoxFor(m => m.EmailId, new { @id = "email-id", @class = "form-control mandatory-mark", @placeholder = "Enter Email Address", required = "required", @maxlength = 250, @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.EmailId)
+                                        </div>
+
+                                        @*VirtualPrivateAddress*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Virtual Private Address")
+                                            @Html.TextBoxFor(m => m.VirtualPrivateAddress, new { @id = "virtual-private-address", @class = "form-control mandatory-mark", @placeholder = "Enter Virtual Private Address", required = "required", @maxlength = 250, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.VirtualPrivateAddress)
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark", @Type = "date", required = "required", onchange = "Activationdate()" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*ExpiryDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control", @Type = "date", onchange = "Expirydate()" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control", @placeholder = "Enter Note", @maxlength = 1500, @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*Hiddent Field For BeneficiaryDetailPrmKey*@
+                                        @Html.HiddenFor(m => m.BeneficiaryDetailPrmKey)
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Footer*@
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/Custom/BeneficiaryDetail.js"></script>

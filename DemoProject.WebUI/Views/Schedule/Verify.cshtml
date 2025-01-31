@@ -1,0 +1,263 @@
+﻿@model  DemoProject.Services.ViewModel.Management.Master.ScheduleViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Management.Master
+
+@{
+    /**/
+
+    ScheduleViewModel model = new ScheduleViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("SCDAUT");
+}
+
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Schedule - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+                        @*======= First Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title =======*@
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Verify</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @*======= Third Row - Data Entry Page =======*@
+                        <div class="row read-only">
+                            <div class="col-12">
+                                @*MakerRemark*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maker Remark")
+                                    @Html.TextBoxFor(m => m.MakerRemark, new { @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.MakerRemark)
+                                </div>
+
+                                @*NameOfSchedule*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Name Of Schedule")
+                                    @Html.TextBoxFor(m => m.NameOfSchedule, new { @id = "name-of-schedule", @class = "form-control mandatory-mark title-case text-capitalize", @placeholder = "Enter Name Of Schedule", required = "required", @maxlength = 50, onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.NameOfSchedule)
+                                </div>
+
+                                @*NameOfSchedule*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.NameOfScheduleInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransNameOfSchedule, null, new { @id = "trans-name-of-schedule", @class = "form-control mandatory-mark", @placeholder = model.NameOfSchedulePlaceHolderInRegionalLanguage, required = "required", @maxlength = 50 })
+                                    @Html.ValidationMessageFor(m => m.TransNameOfSchedule)
+                                </div>
+
+                                @*AliasName*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Alias Name")
+                                    @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control default-none title-case text-capitalize", @placeholder = "Enter Alias Name", @Value = "None", @maxlength = 10, onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.AliasName)
+                                </div>
+
+                                @*TransAlias Name*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.AliasNameInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransAliasName, null, new { @id = "trans-alias-name", @class = "form-control default-none", @placeholder = model.AliasNamePlaceHolderInRegionalLanguage, @maxlength = 10 })
+                                    @Html.ValidationMessageFor(m => m.TransAliasName)
+                                </div>
+
+                                @*NameOnReport*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(" Name On Report ")
+                                    @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control default-none title-case text-capitalize", @placeholder = "Enter Name On Report", @Value = "None", @maxlength = 100, onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.NameOnReport)
+                                </div>
+
+                                @*TransName On Report*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.NameOnReportInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransNameOnReport, null, new { @id = "trans-name-on-report", @class = "form-control default-none", @placeholder = model.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = 100 })
+                                    @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                </div>
+
+                                @*Activation Date*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Activation Date")
+                                    @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark deny-past-date set-current-date", required = "required", @Type = "date", onclick = "DenyPastDate()" })
+                                    @Html.ValidationMessageFor(m => m.ActivationDate)
+                                </div>
+
+                                @*Expiry Date*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Expiry Date")
+                                    @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control deny-past-date-from-reference-date", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                    @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                </div>
+
+                                @*Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Note")
+                                    @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control text-capitalize title-case default-none", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.Note)
+                                </div>
+
+                                @*Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.NoteInRegionalLanguage)
+                                    @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none", @placeholder = model.NotePlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                    @Html.ValidationMessageFor(m => m.TransNote)
+                                </div>
+
+                                @*NameOfUser*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Name Of User")
+                                    @Html.TextBoxFor(m => m.NameOfUser, new { @class = "form-control" })
+                                </div>
+
+                                @*EntryDateTime*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Entry Date Time")
+                                    @Html.TextBoxFor(m => m.EntryDateTime, new { @class = "form-control" })
+                                </div>
+
+                            </div>
+                        </div>
+
+                        @*======= Fourth Row - Accordians =======*@
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div id="accordion" class="accordion md-accordion accordion-blocks">
+
+                                    @*Schedule Frequency*@
+                                    <div class="card mt-3">
+                                        <div class="card-header collapsed p-3" id="heading-schedule-frequency" aria-expanded="false" data-toggle="collapse" href="#collapse-schedule-frequency">
+                                            <a class="card-title">
+                                                <b>Schedule Frequency</b>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-schedule-frequency" class="collapse" aria-labelledby="heading-schedule-frequency" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <table id="schedule-frequency-table" class="table compact  table-striped table-bordered " cellspacing="0" width="100">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check_all" id="selectAll" /></th>
+                                                            <th style=" display:none;">ScheduleTypeId</th>
+                                                            <th>ScheduleType </th>
+                                                            <th>NumberOfDays</th>
+                                                            <th style=" display:none;">DayOfWeekId</th>
+                                                            <th>WeekDay</th>
+                                                            <th style=" display:none;">DayOfMonthId</th>
+                                                            <th>Monthday</th>
+                                                            <th>ScheduleTime</th>
+                                                            <th>SpecifiedDate</th>
+                                                            <th>Recur</th>
+                                                            <th>IsEvery</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="text-center read-only">
+                                                        @{
+                                                            IEnumerable<ScheduleFrequencyViewModel> viewModelList = (IEnumerable<ScheduleFrequencyViewModel>)HttpContext.Current.Session["ScheduleFrequency"];
+
+                                                            foreach (ScheduleFrequencyViewModel viewModel in viewModelList)
+                                                            {
+                                                                <tr>
+                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                    <td class="d-none">@viewModel.ScheduleTypeId</td>
+                                                                    <td>@viewModel.NameOfScheduleType</td>
+                                                                    <td>@viewModel.NumberOfDays</td>
+                                                                    <td class="d-none">@viewModel.DaysOfWeekId</td>
+                                                                    <td>@viewModel.NameOfWeekDay</td>
+                                                                    <td class="d-none">@viewModel.DaysOfMonthId</td>
+                                                                    <td>@viewModel.NameOfMonthDay</td>
+                                                                    <td>@viewModel.ScheduleTime</td>
+                                                                    <td>@viewModel.SpecifiedDate</td>
+                                                                    <td>@viewModel.Recur</td>
+                                                                    <td>@viewModel.IsEvery</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*Hiddent Field For SchedulePrmKey*@
+                        @Html.HiddenFor(m => m.SchedulePrmKey)
+
+                        @*Hiddent Field For ScheduleId*@
+                        @Html.HiddenFor(m => m.ScheduleId)
+
+                        @*Hiddent Field For ScheduleModificationPrmKey*@
+                        @Html.HiddenFor(m => m.ScheduleModificationPrmKey)
+
+                        @*Hiddent Field For ScheduleTranslationPrmKey*@
+                        @Html.HiddenFor(m => m.ScheduleTranslationPrmKey)
+
+                        @*Hiddent Field For ScheduleFrequencyPrmKey*@
+                        @Html.HiddenFor(m => m.ScheduleFrequencyPrmKey)
+
+                    </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Verify", "SaveDataTables", "Schedule", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    debugger;
+
+    $(".js-example-basic-multiple").select2();
+
+        @{
+                var ScheduleTypes = model.ScheduleTypeDropdownList.ToList();
+                var markup1 = "";
+                foreach (var i in ScheduleTypes)
+                {
+                    markup1 += "<option value=" + i.Value + ">" + i.Text + "</option>";
+                };
+        }
+    var ScheduleTypeList = '@Html.Raw(markup1)';
+
+    var url = "@Url.Action("SaveDataTables", "Schedule")";
+
+</script>
+<script src="~/Scripts/Custom/Schedule.js"></script>

@@ -1,0 +1,194 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonBoardOfDirectorRelationViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonBoardOfDirectorRelationViewModel model = new PersonBoardOfDirectorRelationViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("BDRAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Board Of Director Relation - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @* ======= First Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*CheckerRemark*@
+                                <div class="form-group mt-5 ml-5 mr-5">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark read-only" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row ml-2">
+                                    <div class="col-12">
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="modal fade" id="relation-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title text-center" id="board-director-relation-text">Add</h4>
+                                                                            <button type="button" class="close-relation-modal" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            @*BoardOfDirector*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Board Of Director")
+                                                                                @Html.DropDownListFor(m => m.BoardOfDirectorId, new SelectList(personDetailViewModel.BoardOfDirectorDropdownList, "Value", "Text", 0), "--- Select Board Of Director ---", new { @id = "board-of-director-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.BoardOfDirectorId)
+                                                                                <span id="board-of-director-id-error" class="error modal-input-error d-none">Please Select Valid Board Of Director. </span>
+                                                                            </div>
+
+                                                                            @*Relation*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Relation")
+                                                                                @Html.DropDownListFor(m => m.RelationId, new SelectList(personDetailViewModel.FamilyRelationDropdownList, "Value", "Text", 0), "--- Select Relation ---", new { @id = "relation-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.RelationId)
+                                                                                <span id="relation-id-error" class="error modal-input-error d-none">Please Select Valid Relation. </span>
+                                                                            </div>
+
+                                                                            @*Note*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Note")
+                                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-board-of-director", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                                            </div>
+
+                                                                            @*ReasonForModification*@
+                                                                            <div id="board-of-director-div" class="form-group">
+                                                                                @Html.CustomLabel("Reason For Modification")
+                                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-board-of-director", @class = "form-control default-none deny-multiple-space modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" id="btn-add-relation-modal" class="btn btn-success ">Add</button>
+                                                                            <button type="button" id="btn-update-relation-modal" class="btn btn-primary ">Update</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card-body">
+                                                                <div class="table-responsive" style="min-height:200px;">
+                                                                    <table id="tbl-relation" class="table compact table-striped table-bordered" width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select-all-relation" id="select-all-relation" /></th>
+                                                                                <th class="d-none">BoardOfDirectorId</th>
+                                                                                <th>BoardOfDirector</th>
+                                                                                <th class="d-none">RelationId</th>
+                                                                                <th>Relation</th>
+                                                                                <th>Note</th>
+                                                                                <th>ReasonForModification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<PersonBoardOfDirectorRelationViewModel> personBoardOfDirectorRelationViewModelList = (IEnumerable<PersonBoardOfDirectorRelationViewModel>)HttpContext.Current.Session["BoardOfDirectorRelation"];
+                                                                                if (personBoardOfDirectorRelationViewModelList != null)
+                                                                                {
+                                                                                    foreach (PersonBoardOfDirectorRelationViewModel viewModel in personBoardOfDirectorRelationViewModelList)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                            <td class="d-none">@viewModel.BoardOfDirectorId</td>
+                                                                                            <td>@viewModel.NameOfPerson</td>
+                                                                                            <td class="d-none">@viewModel.RelationId</td>
+                                                                                            <td>@viewModel.NameOfRelation</td>
+                                                                                            <td>@viewModel.Note</td>
+                                                                                            <td>@viewModel.ReasonForModification</td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Hiddent Field For PrmKey*@
+                                            @Html.HiddenFor(m => m.PrmKey)
+
+                                            @*Hiddent Field For PersonPrmKey*@
+                                            @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                            @*Hiddent Field For BoardOfDirectorPrmKey*@
+                                            @Html.HiddenFor(m => m.BoardOfDirectorPrmKey)
+
+                                            @*Hiddent Field For PersonId*@
+                                            @Html.HiddenFor(m => m.PersonId)
+
+                                        </div>
+
+                                        @Html.OperationFooter("Amend", "Exit", "Home", "None")
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var saveDataTableURL = "@Url.Action("SaveBoardOfDirectorRelationDataTable", "PersonBoardOfDirectorRelation")";
+</script>
+<script src="~/Scripts/Custom/PersonBoardOfDirectorRelation.js"></script>

@@ -1,0 +1,490 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.Master.VillageTownCityViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.PersonInformation.Master
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    VillageTownCityDetailViewModel detailViewModel = new VillageTownCityDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("VLGAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>VillageTownCity - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Amend", "VillageTownCity", FormMethod.Post, new { enctype="multipart/frorm-data", id = "form", autocomplete ="off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12" id="radio">
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @class = "form-control mandatory-mark read-only" })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*CenterCategoryPrmKey*@
+                                        <div class="form-group @(Model.CenterModificationPrmKey > 0 ? "read-only" : "")">
+                                            @Html.CustomLabel("Category")
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <div class="mt-1 d-flex justify-content-between">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.CenterCategoryPrmKey, "1", new { @id = "center-category-1", @name = "Village", @class = "center-category" })
+                                                            <label for="center-category-1" class="form-check-label pl-2">Village</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.CenterCategoryPrmKey, "2", new { @id = "center-category-2", @name = "Town", @class = "center-category" })
+                                                            <label for="center-category-2" class="form-check-label pl-2">Town</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.CenterCategoryPrmKey, "3", new { @id = "center-category-3", @name = "City", @class = "center-category" })
+                                                            <label for="center-category-3" class="form-check-label pl-2">City</label>
+                                                        </div>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.CenterCategoryPrmKey)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*NameOfCenter*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" id="center-name">Name Of Village</label>
+                                            @Html.TextBoxFor(m => m.NameOfCenter, new { @id = "name-of-center", @class = "form-control mandatory-mark title-case", @placeholder = "Enter Name Of Center", required = "required", @maxlength = "100", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfCenter)
+                                        </div>
+
+                                        @*TransNameOfCenter*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" id="trans-center-name">गावाचे नाव</label>
+                                            @Html.TextBoxFor(m => m.TransNameOfCenter, null, new { @id = "trans-name-of-center", @class = "form-control mandatory-mark", @placeholder = "गावाचे नाव प्रविष्ट करा", required = "required", @maxlength = "100" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfCenter)
+                                        </div>
+
+                                        @*AliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control default-none title-case", @placeholder = "Enter Alias Name", @maxlength = "10", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, null, new { @id = "trans-alias-name", @class = "form-control default-none", @placeholder = detailViewModel.AliasNamePlaceHolderInRegionalLanguage, @maxlength = "10" })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Name On Report ")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control default-none title-case", @placeholder = "Enter Name On Report", @maxlength = "100", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, null, new { @id = "trans-name-on-report", @class = "form-control default-none", @placeholder = detailViewModel.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = "100" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*ParentCenterPrmKey For Country*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold">Name Of Country</label>
+                                            @Html.DropDownListFor(m => m.ParentCenterCountryId, new SelectList(detailViewModel.CountryDropdownList, "Value", "Text"), "--- Select Country ---", new { @id = "country", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ParentCenterCountryId)
+                                        </div>
+
+                                        @*ParentCenterPrmKey For State*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold">Name Of State</label>
+                                            @Html.DropDownListFor(m => m.ParentCenterStateId, new SelectList(detailViewModel.StateDropdownListByCountryId(Model.ParentCenterCountryId), "Value", "Text"), "--- Select State ---", new { @id = "state", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ParentCenterStateId)
+                                        </div>
+
+                                        @*ParentCenterPrmKey For Division*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold">Name Of Division</label>
+                                            @Html.DropDownListFor(m => m.ParentCenterDivisionId, new SelectList(detailViewModel.DivisionDropdownListByStateId(Model.ParentCenterStateId), "Value", "Text"), "--- Select Division ---", new { @id = "division", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ParentCenterDivisionId)
+                                        </div>
+
+                                        @*ParentCenterPrmKey For District*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold">Name Of District</label>
+                                            @Html.DropDownListFor(m => m.ParentCenterDistrictId, new SelectList(detailViewModel.DistrictDropdownListByDivisionId(Model.ParentCenterDivisionId), "Value", "Text"), "--- Select District ---", new { @id = "district", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ParentCenterDistrictId)
+                                        </div>
+
+                                        @*ParentCenterPrmKey For SubDivision*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold">Name Of SubDivision</label>
+                                            @Html.DropDownListFor(m => m.ParentCenterSubDivisionOfficeId, new SelectList(detailViewModel.SubDivisionOfficeDropdownListByDistrictId(Model.ParentCenterDistrictId), "Value", "Text"), "--- Select SubDivisionOffice ---", new { @id = "sub-division-office", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ParentCenterSubDivisionOfficeId)
+                                        </div>
+
+                                        @*ParentCenterPrmKey For Taluka*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold">Name Of Taluka</label>
+                                            @Html.DropDownListFor(m => m.ParentCenterTalukaId, new SelectList(detailViewModel.TalukaDropdownListBySubDivisionOfficeId(Model.ParentCenterSubDivisionOfficeId), "Value", "Text"), "--- Select Taluka ---", new { @id = "taluka", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ParentCenterTalukaId)
+                                        </div>
+
+                                        @*ParentCenterPrmKey For PostalOffice*@
+                                        <div id="postal-drop-down">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold">Name Of PostalOffice</label>
+                                                @Html.DropDownListFor(m => m.ParentCenterPostId, new SelectList(detailViewModel.PostalOfficeDropdownListByTalukaId(Model.ParentCenterTalukaId), "Value", "Text"), "--- Select Postal Office ---", new { @id = "postal-office", @class = "form-control mandatory-mark", required = "required" })
+                                                @Html.ValidationMessageFor(m => m.ParentCenterPostId)
+                                            </div>
+                                        </div>
+
+                                        @*Pincode*@
+                                        <div id="pincode">
+                                            <div class="form-group">
+                                                @Html.CustomLabel("Pincode")
+                                                @Html.TextBoxFor(m => m.CenterDemographicDetailViewModel.Pincode, new { @id = "pin-code", @class = "form-control", @type = "number", @placeholder = "Enter Pincode", @maxlength = "6" })
+                                                @Html.ValidationMessageFor(m => m.CenterDemographicDetailViewModel.Pincode)
+                                            </div>
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark ActivationDate", @placeholder = "Enter Activation Date", @type = "date" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control title-case", @placeholder = "Enter Note", @maxlength = "1500", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control", @placeholder = detailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = "1500" })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                        @*Hiddent Field For CenterPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterPrmKey)
+
+                                        @*Hiddent Field For CenterModificationPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterModificationPrmKey)
+
+                                        @*Hiddent Field For CenterTranslationPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterTranslationPrmKey)
+
+                                        @*Hiddent Field For CenterDemographicDetailPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterDemographicDetailViewModel.CenterDemographicDetailPrmKey)
+
+                                        @*Hiddent Field For CenterISOCodePrmKey*@
+                                        @Html.HiddenFor(m => m.CenterIsoCodeViewModel.CenterISOCodePrmKey)
+
+                                        @*Hiddent Field For CenterOccupationPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterOccupationViewModel.CenterOccupationPrmKey)
+
+                                        @*Hiddent Field For CenterTradingEntityDetailPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterTradingEntityDetailViewModel.CenterTradingEntityDetailPrmKey)
+                                    </div>
+                                </div>
+
+                                @*======= Fourth Row - Accordians =======*@
+                                <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                    @*Accordian 1 - Center ISO Code*@
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card iso-info">
+                                                <div class="card-header collapsed p-3" id="heading-center-iso-code" aria-expanded="true" data-toggle="collapse" href="#collapse-center-iso-code">
+                                                    <a class="card-title">
+                                                        <b>Center ISO Code</b>
+                                                    </a>
+                                                </div>
+                                                <div id="collapse-center-iso-code" class="collapse" aria-labelledby="heading-center-iso-code" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        @*ISOAlphaNumericCode2*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("ISO AlphaNumeric Code2")
+                                                            @Html.TextBoxFor(m => m.CenterIsoCodeViewModel.ISOAlphaNumericCode2, new { @class = "form-control title-case", @placeholder = "Enter ISO AlphaNumeric Code", @maxlength = "2" })
+                                                            @Html.ValidationMessageFor(m => m.CenterIsoCodeViewModel.ISOAlphaNumericCode2)
+                                                        </div>
+
+                                                        @*ISOAlphaNumericCode3*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("ISO AlphaNumeric Code3")
+                                                            @Html.TextBoxFor(m => m.CenterIsoCodeViewModel.ISOAlphaNumericCode3, new { @class = "form-control", @placeholder = "Enter ISO AlphaNumeric Code", @maxlength = "3" })
+                                                            @Html.ValidationMessageFor(m => m.CenterIsoCodeViewModel.ISOAlphaNumericCode3)
+                                                        </div>
+
+                                                        @*ISONumericCode*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("ISO Numeric Code")
+                                                            @Html.TextBoxFor(m => m.CenterIsoCodeViewModel.ISONumericCode, new { @class = "form-control", @type = "number", @placeholder = "Enter ISO Numeric Code" })
+                                                            @Html.ValidationMessageFor(m => m.CenterIsoCodeViewModel.ISONumericCode)
+                                                        </div>
+
+                                                        @*OtherCode*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Other Code")
+                                                            @Html.TextBoxFor(m => m.CenterIsoCodeViewModel.OtherCode, new { @class = "form-control title-case", @placeholder = "Enter Other Code", @maxlength = "20" })
+                                                            @Html.ValidationMessageFor(m => m.CenterIsoCodeViewModel.OtherCode)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 2 - Center Demographic Detail*@
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card demographicdetail-info">
+                                                <div class="card-header collapsed p-3" id="heading-center-demographic-detail" aria-expanded="false" data-toggle="collapse" href="#collapse-center-demographic-detail">
+                                                    <a class="card-title">
+                                                        <b>Center Demographic Detail</b>
+                                                    </a>
+                                                </div>
+                                                <div id="collapse-center-demographic-detail" class="collapse" aria-labelledby="heading-center-demographic-detail" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        @*LocalGovernment*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Local Government")
+                                                            @Html.DropDownListFor(m => m.CenterDemographicDetailViewModel.LocalGovernmentId, new SelectList(detailViewModel.LocalGovernmentDropdownList, "Value", "Text"), "--- Select Local Government ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CenterDemographicDetailViewModel.LocalGovernmentId)
+                                                        </div>
+
+                                                        @*Direction*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Direction")
+                                                            @Html.DropDownListFor(m => m.CenterDemographicDetailViewModel.DirectionId, new SelectList(detailViewModel.DirectionDropdownList, "Value", "Text"), "--- Select Direction ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CenterDemographicDetailViewModel.DirectionId)
+                                                        </div>
+
+                                                        @*AreaTypePrmKey*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Area Type")
+                                                            @Html.DropDownListFor(m => m.CenterDemographicDetailViewModel.AreaTypeId, new SelectList(detailViewModel.AreaTypeDropdownList, "Value", "Text"), "--- Select Area Type ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CenterDemographicDetailViewModel.AreaTypeId)
+                                                        </div>
+
+                                                        @*TotalPopulation*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Population")
+                                                            @Html.TextBoxFor(m => m.CenterDemographicDetailViewModel.TotalPopulation, new { @class = "form-control mandatory-mark", @placeholder = "Enter Population", @type = "number", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CenterDemographicDetailViewModel.TotalPopulation)
+                                                        </div>
+
+                                                        @*PerCapitaIncome*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Per Capita Income")
+                                                            @Html.TextBoxFor(m => m.CenterDemographicDetailViewModel.PerCapitaIncome, new { @class = "form-control mandatory-mark", @placeholder = "Enter Per Capita Income", @type = "number", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CenterDemographicDetailViewModel.PerCapitaIncome)
+                                                        </div>
+
+                                                        @*EducationLevel*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Education Level")
+                                                            @Html.DropDownListFor(m => m.CenterDemographicDetailViewModel.EducationLevelId, new SelectList(detailViewModel.EducationLevelDropdownList, "Value", "Text"), "--- Select Education Level ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CenterDemographicDetailViewModel.EducationLevelId)
+                                                        </div>
+
+                                                        @*FamilySystem*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Family System")
+                                                            @Html.DropDownListFor(m => m.CenterDemographicDetailViewModel.FamilySystemId, new SelectList(detailViewModel.FamilySystemDropdownList, "Value", "Text"), "--- Select Family Type ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CenterDemographicDetailViewModel.FamilySystemId)
+                                                        </div>
+
+                                                        @*NumberOfResidentsOwningHomes*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Number Of Residents Owning Homes")
+                                                            @Html.TextBoxFor(m => m.CenterDemographicDetailViewModel.NumberOfResidentsOwningHomes, new { @class = "form-control mandatory-mark", @placeholder = "Enter Number Of Residents Owning Homes", @type = "number", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CenterDemographicDetailViewModel.NumberOfResidentsOwningHomes)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 3 - Center Occupation*@
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card occupation-info">
+                                                <div class="card-header collapsed p-3" id="heading-center-occupation" aria-expanded="false" data-toggle="collapse" href="#collapse-center-occupation">
+                                                    <a class="card-title">
+                                                        <b>Center Occupation</b>
+                                                    </a>
+                                                </div>
+                                                <div id="collapse-center-occupation" class="collapse" aria-labelledby="heading-center-occupation" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        @*OccupationActivity*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Occupation Activity")
+                                                            <div class="bleft">
+                                                                @Html.ListBoxFor(m => m.SelectedOccupationId, new MultiSelectList(detailViewModel.OccupationDropdownList, "Value", "Text"), new { @class = "form-control js-example-basic-multiple", name = "CenterOccupationId", multiple = "multiple" })
+                                                                @Html.ValidationMessageFor(m => m.SelectedOccupationId)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 4 - Center Trading Entity Detail*@
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-header collapsed p-3" id="heading-center-trading-entity-detail" aria-expanded="false" data-toggle="collapse" href="#collapse-center-trading-entity-detail">
+                                                    <a class="card-title">
+                                                        <b>Center Trading Entity Detail</b>
+                                                    </a>
+                                                </div>
+                                                <div id="collapse-center-trading-entity-detail" class="collapse" aria-labelledby="heading-center-trading-entity-detail" data-parent="#accordion">
+
+                                                    <div class="modal fade" id="add-center-trading-entity-detail" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+
+                                                                    <h4 class="modal-title text-center" id="trading-entity-detail-text">Add</h4>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+
+                                                                    @*NameOfEntity*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Name Of Entity")
+                                                                        @Html.DropDownListFor(m => m.CenterTradingEntityDetailViewModel.TradingEntityId, new SelectList(detailViewModel.TradingEntityDropdownList, "Value", "Text", 0), "--- Select Trading Entity ---", new { @id = "name-of-trading-entity", @class = "form-control mandatory-mark" })
+                                                                        @Html.ValidationMessageFor(m => m.CenterTradingEntityDetailViewModel.TradingEntityId)
+                                                                    </div>
+
+                                                                    @*Volume*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Volume")
+                                                                        @Html.TextBoxFor(m => m.CenterTradingEntityDetailViewModel.Volume, new { @id = "volume-text", @class = "form-control mandatory-mark", @type = "number", @min = "1", @max = "9999", @placeholder = "Enter Volume" })
+                                                                        @Html.ValidationMessageFor(m => m.CenterTradingEntityDetailViewModel.Volume)
+                                                                    </div>
+
+                                                                    @*ReasonForModification*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("ReasonForModification")
+                                                                        @Html.TextAreaFor(m => m.CenterTradingEntityDetailViewModel.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control title-case", @placeholder = "Enter Reason For Modification", @maxlength = "1500", onkeydown = "Maketranslation()" })
+                                                                        @Html.ValidationMessageFor(m => m.CenterTradingEntityDetailViewModel.ReasonForModification)
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button" id="btn-add-trading-entity" class="btn btn-success ">Add</button>
+                                                                    <button type="button" id="btn-update-trading-entity" class="btn btn-primary ">Update</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <table id="center-trading-entity-detail-table" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100">
+                                                            <thead class="text-center">
+                                                                <tr>
+                                                                    <th><input type="checkbox" name="check_all" id="selectAll" style="margin-left:11px;" /></th>
+                                                                    <th class="d-none">TradingEntityId</th>
+                                                                    <th>NameOfEntity</th>
+                                                                    <th>Volume</th>
+                                                                    <th>ReasonForModification</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody class="text-center">
+                                                                @{
+                                                                    IEnumerable<CenterTradingEntityDetailViewModel> viewModelList = (IEnumerable<CenterTradingEntityDetailViewModel>)HttpContext.Current.Session["CenterTradingEntityDetail"];
+
+                                                                    foreach (CenterTradingEntityDetailViewModel viewModel in viewModelList)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                            <td class="d-none">@viewModel.TradingEntityId</td>
+                                                                            <td>@viewModel.NameOfTradingEntity</td>
+                                                                            <td>@viewModel.Volume</td>
+                                                                            <td>@viewModel.ReasonForModification</td>
+                                                                        </tr>
+                                                                    }
+
+                                                                }
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Amend", "SaveDataTables", "VillageTownCity", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/VillageTradingEntityDetail.js"></script>
+<script>
+    var url='@Url.Action("SaveDataTables", "VillageTownCity")'
+    var uniqueCenterNameUrl = '@Url.Action("GetUniqueCenterName", "VillageTownCity")'
+    var stateDropdownListUrl = '@Url.Action("StateDropdownListByCountryPrmKey", "VillageTownCity")'
+    var divisionDropdownListUrl = '@Url.Action("DivisionDropdownListByStatePrmKey", "VillageTownCity")'
+    var districtDropdownListUrl = '@Url.Action("DistrictDropdownListByDivisionPrmKey", "VillageTownCity")'
+    var talukaDropdownListUrl = '@Url.Action("TalukaDropdownListByDistrictPrmKey", "VillageTownCity")'
+    var postDropdownListUrl = '@Url.Action("PostalOfficeDropdownListByTalukaPrmKey", "VillageTownCity")'
+</script>

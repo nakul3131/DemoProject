@@ -1,0 +1,173 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.MFAViewModel
+@using DemoProject.Services.HtmlHelpers;
+
+@{
+    Layout = null;
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Token Based Authentication</title>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/Custom.css" rel="stylesheet" />
+    <link href="~/Content/TokenBasedMFA.css" rel="stylesheet" />  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .toast-body {
+            padding: .75rem;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            -webkit-box-shadow: 0 4px 6px -6px #222;
+            -moz-box-shadow: 0 4px 6px -6px #222;
+            box-shadow: 0 8px 8px -6px #222;
+        }
+
+    </style>
+</head>
+<body id="background" onunload="logout()">
+    <div class="container">
+        <div class="forms-container" style="margin-top:-3%;">
+            <div class="signin-signup">
+                <div class="sign-up-form">
+                    <h5 class="pt-2  text-left"><b>SCS-PathPranali</b></h5>
+                    <div class="card bg-transparent mt-3  " style="width:40%; right:1%;margin-left:27%;z-index:10;">
+                        <div class="card-body">
+                            <h4 class="card-title text-left"><b>MFA</b></h4>
+                            <h6><b>Multi Factor Authentication Using Tokens</b></h6>
+
+                            @*<h2 class="title">Sign Up</h2>*@
+                            @using (Html.BeginForm("TokenBasedMFA", "Account", FormMethod.Post))
+                            {
+
+                                @Html.AntiForgeryToken()
+                                {
+
+                                    @Html.ValidationMessage("InvalidAttempt")
+
+                                    @CustomHtmlHelper.Token((string)TempData["DeliveryChannel"], (string)TempData["smsResponseResult"]);
+
+                                    @Html.ValidationMessage("InvalidToken")
+
+                                }
+
+                                <div class="clearfix"></div>
+                                <div class="form-row  mt-4">
+                                    <button type="submit" class="btn btn-sm btn-block btn-primary" onclick="window.location.href='@Url.Action("DashBoard", "Home")'"><h5><b>Continue</b></h5></button>
+                                </div>
+                                <div class="d-block d-md-none">
+                                    <div class="clearfix">
+                                        <button type="button" class="btn btn-link float-left">Need Help?</button>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="panels-container">
+            <div class="panel left-panel">
+                @*<div class="content">
+                        <h3>Are you new user?</h3>
+                        <p>
+
+                        </p>
+                        <button class="btn badge-danger" >
+                            Sign up
+                        </button>
+                    </div>*@
+
+            </div>
+            <div class="panel right-panel" style="margin-top:-250%;">
+                <div class="content">
+                    <h3></h3>
+                    <p>
+
+                    </p>
+                    <button class="btn btn-danger" id="sign-in-btn">
+                        
+                    </button>
+                </div>
+                <img src="~/Images/Login/two_factor_authentication.svg" class="image" alt="" />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+<script>
+ 
+    debugger;
+    const sign_in_btn = document.querySelector("#sign-in-btn");
+    const sign_up_btn = document.querySelector("#sign-up-btn");
+    const container = document.querySelector(".container");
+
+    
+    sign_in_btn.addEventListener("click", () => {
+        container.classList.remove("sign-up-mode");
+    });
+
+    $(document).ready(function ()
+    {
+        $("#myToast").toast('show');
+        debugger;
+
+        $(".link").fadeOut('slow').delay(30000).fadeIn("slow");
+
+        $("#close").click(function () {
+
+            $(".link").fadeOut('slow').delay(30000).fadeIn('slow');
+            $("#myToast").toast('show');
+        });
+
+    });
+
+    function ResendSMS()
+    {
+        debugger;
+        $.ajax(
+        {
+            url: '@Url.Action("ReSendUserAuthenticationToken", "SMS")',
+            type: "GET",
+            dataType:"JSON",
+            success: function (data)
+            {
+                if (data == "Success")
+                {
+                    location.reload();
+                }
+            },
+
+            error: function ()
+            {
+                //alert("An error has occured!!!");
+            }
+        });
+    }
+
+    function logout()
+        {
+            $.ajax(
+            {
+                url: '@Url.Action("Logout", "Account")',
+                type: "GET",
+                dataType:"JSON",
+            });
+        }
+
+</script>
+
+
+
+
+

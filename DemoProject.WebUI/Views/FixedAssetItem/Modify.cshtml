@@ -1,0 +1,241 @@
+﻿@model DemoProject.Services.ViewModel.Account.Master.FixedAssetItemViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Master
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    FixedAssetItemViewModel model = new FixedAssetItemViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("FAIMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FixedAssetItem - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*NameOfItem*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of Item")
+                                            @Html.TextBoxFor(m => m.NameOfItem, new { @id = "name-of-item", @class = "form-control mandatory-mark", @placeholder = "Enter Name Of Item", required = "required", @maxlength = "150", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfItem)
+                                        </div>
+
+                                        @*TransNameOfItem*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOfItemInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOfItem, new { @id = "trans-name-of-item", @class = "form-control mandatory-mark", @placeholder = model.NameOfItemPlaceHolderInRegionalLanguage, required = "required", @maxlength = "150", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfItem)
+                                        </div>
+
+                                        @*Alias Name*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control", @placeholder = "Enter Alias Name", @maxlength = "10", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, new { @id = "trans-alias-name", @class = "form-control", @placeholder = model.AliasNamePlaceHolderInRegionalLanguage, @maxlength = "10", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name On Report")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control", @placeholder = "Enter Name On Report", required = "required", @maxlength = "150", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, new { @id = "trans-name-on-report", @class = "form-control", @placeholder = model.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = "150", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*IsTangibleAsset*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Is Tangible Asset")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.IsTangibleAsset, new { @id = "is-tangible-asset", @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*IsTaxable*@
+                                        <div class="row form-group mt-4">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Is Taxable")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.IsTaxable, new { @id = "is-taxable", @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*HSN_SACCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("HSN_SAC Code")
+                                            @Html.TextBoxFor(m => m.HSN_SACCode, new { @class = "form-control", @type = "number", @placeholder = "Enter HSN_SAC Code", @min = 1000, @max = 99999999, @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.HSN_SACCode)
+                                        </div>
+
+                                        @*CGST*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("CGST")
+                                            @Html.TextBoxFor(m => m.CGST, new { @id = "cgst", @class = "form-control", @type = "number", @placeholder = "Enter CGST", @min = 0, @max = 99, @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.CGST)
+                                        </div>
+
+                                        @*SGST*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("SGST")
+                                            @Html.TextBoxFor(m => m.SGST, new { @id = "sgst", @class = "form-control read-only", @type = "number", @placeholder = "Enter SGST", @min = 0, @max = 99, @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.SGST)
+                                        </div>
+
+                                        @*IGST*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("IGST")
+                                            @Html.TextBoxFor(m => m.IGST, new { @id = "igst", @class = "form-control read-only", @type = "number", @placeholder = "Enter IGST", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.IGST)
+                                        </div>
+
+                                        @*Cess*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Cess")
+                                            @Html.TextBoxFor(m => m.Cess, new { @class = "form-control", @type = "number", @placeholder = "Enter Cess", @min = 0, @max = 99, @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.Cess)
+                                        </div>
+
+                                        @*IsEligibleForITC*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Is Eligible For ITC")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.IsEligibleForITC, new { @id = "is-eligible-for-iTC", @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control", @placeholder = model.NotePlaceHolderInRegionalLanguage, @maxlength = "1500", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                        @*Hiddent Field For FixedAssetItemPrmKey*@
+                                        @Html.HiddenFor(m => m.FixedAssetItemPrmKey)
+
+                                        @*Hiddent Field For FixedAssetItemModificationPrmKey*@
+                                        @Html.HiddenFor(m => m.FixedAssetItemModificationPrmKey)
+
+                                        @*Hiddent Field For FixedAssetItemTranslationPrmKey*@
+                                        @Html.HiddenFor(m => m.FixedAssetItemTranslationPrmKey)
+                                    </div>
+                                </div>
+
+                                @*======= Fifth Row - Reason For Modification Input In Regional Language =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reason For Modification")
+                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                        </div>
+
+                                        @*TransReasonForModification*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.ReasonForModificationInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransReasonForModification, new { @id = "trans-reason-for-modification", @class = "form-control", @placeholder = model.ReasonForModificationPlaceHolderInRegionalLanguage, @maxlength = "1500", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransReasonForModification)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Modify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/FixedAssetItem.js"></script>

@@ -1,0 +1,262 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonCourtCaseViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonCourtCaseViewModel model = new PersonCourtCaseViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PCCAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Person Court Case - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark">&nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*CheckerRemark*@
+                                <div class="form-group mt-5 ml-5 mr-5">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark read-only" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row ml-2">
+                                    <div class="col-12">
+
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="modal fade" id="court-case-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title text-center" id="person-court-case-text">Add</h4>
+                                                                    <button type="button" class="close-court-case-modal" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    @*CourtCaseType*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Name Of Court Case Type")
+                                                                        @Html.DropDownListFor(m => m.CourtCaseTypeId, new SelectList(personDetailViewModel.CourtCaseTypeDropdownList, "Value", "Text", 0), "--- Select Name Of Court Case Type ---", new { @id = "court-case-types-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.CourtCaseTypeId)
+                                                                        <span id="court-case-types-id-error" class="error modal-input-error d-none">Please Select Valid Name Of Court Case Type. </span>
+                                                                    </div>
+                                                                    @*FilingDate*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Filing Date")
+                                                                        @Html.TextBoxFor(m => m.FilingDate, "{0:yyyy-MM-dd}", new { @id = "activation-filing-dates", @class = "form-control mandatory-mark deny-future-date allow-past-date-upto-50y modal-input", @type = "date" })
+                                                                        @Html.ValidationMessageFor(m => m.FilingDate)
+                                                                        <span id="activation-filing-dates-error" class="error modal-input-error d-none">Please Enter Filing Date. </span>
+                                                                    </div>
+                                                                    @*FilingNumber*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Filing Number")
+                                                                        @Html.TextBoxFor(m => m.FilingNumber, new { @id = "filing-numbers", @class = "form-control mandatory-mark alpha-numeric-with-dash-slash upper-case deny-multiple-space modal-input", @placeholder = "Enter Filing Number", @minlength = 3, @maxlength = 50, required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.FilingNumber)
+                                                                        <span id="filing-numbers-error" class="error modal-input-error d-none">Please Enter Filing Number. </span>
+                                                                    </div>
+                                                                    @*RegistrationDate*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Registration Date")
+                                                                        @Html.TextBoxFor(m => m.RegistrationDate, "{0:yyyy-MM-dd}", new { @id = "expiry-filing-dates", @class = "form-control mandatory-mark modal-input", required = "required", @Type = "date" })
+                                                                        @Html.ValidationMessageFor(m => m.RegistrationDate)
+                                                                        <span id="expiry-filing-dates-error" class="error modal-input-error d-none">Please Enter Registration Date. </span>
+                                                                    </div>
+
+                                                                    @*RegistrationNumber*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Registration Number")
+                                                                        @Html.TextBoxFor(m => m.RegistrationNumber, new { @id = "registration-numbers", @class = "form-control mandatory-mark alpha-numeric-with-dash-slash upper-case deny-multiple-space modal-input", @placeholder = "Enter Registration Number", @minlength = 3, @maxlength = 50, required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.RegistrationNumber)
+                                                                        <span id="registration-numbers-error" class="error modal-input-error d-none">Please Enter Registration Number. </span>
+                                                                    </div>
+
+                                                                    @*CNRNumber*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("CNR Number")
+                                                                        @Html.TextBoxFor(m => m.CNRNumber, new { @id = "cnr-number-case", @class = "form-control mandatory-mark alpha-numeric-with-dash-slash deny-past-date-from-reference-date upper-case deny-multiple-space modal-input", @placeholder = "Enter CNR Number", @minlength = 3, @maxlength = 50, required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.CNRNumber)
+                                                                        <span id="cnr-number-case-error" class="error modal-input-error d-none">Please Enter CNR Number. </span>
+                                                                    </div>
+
+                                                                    @*AmountOfDecree*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Amount Of Decree")
+                                                                        @Html.TextBoxFor(m => m.AmountOfDecree, new { @id = "amount-of-decree", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Amount Of Decree", @type = "number", @min = 1000, @max = 999999999, required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.AmountOfDecree)
+                                                                        <span id="amount-of-decree-error" class="error modal-input-error d-none">Please Enter Amount Of Decree.</span>
+                                                                    </div>
+
+                                                                    @*CollateralAmount*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Collateral Amount")
+                                                                        @Html.TextBoxFor(m => m.CollateralAmount, new { @id = "collateral-amount", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Collateral Amount", @type = "number", @min = 1000, @max = 999999999, required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.CollateralAmount)
+                                                                        <span id="collateral-amount-error" class="error modal-input-error d-none">Please Enter Collateral Amount. </span>
+                                                                    </div>
+                                                                    @*CourtCaseStage*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Name Of Court Case Stage")
+                                                                        @Html.DropDownListFor(m => m.CourtCaseStageId, new SelectList(personDetailViewModel.CourtCaseStageDropdownList, "Value", "Text", 0), "--- Select Name Of Court Case Stage ---", new { @id = "court-cases-stage-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.CourtCaseStageId)
+                                                                        <span id="court-cases-stage-id-error" class="error modal-input-error d-none">Please Select Name Of Court Case Stage.</span>
+                                                                    </div>
+                                                                    @*Note*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Note")
+                                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-court-case", @class = "form-control modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                                    </div>
+
+                                                                    @*ReasonForModification*@
+                                                                    <div id="court-case-div" class="form-group">
+                                                                        @Html.CustomLabel("Reason For Modification")
+                                                                        @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-court-case", @class = "form-control modal-input default-none", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                        @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" id="btn-add-court-case-modal" class="btn btn-success ">Add</button>
+                                                                    <button type="button" id="btn-update-court-case-modal" class="btn btn-primary">Update</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <table id="tbl-court-case" class="table compact table-striped table-bordered" width="100">
+                                                            <thead class="text-center">
+                                                                <tr>
+                                                                    <th><input type="checkbox" name="check_all" id="select-all-court-case" /></th>
+                                                                    <th class="d-none">CourtCaseTypeId</th>
+                                                                    <th>NameOfCourtCaseType</th>
+                                                                    <th>FilingDate</th>
+                                                                    <th>FilingNumber</th>
+                                                                    <th>RegistrationDate</th>
+                                                                    <th>RegistrationNumber</th>
+                                                                    <th>CNRNumber</th>
+                                                                    <th>AmountOfDecree</th>
+                                                                    <th>CollateralAmount</th>
+                                                                    <th class="d-none">CourtCaseStageId</th>
+                                                                    <th>NameOfCourtCaseStage</th>
+                                                                    <th>Note</th>
+                                                                    <th>ReasonForModification</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody class="text-center">
+                                                                @{
+                                                                    IEnumerable<PersonCourtCaseViewModel> personCourtCaseViewModelList = (IEnumerable<PersonCourtCaseViewModel>)HttpContext.Current.Session["CourtCase"];
+                                                                    if (personCourtCaseViewModelList != null)
+                                                                    {
+                                                                        foreach (PersonCourtCaseViewModel viewModel in personCourtCaseViewModelList)
+                                                                        {
+                                                                            <tr>
+                                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                <td class="d-none">@viewModel.CourtCaseTypeId</td>
+                                                                                <td>@viewModel.NameOfCourtCaseType</td>
+                                                                                <td>@viewModel.FilingDate.ToString("yyyy-MM-dd")</td>
+                                                                                <td>@viewModel.FilingNumber</td>
+                                                                                <td>@viewModel.RegistrationDate.ToString("yyyy-MM-dd")</td>
+                                                                                <td>@viewModel.RegistrationNumber</td>
+                                                                                <td>@viewModel.CNRNumber</td>
+                                                                                <td>@viewModel.AmountOfDecree</td>
+                                                                                <td>@viewModel.CollateralAmount</td>
+                                                                                <td class="d-none">@viewModel.CourtCaseStageId</td>
+                                                                                <td>@viewModel.NameOfCourtCaseStage</td>
+                                                                                <td>@viewModel.Note</td>
+                                                                                <td>@viewModel.ReasonForModification</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        @*Hiddent Field For PrmKey*@
+                                        @Html.HiddenFor(m => m.PrmKey)
+
+                                        @*Hiddent Field For PersonPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                        @*Hiddent Field For PersonPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonId)
+
+                                        @*Hiddent Field For PersonCourtCasePrmKey*@
+                                        @Html.HiddenFor(m => m.PersonCourtCasePrmKey)
+                                    </div>
+                                </div>
+                            </div>
+
+                            // Save/Submit Button
+                            @Html.OperationFooter("Amend", "SavePersonCourtCaseDataTable", "PersonCourtCase", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var saveDataTableURL = "@Url.Action("SavePersonCourtCaseDataTable", "PersonCourtCase")";
+</script>
+<script src="~/Scripts/Custom/PersonCourtCase.js"></script>

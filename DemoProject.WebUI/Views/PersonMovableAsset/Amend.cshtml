@@ -1,0 +1,392 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonMovableAssetViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    /*Review And Delete Those Variables*/
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+    /*Review And Delete Those Variables*/
+
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonMovableAssetViewModel model = new PersonMovableAssetViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PMVAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Movable Asset - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card d-block mb-3">
+
+                    @using(Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+
+                        @*======= First Row - Mandatory Mark =======*@
+                        @*Page Title- Create*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                <h5 class="font-weight-bold mt-1">Amend</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @{
+                            <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                @Model.FullName
+                            </h5>
+                        }
+
+                        @*CheckerRemark*@
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mt-5 ml-5 mr-5">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark read-only" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        @*======= Second Row - Data Entry Page =======*@
+                        @*Two Columns For Default Application Language (i.e. English) And Other For Regional Language Translation With Equal Length*@
+
+                        <div class="card-body ml-2">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="modal fade" id="movable-asset-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title  text-center" id="asset-text">Add</h4>
+                                                    <button type="button" class="close-movable-asset-modal" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @*VehicleCompany*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Vehicle Company")
+                                                        @Html.DropDownListFor(m => m.VehicleMakeId, new SelectList(personDetailViewModel.VehicleMakeDropdownList, "Value", "Text", 0), "--- Select Vehicle Company  --- ", new { @id = "vehicle-make-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.VehicleMakeId)
+                                                        <span id="vehicle-make-id-error" class="error modal-input-error d-none">Please Select Valid Vehicle Company. </span>
+                                                    </div>
+
+                                                    @*VehicleModel*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Vehicle Model")
+                                                        @Html.DropDownListFor(m => m.VehicleModelId, new SelectList(personDetailViewModel.VehicleModelDropdownList, "Value", "Text", 0), "--- Select Vehicle Model --- ", new { @id = "vehicle-model-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.VehicleModelId)
+                                                        <span id="vehicle-model-id-error" class="error modal-input-error d-none">Please Select Valid Vehicle Model. </span>
+                                                    </div>
+
+                                                    @*VehicleVariant*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Vehicle Variant")
+                                                        @Html.DropDownListFor(m => m.VehicleVariantId, new List<SelectListItem>(), new { @id = "vehicle-variant-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.VehicleVariantId)
+                                                        <span id="vehicle-variant-id-error" class="error modal-input-error d-none">Please Select Valid Vehicle Variant. </span>
+                                                    </div>
+
+                                                    @*NumberOfOwners*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Number Of Owners")
+                                                        @Html.TextBoxFor(m => m.NumberOfOwners, new { @id = "number-of-owners-movable-asset", @class = "form-control real-number mandatory-mark modal-input", @placeholder = "Enter Number Of Owners", @type = "number", @min = 1, @max = 19, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.NumberOfOwners)
+                                                        <span id="number-of-owners-movable-asset-error" class="error modal-input-error d-none">Please Enter Valid Number Of Owners. </span>
+                                                    </div>
+
+                                                    @*ManufacturingYear*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Manufacturing Year")
+                                                        @Html.TextBoxFor(m => m.ManufacturingYear, new { @id = "manufacturing-year-movable-asset", @class = "form-control mandatory-mark real-number modal-input", @placeholder = "Enter Manufacturing Year", @min = DateTime.Now.Year - 50, @max = DateTime.Now.Year, @type = "number" })
+                                                        @Html.ValidationMessageFor(m => m.ManufacturingYear)
+                                                        <span id="manufacturing-year-movable-asset-error" class="error modal-input-error d-none">Please Enter Valid Manufacturing Year.</span>
+                                                    </div>
+
+                                                    @*DateOfPurchase*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Date Of Purchase")
+                                                        @Html.TextBoxFor(m => m.PurchaseDate, "{0:yyyy-MM-dd}", new { @id = "date-of-purchase-movable-asset", @class = "form-control mandatory-mark modal-input", required = "required", @Type = "date" })
+                                                        @Html.ValidationMessageFor(m => m.PurchaseDate)
+                                                        <span id="date-of-purchase-movable-asset-error" class="error modal-input-error d-none">Please Enter Valid Date Of Purchase. </span>
+                                                    </div>
+
+                                                    @*RegistrationDate*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Registration Date")
+                                                        @Html.TextBoxFor(m => m.RegistrationDate, "{0:yyyy-MM-dd}", new { @id = "registration-date-movable-asset", @class = "form-control mandatory-mark modal-input", required = "required", @Type = "date" })
+                                                        @Html.ValidationMessageFor(m => m.RegistrationDate)
+                                                        <span id="registration-date-movable-asset-error" class="error modal-input-error d-none">Please Enter Valid Registration Date. </span>
+                                                    </div>
+
+                                                    @*RegistrationNumber*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Registration Number")
+                                                        @Html.TextBoxFor(m => m.RegistrationNumber, new { @id = "registration-number-movable-asset", @class = "form-control mandatory-mark upper-case modal-input", @placeholder = "Enter Registration Number", required = "required", @maxlength = 13 })
+                                                        @Html.ValidationMessageFor(m => m.RegistrationNumber)
+                                                        <span id="registration-number-movable-asset-error" class="error modal-input-error line-height-2 d-none">Please enter a valid registration number(e.g.,AB12XY1234)</span>
+                                                    </div>
+
+                                                    @*PurchasePrice*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Purchase Price")
+                                                        @Html.TextBoxFor(m => m.PurchasePrice, new { @id = "purchase-price-movable-asset", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Purchase Price", @type = "number", @min = 1, @max = 999999999, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.PurchasePrice)
+                                                        <span id="purchase-price-movable-asset-error" class="error modal-input-error d-none">Please Enter Valid Purchase Price. </span>
+                                                    </div>
+
+                                                    @*CurrentMarketValue*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Current Market Value")
+                                                        <div>
+                                                            @Html.TextBoxFor(m => m.CurrentMarketValue, new { @id = "current-market-value-movable-asset", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Current Market Value", @type = "number", @min = 0, @max = 999999999, required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.CurrentMarketValue)
+                                                            <span id="current-market-value-movable-asset-error" class="error modal-input-error d-none">Please Enter Valid Current Market Value. </span>
+                                                        </div>
+                                                    </div>
+
+                                                    @*OwnershipPercentage*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Ownership Percentage")
+                                                        @Html.TextBoxFor(m => m.OwnershipPercentage, new { @id = "ownership-percentage-movable-asset", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Ownership Percentage", @type = "number", @min = 0, @max = 100, required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.OwnershipPercentage)
+                                                        <span id="ownership-percentage-movable-asset-error" class="error modal-input-error d-none">Please Enter Valid Ownership Percentage. </span>
+                                                    </div>
+
+                                                    <div class="row form-group mt-5">
+                                                        <div class="col-8">
+                                                            @Html.CustomLabel("Has Any Mortgage")
+                                                        </div>
+                                                        <div class="col-4 pma">
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.HasAnyMortgage, new { @id = "has-any-mortgage-movable", @class = "form-control modal-switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @*IsOwnershipDeceased*@
+                                                    <div class="row form-group mt-4">
+                                                        <div class="col-8">
+                                                            @Html.CustomLabel("Is Ownership Deceased")
+                                                        </div>
+                                                        <div class="col-4 pma">
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.IsOwnershipDeceased, new { @id = "is-ownership-deceased-movable", @class = "form-control modal-switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="@((ViewBag.PersonInformationParameter.MovableAssetDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Photo")
+                                                            <span id="movable-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Photo. </span>
+                                                            @Html.TextBoxFor(m => m.PhotoPathMovable, new { @id = "movable-file-uploader", @class = "form-control mandatory-mark doc-upload modal-input", type = "file", name = "PhotoPath", @placeholder = "Enter Photo", required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.PhotoPathMovable)
+                                                        </div>
+
+                                                        <hr />
+                                                        <div><img id="movable-file-uploader-image-preview" class="modal-input-img-preview" src="" width="200" height="200" /></div>
+                                                        <hr />
+
+                                                        @*FileCaption*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("File Caption")
+                                                            @Html.TextBoxFor(m => m.FileCaption, new { @id = "file-caption-movable", @class = "form-control mandatory-mark deny-multiple-space title-case default-none modal-input", @placeholder = "Enter File Caption", @maxlength = 400, required = "required" })
+                                                            @Html.ValidationMessageFor(m => m.FileCaption)
+                                                            <span id="file-caption-movable-error" class="error modal-input-error d-none">Please Enter File Caption. </span>
+                                                        </div>
+
+                                                        @*Hiddent Field For MovableAssetDocumentUpload*@
+                                                        @Html.HiddenFor(m => personInformationParameterViewModel.MovableAssetDocumentUpload, new { @id = "movable-asset-document-upload" })
+
+                                                        @*Hiddent Field For EnableMovableAssetDocumentUploadInLocalStorage*@
+                                                        @Html.HiddenFor(m => personInformationParameterViewModel.EnableMovableAssetDocumentUploadInLocalStorage, new { @id = "enable-movable-asset-document-upload" })
+                                                    </div>
+
+                                                    @*Note*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Note")
+                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-movable-asset", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                    </div>
+
+                                                    @*ReasonForModification*@
+                                                    <div id="movable-asset-div" class="form-group">
+                                                        @Html.CustomLabel("Reason For Modification")
+                                                        @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-movable-asset", @class = "form-control modal-input deny-multiple-space default-none", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                        @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" id="btn-add-movable-asset-modal" class="btn btn-success ">Add</button>
+                                                    <button type="button" id="btn-update-movable-asset-modal" class="btn btn-primary ">Update</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="tbl-movable-asset" class="table compact table-striped table-bordered" width="100">
+                                            <thead class="text-center">
+                                                <tr>
+                                                    <th><input type="checkbox" name="check_all" id="select-all-movable-asset" /></th>
+                                                    <th class="d-none">VehicleMakeId</th>
+                                                    <th>VehicleCompany</th>
+                                                    <th class="d-none">VehicleModelId</th>
+                                                    <th>VehicleModel</th>
+                                                    <th class="d-none">VehicleVariantId</th>
+                                                    <th>VehicleVariant</th>
+                                                    <th>NumberOfOwners</th>
+                                                    <th>ManufacturingYear</th>
+                                                    <th>DateOfPurchase</th>
+                                                    <th>RegistrationDate</th>
+                                                    <th>RegistrationNumber</th>
+                                                    <th>PurchasePrice</th>
+                                                    <th>CurrentMarketValue</th>
+                                                    <th>OwnershipPercentage</th>
+                                                    <th>HasAnyMortgage</th>
+                                                    <th>IsOwnershipDeceased</th>
+                                                    <th>Photopath</th>
+                                                    <th>Photo</th>
+                                                    <th>FileCaption</th>
+                                                    <th>Note</th>
+                                                    <th>ReasonForModification</th>
+                                                    <th class="d-none">FileName</th>
+                                                    <th class="d-none">PersonMovableAssetDocument</th>
+                                                    <th class="d-none">LocalStoragePath</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody class="text-center">
+                                                @{
+                                                    IEnumerable<PersonMovableAssetViewModel> personMovableAssetViewModelList = (IEnumerable<PersonMovableAssetViewModel>)HttpContext.Current.Session["MovableAsset"];
+                                                    if (personMovableAssetViewModelList != null)
+                                                    {
+                                                        foreach (PersonMovableAssetViewModel viewModel in personMovableAssetViewModelList)
+                                                        {
+                                                            counter += 1;
+                                                            photoId = "photo-id" + counter.ToString();
+                                                            fileUploaderId = "data-table-movable-file-uploader" + counter.ToString();
+                                                            <tr>
+                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                <td class="d-none">@viewModel.VehicleMakeId</td>
+                                                                <td>@viewModel.NameOfVehicleMake</td>
+                                                                <td class="d-none">@viewModel.VehicleModelId</td>
+                                                                <td>@viewModel.NameOfVehicleModel</td>
+                                                                <td class="d-none">@viewModel.VehicleVariantId</td>
+                                                                <td>@viewModel.NameOfVehicleVariant</td>
+                                                                <td>@viewModel.NumberOfOwners</td>
+                                                                <td>@viewModel.ManufacturingYear</td>
+                                                                <td>@viewModel.PurchaseDate.ToString("yyyy-MM-dd")</td>
+                                                                <td>@viewModel.RegistrationDate.ToString("yyyy-MM-dd")</td>
+                                                                <td>@viewModel.RegistrationNumber</td>
+                                                                <td>@viewModel.PurchasePrice</td>
+                                                                <td>@viewModel.CurrentMarketValue</td>
+                                                                <td>@viewModel.OwnershipPercentage</td>
+                                                                <td>@viewModel.HasAnyMortgage</td>
+                                                                <td>@viewModel.IsOwnershipDeceased</td>
+                                                                <td>
+                                                                    <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                </td>
+                                                                <td>
+                                                                    @if (viewModel.EnableMovableAssetDocumentUploadInLocalStorage == true)
+                                                                    {
+                                                                        <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.MovableAssetDocumentLocalStoragePath + viewModel.PhotoPathMovable.FileName)" width="50" height="50" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                        var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                        <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                        string filename = Path.GetFileName(imgsrc);
+                                                                    }
+                                                                </td>
+                                                                <td>@viewModel.FileCaption</td>
+                                                                <td>@viewModel.Note</td>
+                                                                <td>@viewModel.ReasonForModification</td>
+                                                                <td class="d-none">@viewModel.NameOfFile</td>
+                                                                <td class="d-none">@viewModel.PersonMovableAssetDocumentPrmKey</td>
+                                                                <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*Hiddent Field For PrmKey*@
+                        @Html.HiddenFor(m => m.PrmKey)
+
+                        @*Hiddent Field For PersonPrmKey*@
+                        @Html.HiddenFor(m => m.PersonPrmKey)
+
+                        @*Hiddent Field For PersonMovableAssetPrmKey*@
+                        @Html.HiddenFor(m => m.PersonMovableAssetPrmKey)
+
+                        @*Hiddent Field For PersonMovableAssetDocumentPrmKey*@
+                        @Html.HiddenFor(m => m.PersonMovableAssetDocumentPrmKey)
+
+                        @*Hiddent Field For PersonId*@
+                        @Html.HiddenFor(m => m.PersonId)
+
+                    </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Amend", "SaveMovableAssetDataTables", "PersonMovableAsset", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var saveDataTableURL = "@Url.Action("SaveMovableAssetDataTables", "PersonMovableAsset")";
+</script>
+<script src="~/Scripts/Custom/PersonMovableAsset.js"></script>
+

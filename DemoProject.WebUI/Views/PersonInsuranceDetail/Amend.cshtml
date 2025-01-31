@@ -1,0 +1,290 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonInsuranceDetailViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("INSAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Insurance Detail - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark"> &nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-5 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*CheckerRemark*@
+                                <div class="ml-5 mt-5 mr-5 form-group read-only">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+
+                                <div id="heading-insurance-detail" class="ml-2 card-body">
+                                    <div class="mt-5 row">
+                                        <div class="col-12">
+                                            <div class="modal fade" id="insurance-detail-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title text-center" id="insurance-detail-text">Add</h4>
+                                                            <button type="button" class="close-insurance-detail-modal" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @*Insurance Type*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Insurance Type")
+                                                                @Html.DropDownListFor(m => m.InsuranceTypeId, new SelectList(personDetailViewModel.InsuranceTypeDropdownList, "Value", "Text", 0), "--- Select Insurance Type ---", new { @id = "insurance-type-id", required = "required", @class = "form-control mandatory-mark modal-input" })
+                                                                @Html.ValidationMessageFor(m => m.InsuranceTypeId)
+                                                                <span id="insurance-type-id-error" class="error modal-input-error d-none">Please Select An Insurance Type Before Proceeding. </span>
+                                                            </div>
+
+                                                            @*Insurance Company*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Insurance Company")
+                                                                @Html.DropDownListFor(m => m.InsuranceCompanyId, new SelectList(personDetailViewModel.InsuranceCompanyDropdownList, "Value", "Text", 0), "--- Select Insurance Company ---", new { @id = "insurance-company-id", required = "required", @class = "form-control mandatory-mark modal-input" })
+                                                                @Html.ValidationMessageFor(m => m.InsuranceCompanyId)
+                                                                <span id="insurance-company-id-error" class="error modal-input-error d-none">Please Select An Insurance Company Before Proceeding. </span>
+                                                            </div>
+
+                                                            @*Start Date*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Start Date")
+                                                                @Html.TextBoxFor(m => m.StartDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark activation-date deny-future-date allow-past-date-upto-30y modal-input", required = "required", @Type = "date" })
+                                                                @Html.ValidationMessageFor(m => m.StartDate)
+                                                                <span id="activation-date-error" class="error modal-input-error d-none">Please Select Valid Start Date. </span>
+                                                            </div>
+
+                                                            @*Maturity Date*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Maturity Date")
+                                                                @Html.TextBoxFor(m => m.MaturityDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", required = "required", @class = "form-control expiry-date mandatory-mark allow-future-date-upto-50y modal-input", @Type = "date" })
+                                                                @Html.ValidationMessageFor(m => m.MaturityDate)
+                                                                <span id="expiry-date-error" class="error modal-input-error d-none">Please Select Valid Maturity Date.</span>
+                                                            </div>
+
+                                                            @*Close Date*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Close Date")
+                                                                @Html.TextBoxFor(m => m.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-person-insurance", @class = "form-control deny-past-date-from-reference-date deny-future-date modal-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                                                @Html.ValidationMessageFor(m => m.CloseDate)
+                                                                <span id="close-date-person-insurance-error" class="error modal-input-error d-none">Close Date Never Less Than Start Date. </span>
+                                                            </div>
+
+                                                            @*Policy Number*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Policy Number")
+                                                                @Html.TextBoxFor(m => m.PolicyNumber, new { @id = "policy-number", @class = "form-control mandatory-mark alpha-numeric-with-hyphen-underscore upper-case deny-multiple-space modal-input", @placeholder = "Enter Policy Number", @minlength = 3, @maxlength = 50, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.PolicyNumber)
+                                                                <span id="policy-number-error" class="error modal-input-error d-none">Please Enter Valid Policy Number. </span>
+                                                                <span id="policy-numbers-error" class="error modal-input-error d-none">Please Enter Unique Sequence Number.</span>
+                                                            </div>
+
+                                                            @*Policy Premium*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Policy Premium")
+                                                                @Html.TextBoxFor(m => m.PolicyPremium, new { @id = "policy-premium", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Policy Premium", @type = "number", @min = 1, @max = 999999999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.PolicyPremium)
+                                                                <span id="policy-premium-error" class="error modal-input-error d-none">Please Enter Valid Policy Premium. </span>
+                                                            </div>
+
+                                                            @*Policy Sum Assured*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Policy Sum Assured")
+                                                                @Html.TextBoxFor(m => m.PolicySumAssured, new { @id = "policy-sum-assured", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Policy Sum Assured", @type = "number", required = "required", @min = 1, @max = 999999999 })
+                                                                @Html.ValidationMessageFor(m => m.PolicySumAssured)
+                                                                <span id="policy-sum-assured-error" class="error modal-input-error d-none">Please Enter Policy Sum Assured.</span>
+                                                            </div>
+
+                                                            @*Overdues Premium*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Overdues Premium")
+                                                                @Html.TextBoxFor(m => m.OverduesPremium, new { @id = "overdues-premium", @class = "form-control mandatory-mark real-number modal-input", @placeholder = "Enter Overdues Premium", @type = "number", @min = 0, @max = 999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.OverduesPremium)
+                                                            </div>
+
+                                                            @*Has Any Mortgage*@
+                                                            <div class="row form-group mt-5">
+                                                                <div class="col-8">
+                                                                    @Html.CustomLabel("Has Any Mortgage")
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <div class="text-right">
+                                                                        <label class="switch switch-left-right">
+                                                                            @Html.CheckBoxFor(m => m.HasAnyMortgage, new { @id = "has-any-mortgage-insurance", @class = "form-control modal-switch-input", required = "required" })
+                                                                            <span class="slider round">
+                                                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Note")
+                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-insurance-detail", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                            </div>
+
+                                                            @*ReasonForModification*@
+                                                            <div id="insurance-div" class="form-group">
+                                                                @Html.CustomLabel("Reason For Modification")
+                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-insurance-detail", @class = "form-control deny-multiple-space default-none modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" id="btn-add-insurance-detail-modal" class="btn btn-success ">Add</button>
+                                                                <button type="button" id="btn-update-insurance-detail-modal" class="btn btn-primary ">Update</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <div class="table-responsive" style="min-height:200px;">
+                                                    <table id="tbl-insurance-detail" class="table compact  table-striped table-bordered" width="100">
+                                                        <thead class="text-center">
+                                                            <tr>
+                                                                <th><input type="checkbox" name="check_all" id="select-all-insurance-detail" /></th>
+                                                                <th class="d-none">InsuranceTypeId</th>
+                                                                <th>InsuranceType</th>
+                                                                <th class="d-none">InsuranceCompanyId</th>
+                                                                <th>InsuranceCompany</th>
+                                                                <th>StartDate</th>
+                                                                <th>MaturityDate</th>
+                                                                <th>CloseDate</th>
+                                                                <th>PolicyNumber</th>
+                                                                <th>PolicyPremium</th>
+                                                                <th>PolicySumAssured</th>
+                                                                <th>OverduesPremium</th>
+                                                                <th>HasAnyMortgage</th>
+                                                                <th>Note</th>
+                                                                <th>ReasonForModification</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="text-center">
+                                                            @{
+                                                                IEnumerable<PersonInsuranceDetailViewModel> insuranceDetailViewModelList = (IEnumerable<PersonInsuranceDetailViewModel>)HttpContext.Current.Session["InsuranceDetail"];
+                                                                if (insuranceDetailViewModelList != null)
+                                                                {
+                                                                    foreach (PersonInsuranceDetailViewModel viewModel in insuranceDetailViewModelList)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                            <td class="d-none">@viewModel.InsuranceTypeId</td>
+                                                                            <td>@viewModel.NameOfInsuranceType</td>
+                                                                            <td class="d-none">@viewModel.InsuranceCompanyId</td>
+                                                                            <td>@viewModel.NameOfInsuranceCompany</td>
+                                                                            <td>@viewModel.StartDate.ToString("yyyy-MM-dd")</td>
+                                                                            <td>@(viewModel.MaturityDate == null ? "" : Convert.ToDateTime(viewModel.MaturityDate).ToString("yyyy-MM-dd"))</td>
+                                                                            <td>@(viewModel.CloseDate == null ? "" : Convert.ToDateTime(viewModel.CloseDate).ToString("yyyy-MM-dd"))</td>
+                                                                            <td>@viewModel.PolicyNumber</td>
+                                                                            <td>@viewModel.PolicyPremium</td>
+                                                                            <td>@viewModel.PolicySumAssured</td>
+                                                                            <td>@viewModel.OverduesPremium</td>
+                                                                            <td>@viewModel.HasAnyMortgage</td>
+                                                                            <td>@viewModel.Note</td>
+                                                                            <td>@viewModel.ReasonForModification</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    @*Hiddent Field For PrmKey*@
+                                    @Html.HiddenFor(m => m.PrmKey)
+
+                                    @*Hiddent Field For PersonPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                    @*Hiddent Field For PersonId*@
+                                    @Html.HiddenFor(m => m.PersonId)
+
+                                    @*Hiddent Field For PersonMachineryAssetPrmKey*@
+                                    @Html.HiddenFor(m => Model.PersonInsuranceDetailPrmKey)
+
+                                </div>
+
+                                @*Save/Submit Button*@
+                                @Html.OperationFooter("Amend", "Exit", "Home", "None")
+                            </div>
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var saveDataTableURL = "@Url.Action("SaveInsuranceDataTable", "PersonInsuranceDetail")";
+</script>
+<script src="~/Scripts/Custom/PersonInsuranceDetail.js"></script>
+

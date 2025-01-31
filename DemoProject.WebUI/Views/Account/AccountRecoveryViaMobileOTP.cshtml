@@ -1,0 +1,93 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.MFAViewModel
+
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/Custom.css" rel="stylesheet" />
+
+    <title>Account Recovery Via Mobile</title>
+</head>
+
+<body id="background">
+    <div class="container-fluid">
+        <!-- Center Of Page  -->
+        <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+            <div class="row heightresponsive">
+
+            </div>
+            <!-- Second Row  -->
+            <div class="row">
+                <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                    <div class="text-center">
+                        <img class="rounded-circle" width="90" height="90" src="@Url.Action("GetUserProfilePhoto", "Account")" alt="User Photo" />
+                    </div>
+                </div>
+            </div>
+            <!-- Third Row  -->
+            <div class="row pt-0 pt-lg-2 pb-lg-2 bg-white">
+                <div class="col-12 col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+                    <div class="card bg-transparent d-block">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">Account Recovery</h4>
+                            <h6 class="card-text text-muted text-center"><small>This helps show that this account really belongs to you</small></h6>
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                {
+                                    <div class="text-center pt-2">
+                                        <img src="~/Icons/MobileNotification.png" alt="Mobile Notification Image" style="width:40%;" />
+                                    </div>
+
+                                    @*Header Text / Title*@
+                                    <div class="pt-3">
+                                        <h6> <small> Please Enter the OTP sent to your registered mobile number </small></h6>
+                                    </div>
+
+                                    @*Mobile OTP*@
+                                    <div class="form-group pt-3">
+                                        <div class="clearfix">
+                                            <div class="float-left"><i class="fas fa-mobile-alt"></i></div>
+                                            <label class="float-left font-weight-bold ml-1">Mobile OTP</label>
+                                            <div class="d-none d-md-block">
+                                                <button type="button" class="btn btn-link float-right"><b>Resend?</b></button>
+                                            </div>
+                                        </div>
+                                        @Html.TextBoxFor(m => m.MobileOTP, new { @class = "form-control", @placeholder = "Enter Mobile OTP", @autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.MobileOTP)
+                                    </div>
+                                    @Html.ValidationMessage("InvalidToken")
+
+                                    @*Continue button*@
+                                    <div class="form-group pt-4">
+                                        <button type="submit" class="btn btn-sm btn-block btn-primary"><h5><b>Continue</b></h5></button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+

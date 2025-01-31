@@ -1,0 +1,183 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.Master.ContinentViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.PersonInformation.Master
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    ContinentDetailViewModel detailViewModel = new ContinentDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("CONAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Continent - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Amend", "Continent", FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12" id="radio">
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @class = "form-control mandatory-mark read-only" })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*CenterCategoryPrmKey*@
+                                        <div class="form-group @(Model.CenterModificationPrmKey > 0 ? "read-only" : "")">
+                                            @Html.CustomLabel("Category")
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="mt-1 d-flex justify-content-between">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.CenterCategoryPrmKey, "11", new { @id = "category-11", @name = "SubContinent", @class = "center-category" })
+                                                            <label for="category-11" class="form-check-label pl-2">SubContinent</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.CenterCategoryPrmKey, "12", new { @id = "category-12", @name = "Continent", @class = "center-category" })
+                                                            <label for="category-12" class="form-check-label pl-2">Continent</label>
+                                                        </div>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.CenterCategoryPrmKey)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*NameOfCenter*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" id="center-name-continent">Name Of Continent</label>
+                                            @Html.TextBoxFor(m => m.NameOfCenter, new { @id = "name-of-center-continent", @class = "form-control mandatory-mark title-case", @placeholder = "Enter Name Of Continent", required = "required", @maxlength = 100, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfCenter)
+                                        </div>
+
+                                        @*TransNameOfCenter*@
+                                        <div class="form-group">
+                                            <label class="font-weight-bold" id="trans-center-name-continent">खंडाचे नाव</label>
+                                            @Html.TextBoxFor(m => m.TransNameOfCenter, null, new { @id = "trans-name-of-center-continent", @class = "form-control mandatory-mark", @placeholder = "खंडाचे नाव प्रविष्ट करा", required = "required", @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfCenter)
+                                        </div>
+
+                                        @*AliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control default-none title-case", @placeholder = "Enter Alias Name", @maxlength = 8, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, null, new { @id = "trans-alias-name", @class = "form-control default-none", @placeholder = detailViewModel.AliasNamePlaceHolderInRegionalLanguage, @maxlength = 8 })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Name On Report ")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control default-none title-case", @placeholder = "Enter Name On Report", @maxlength = 100, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, null, new { @id = "trans-name-on-report", @class = "form-control default-none", @placeholder = detailViewModel.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*ParentCenterPrmKey*@
+                                        <div id="continentDropDown">
+                                            <div class="form-group">
+                                                @Html.CustomLabel("Name Of Continent")
+                                                @Html.DropDownListFor(m => m.ParentCenterId, new SelectList(detailViewModel.ContinentDropdownList, "Value", "Text"), "--- Select Name Of Continent ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                                @Html.ValidationMessageFor(m => m.ParentCenterId)
+                                            </div>
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "ActivationDate", @class = "form-control mandatory-mark ActivationDate", @Type = "date" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control title-case", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control", @placeholder = detailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                        @*Hiddent Field For CenterPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterPrmKey)
+
+                                        @*Hiddent Field For CenterModificationPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterModificationPrmKey)
+
+                                        @*Hiddent Field For CenterTranslationPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterTranslationPrmKey)
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var url = "@Url.Action("GetUniqueCenterName", "Continent")";
+    </script>
+    <script src="~/Scripts/Custom/Center.js"></script>
+</body>
+</html>

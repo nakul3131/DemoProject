@@ -1,0 +1,1449 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.UserProfileViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Security.Users
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    UserProfileDetailViewModel userProfileDetailViewModel = new UserProfileDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("UPLMOD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>User Profile - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title If Screen Large Then Column - 12 Otherwise Col - 6 For Create And Remaining For Translation*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*Person Name*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Person")
+                                            @Html.DropDownListFor(m => m.PersonId, new SelectList(userProfileDetailViewModel.PersonDropdownList, "Value", "Text", 0), "Select Person", new { @id = "person-id", @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.PersonId)
+                                        </div>
+
+                                        @*NameOfUserProfile*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of User Profile")
+                                            @Html.TextBoxFor(m => m.NameOfUserProfile, new { @id = "name-of-user-profile", @class = "form-control mandatory-mark text-capitalize", @maxlength = "50", @autocomplete = "off", @placeholder = "Enter Name Of User Profile", required = "required", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfUserProfile)
+                                        </div>
+
+                                        @*AliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control text-capitalize", @maxlength = "10", @autocomplete = "off", @placeholder = "Enter Alias Name", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Name On Report ")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control text-capitalize", @maxlength = "100", @autocomplete = "off", @placeholder = "Enter Name On Report", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*EmailId*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Email Id")
+                                            @Html.TextBoxFor(m => m.EmailId, new { @id = "email-id", @class = "form-control text-capitalize", type = "email", @maxlength = "320", @autocomplete = "off", @placeholder = "Enter Email Id" })
+                                            @Html.ValidationMessageFor(m => m.EmailId)
+                                        </div>
+
+                                        @*AlternateEmailId*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alternate EmailId")
+                                            @Html.TextBoxFor(m => m.AlternateEmailId, new { @id = "alternate-email-id", @class = "form-control text-capitalize", type = "email", @maxlength = "320", @autocomplete = "off", @placeholder = "Enter Email Id" })
+                                            @Html.ValidationMessageFor(m => m.AlternateEmailId)
+                                        </div>
+
+                                        @*MobileNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Mobile Number")
+                                            @Html.TextBoxFor(m => m.MobileNumber, new { @id = "mobile-number", @class = "form-control text-capitalize", pattern = ".{10}", @maxlength = "320", @autocomplete = "off", @placeholder = "Enter Email Id", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.MobileNumber)
+                                        </div>
+
+                                        @*AlternateMobileNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alternate Mobile Number")
+                                            @Html.TextBoxFor(m => m.AlternateMobileNumber, new { @id = "alternate-mobile-number", @class = "form-control text-capitalize", pattern = ".{10}", @maxlength = "320", @autocomplete = "off", @placeholder = "Enter Alternate Mobile Number", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.AlternateMobileNumber)
+                                        </div>
+
+                                        @*Activation Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark deny-past-date", @Type = "date", @id = "ActivationDate", @autocomplete = "off", @placeholder = "Enter Activation Date", onclick = "DenyPastDate()", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*Expiry Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control deny-past-date-from-reference-date", @Type = "date", @id = "ExpiryDate", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('ActivationDate')" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*CloseDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Close Date")
+                                            @Html.TextBoxFor(m => m.CloseDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @Type = "date", @id = "CloseDate", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.CloseDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control text-capitalize", @autocomplete = "off", @maxlength = "1500", @placeholder = "Enter Note" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*Role Profile*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Role Profile")
+                                            <div class="mr-3">
+                                                @Html.DropDownListFor(m => m.RoleProfileId, new SelectList(userProfileDetailViewModel.RoleProfileDropDownList, "Value", "Text"), "--- Select Role  Profile ---", new { @id = "role-profile-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                @Html.ValidationMessageFor(m => m.RoleProfileId)
+                                            </div>
+                                        </div>
+
+                                        @*IsShowUserProfileCurrency*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Is Show User Profile Currency")
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.IsShowUserProfileCurrency, new { @class = "form-control switch-input", @id = "is-show-user-profile-currency", required = "required" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                            @*Accordian 1 - User Profile Home Business Office*@
+                                            <div id="heading-home-business-office" class="card mt-3">
+                                                <div class="card-header p-3" id="home-business-office-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-home-business-office" data-target="#collapse-home-business-office" href="#collapse-home-business-office">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Home Business Office</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="home-business-office-accordion-error" class="error d-none"> Home Business Office Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-home-business-office" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-home-business-office" data-target="#collapse-home-business-office">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-home-business-office" class="collapse" aria-labelledby="heading-home-business-office" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Home Branch Name*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Home Branch Name")
+                                                                    @Html.DropDownListFor(m => m.UserProfileHomeBusinessOfficeViewModel.BusinessOfficeId, new SelectList(userProfileDetailViewModel.BusinessOfficeDropdownList, "Value", "Text"), "Select Business Office", new { @id = "home-branch", @class = "form-control mandatory-mark", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfileHomeBusinessOfficeViewModel.BusinessOfficeId)
+                                                                </div>
+
+                                                                @*Activation Date*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Activation Date")
+                                                                    @Html.TextBoxFor(m => m.UserProfileHomeBusinessOfficeViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark deny-past-date", @Type = "date", @id = "ActivationDate", @placeholder = "Enter Activation Date", onclick = "DenyPastDate()", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfileHomeBusinessOfficeViewModel.ActivationDate)
+                                                                </div>
+
+                                                                @*Expiry Date*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Expiry Date")
+                                                                    @Html.TextBoxFor(m => m.UserProfileHomeBusinessOfficeViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control deny-past-date-from-reference-date", @Type = "date", @id = "ExpiryDate", onclick = "DenyPastDateFromReferenceDate('ActivationDate')" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfileHomeBusinessOfficeViewModel.ExpiryDate)
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.UserProfileHomeBusinessOfficeViewModel.Note, new { @id = "note-user-profile-home-business-office", @class = "form-control text-capitalize deny-multiple-space", @maxlength = "1500", @placeholder = "Enter Note" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfileHomeBusinessOfficeViewModel.Note)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 2 - User Profile Password Policy*@
+                                            <div id="heading-password-policy" class="card mt-3">
+                                                <div class="card-header p-3" id="password-policy-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-password-policy" data-target="#collapse-password-policy" href="#collapse-password-policy">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Password Policy</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="password-policy-accordion-error" class="error d-none"> Password Policy Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-password-policy" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-password-policy" data-target="#collapse-password-policy">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-password-policy" class="collapse" aria-labelledby="heading-password-policy" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Password Policy*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Password Policy")
+                                                                    @Html.DropDownListFor(m => m.UserProfilePasswordPolicyViewModel.PasswordPolicyId, new SelectList(userProfileDetailViewModel.PasswordPolicyDropDownList, "Value", "Text"), "Select Password Policy", new { @id = "password-policy-id", @class = "form-control mandatory-mark", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfilePasswordPolicyViewModel.PasswordPolicyId)
+                                                                </div>
+
+                                                                @*ActivationDate*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Activation Date")
+                                                                    @Html.TextBoxFor(m => m.UserProfilePasswordPolicyViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark deny-past-date", @id = "activation-date-password-policy", @Type = "date", onclick = "DenyPastDate()", @placeholder = "Enter Activation Date", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfilePasswordPolicyViewModel.ActivationDate)
+                                                                </div>
+
+                                                                @*ExpiryDate*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Expiry Date")
+                                                                    @Html.TextBoxFor(m => m.UserProfilePasswordPolicyViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control deny-past-date-from-reference-date", @id = "expiry-date-password-policy", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date-password-policy')", @placeholder = "Enter Expiry Date" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfilePasswordPolicyViewModel.ExpiryDate)
+                                                                </div>
+
+                                                                @*CloseDate*@
+                                                                <div class="form-group d-none">
+                                                                    @Html.CustomLabel("Close Date")
+                                                                    @Html.TextBoxFor(m => m.UserProfilePasswordPolicyViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @Type = "date", @id = "close-date-password-policy" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfilePasswordPolicyViewModel.CloseDate)
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.UserProfilePasswordPolicyViewModel.Note, new { @id = "note-password-policy", @class = "form-control deny-multiple-space", @placeholder = "Enter Note", @maxlength = "1500", onkeyup = "ToTextCapitalize()" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfilePasswordPolicyViewModel.Note)
+                                                                </div>
+
+                                                                <div class="form-group d-none">
+                                                                    @Html.CustomLabel("ReasonForModification")
+                                                                    @Html.TextAreaFor(m => m.UserProfilePasswordPolicyViewModel.ReasonForModification, new { @id = "reason-for-modification-password-policy", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", onkeyup = "ToTextCapitalize()" })
+                                                                    @Html.ValidationMessageFor(m => m.UserProfilePasswordPolicyViewModel.ReasonForModification)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 3 - User Profile Business Office*@
+                                            <div id="heading-business-office-parameter" class="card mt-3">
+                                                <div class="card-header" id="business-office-parameter-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office-parameter" data-target="#collapse-business-office-parameter">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Business Office</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="business-office-data-table-error" class="error d-none"> User Profile Business Office Data Table Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-business-office-parameter" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office-parameter" data-target="#collapse-business-office-parameter">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="collapse-business-office-parameter" class="collapse" aria-labelledby="heading-business-office-parameter" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Business Office Data Entry Modal / Popup Page*@
+                                                                <div class="modal fade" id="business-office-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title  text-center" id="business-office-modal-title">Add</h4>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+
+                                                                            <div class="modal-body">
+                                                                                @*NameOfBusinessOffice*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Name Of Business Office")
+                                                                                    @Html.DropDownListFor(m => m.UserProfileBusinessOfficeViewModel.MultiBusinessOfficeId, new MultiSelectList(userProfileDetailViewModel.BusinessOfficeDropdownList, "Value", "Text"), new { @id = "business-office-id", @class = "form-control mandatory-mark modal-input", @multiple = "multiple", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileBusinessOfficeViewModel.MultiBusinessOfficeId)
+                                                                                    <span id="business-office-id-error" class="error modal-input-error d-none"> Please Select Name Of Business Office.</span>
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileBusinessOfficeViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-business-office", @class = "form-control mandatory-mark activation-date deny-past-date deny-next-financial-year-date modal-input set-current-date", @placeholder = "Enter Activation Date", required = "required", @Type = "date", onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileBusinessOfficeViewModel.ActivationDate)
+                                                                                    <span id="activation-date-business-office-error" class="error modal-input-error d-none"> Please Select Activation Date.</span>
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileBusinessOfficeViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-business-office", @class = "form-control expiry-date modal-input", @placeholder = "Enter Expiry Date", @Type = "date", })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileBusinessOfficeViewModel.ExpiryDate)
+                                                                                    <span id="expiry-date-business-office-error" class="error modal-input-error d-none"> Please Select Expiry Date.</span>
+                                                                                </div>
+
+                                                                                @*ClosedDate*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("Closed Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileBusinessOfficeViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-business-office", @class = "form-control deny-future-date-from-reference-date modal-input", @placeholder = "Enter Close Date", @Type = "date", onclick = "DenyFutureDateFromReferenceDate('activation-date-business-office')" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileBusinessOfficeViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.UserProfileBusinessOfficeViewModel.Note, new { @id = "note-business-office", @class = "form-control default-none deny-multiple-space modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileBusinessOfficeViewModel.Note)
+                                                                                </div>
+
+                                                                                @*ReasonForModification*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("ReasonForModification")
+                                                                                    @Html.TextAreaFor(m => m.UserProfileBusinessOfficeViewModel.ReasonForModification, new { @id = "reason-for-modification-business-office", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileBusinessOfficeViewModel.ReasonForModification)
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-business-office-modal" class="btn btn-success ">Add</button>
+                                                                                <button type="button" id="btn-update-business-office-modal" class="btn btn-primary ">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*Business Office Data Table*@
+                                                                <div class="card-body">
+                                                                    <table id="tbl-business-office" class="table compact table-striped table-bordered " width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select-all" id="select-all-business-office" /></th>
+                                                                                <th class="d-none">BusinessOfficeID</th>
+                                                                                <th>NameOfBusinessOffice</th>
+                                                                                <th>Activation Date</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">Reason For Modification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<UserProfileBusinessOfficeViewModel> UserProfileBusinessOfficeviewModelList = (IEnumerable<UserProfileBusinessOfficeViewModel>)HttpContext.Current.Session["UserProfileBusinessOffice"];
+
+                                                                                foreach (UserProfileBusinessOfficeViewModel viewModel in UserProfileBusinessOfficeviewModelList)
+                                                                                {
+                                                                                    <tr class="hoverlightblue">
+                                                                                        <th><input type="checkbox" name="check_all" class="checks" /></th>
+                                                                                        <td class="d-none">@viewModel.BusinessOfficeId</td>
+                                                                                        <td>@viewModel.NameOfBusinessOffice</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 4 - Currency*@
+                                            <div id="show-user-profile-currency-block" class="card mt-3 d-none">
+                                                <div class="card-header " id="currency-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-currency" data-target="#collapse-currency">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Currency</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="currency-data-table-error" class="error d-none"> Currency Data Table Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-currency" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-currency" data-target="#collapse-currency">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="collapse-currency" class="collapse" aria-labelledby="heading-currency" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Currency Modal / Popup Page*@
+                                                                <div class="modal fade" id="currency-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title  text-center">Add</h4>
+                                                                                <button type="button" class="close-currency-modal" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                @*NameOfCurrency*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Name Of Currency")
+                                                                                    @Html.DropDownListFor(m => m.UserProfileCurrencyViewModel.MultiCurrencyId, new SelectList(userProfileDetailViewModel.CurrencyDropdownList, "Value", "Text", 0), new { @id = "currency-id", @class = "form-control mandatory-mark modal-input", @multiple = "multiple", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileCurrencyViewModel.CurrencyId)
+                                                                                    <span id="currency-id-error" class="error modal-input-error d-none"> Please Select Name Of Currency.</span>
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileCurrencyViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-currency", @class = "form-control mandatory-mark activation-date deny-next-financial-year-date deny-past-date modal-input set-current-date", @Type = "date", required = "required", @Onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileCurrencyViewModel.ActivationDate)
+                                                                                    <span id="activation-date-currency-error" class="error modal-input-error d-none"> Please Enter Valid Activation Date.</span>
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileCurrencyViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-currency", @class = "form-control expiry-date modal-input", required = "required", @Type = "date" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileCurrencyViewModel.ExpiryDate)
+                                                                                    <span id="expiry-date-currency-error" class="error modal-input-error d-none"> Please Enter Valid Expiry Date.</span>
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileCurrencyViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-currency", @class = "form-control deny-future-date-from-reference-date modal-input", @Type = "date", onclick = "DenyFutureDateFromReferenceDate('activation-date-currency')" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileCurrencyViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.UserProfileCurrencyViewModel.Note, new { @id = "note-currency", @class = "form-control deny-multiple-space modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileCurrencyViewModel.Note)
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-currency-modal" class="btn btn-success">Add</button>
+                                                                                <button type="button" id="btn-update-currency-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*Currency Data Table*@
+                                                                <div class="card-body">
+                                                                    <table id="tbl-currency" class="table compact table-striped table-bordered " width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select-all" id="select-all-currency" /></th>
+                                                                                <th class="d-none">CurrencyId</th>
+                                                                                <th>NameOfCurrency</th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<UserProfileCurrencyViewModel> UserProfileCurrencyviewModelList = (IEnumerable<UserProfileCurrencyViewModel>)HttpContext.Current.Session["UserProfileCurrency"];
+                                                                                foreach (UserProfileCurrencyViewModel viewModel in UserProfileCurrencyviewModelList)
+                                                                                {
+                                                                                    <tr class="hoverlightblue">
+                                                                                        <th><input type="checkbox" name="check_all" class="checks" /></th>
+                                                                                        <td class="d-none">@viewModel.CurrencyId</td>
+                                                                                        <td>@viewModel.NameOfCurrency</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 5 - User Profile General Ledger*@
+                                            <div id="heading-user-profile-general-ledger" class="card mt-3">
+                                                <div class="card-header " id="user-profile-general-ledger-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-user-profile-general-ledger" data-target="#collapse-user-profile-general-ledger">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>General Ledger</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="general-ledger-data-table-error" class="error d-none"> Currency Data Table Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-user-profile-general-ledger" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-user-profile-general-ledger" data-target="#collapse-user-profile-general-ledger">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-user-profile-general-ledger" class="collapse" aria-labelledby="heading-user-profile-general-ledger" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*General Ledger / Popup Page*@
+                                                                <div class="modal fade" id="general-ledger-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-md" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title text-center">Add</h4>
+                                                                                <button type="button" id="close-general-ledger-modal" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                @*General Ledger*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("General Ledger")
+                                                                                    <div class="mr-3">
+                                                                                        @Html.ListBoxFor(m => m.UserProfileGeneralLedgerViewModel.MultiGeneralLedgerId, new SelectList(userProfileDetailViewModel.GLParentDropdownList, "Value", "Text"), new { @id = "user-profile-general-ledger-id", @class = "form-control mandatory-mark", @multiple = "multiple", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.UserProfileGeneralLedgerViewModel.MultiGeneralLedgerId)
+                                                                                        <span id="user-profile-general-ledger-id-error" class="error modal-input-error d-none"> Please Select General Ledger Name.</span>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileGeneralLedgerViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark activation-date deny-next-financial-year-date deny-past-date modal-input set-current-date", @id = "activation-date-general-ledger", @Type = "date", onclick = "DenyPastDate()", @placeholder = "Enter Activation Date", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileGeneralLedgerViewModel.ActivationDate)
+                                                                                    <span id="activation-date-general-ledger-error" class="error modal-input-error d-none"> Please Enter Activation Date.</span>
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileGeneralLedgerViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control expiry-date modal-input", @id = "expiry-date-general-ledger", @Type = "date", @placeholder = "Enter Expiry Date" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileGeneralLedgerViewModel.ExpiryDate)
+                                                                                    <span id="expiry-date-general-ledger-error" class="error modal-input-error d-none"> Please Enter Expiry Date.</span>
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileGeneralLedgerViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @Type = "date", @id = "close-date-general-ledger" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileGeneralLedgerViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.UserProfileGeneralLedgerViewModel.Note, new { @id = "note-general-ledger", @class = "form-control deny-multiple-space modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileGeneralLedgerViewModel.Note)
+                                                                                </div>
+
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("ReasonForModification")
+                                                                                    @Html.TextAreaFor(m => m.UserProfileGeneralLedgerViewModel.ReasonForModification, new { @id = "reason-for-modification-general-ledger", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileGeneralLedgerViewModel.ReasonForModification)
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-general-ledger-modal" class="btn btn-success ">Add</button>
+                                                                                <button type="button" id="btn-update-general-ledger-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*General Ledger Data Table*@
+                                                                <div class="card-body">
+                                                                    <table id="tbl-general-ledger" class="table compact  table-striped table-bordered text-nowrap" cellspacing="0" width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="check_all" id="select-all-general-ledger" /></th>
+                                                                                <th class="d-none">GeneralLedgerID</th>
+                                                                                <th>Name Of GeneralLedger</th>
+                                                                                <th>Activation Date</th>
+                                                                                <th>Expiry Date</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">ReasonForModification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<UserProfileGeneralLedgerViewModel> UserProfileGeneralLedgerviewModelList = (IEnumerable<UserProfileGeneralLedgerViewModel>)HttpContext.Current.Session["UserProfileGeneralLedger"];
+
+                                                                                foreach (UserProfileGeneralLedgerViewModel viewModel in UserProfileGeneralLedgerviewModelList)
+                                                                                {
+                                                                                    <tr class="hoverlightblue">
+                                                                                        <th><input type="checkbox" name="check_all" class="checks" /></th>
+                                                                                        <td class="d-none">@viewModel.GeneralLedgerId</td>
+                                                                                        <td>@viewModel.NameOfGL</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td style="display:none;">@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 6 - User Profile Menu*@
+                                            <div id="heading-menu" class="card mt-3">
+                                                <div class="card-header p-3" id="menu-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-menu" data-target="#collapse-menu" href="#collapse-menu">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Menu</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="menu-data-table-error" class="error d-none"> Menu Data Table Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-menur" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-menu" data-target="#collapse-menu">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-menu" class="collapse" aria-labelledby="heading-menu" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Menu Modal / Popup Page*@
+                                                                <div class="modal fade" id="menu-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title text-center">Add</h4>
+                                                                                <button type="button" class="close-menu-modal" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                @*NameOfMenu*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Name Of Menu")
+                                                                                    @Html.DropDownListFor(m => m.UserProfileMenuViewModel.ModelMenuId, new SelectList(userProfileDetailViewModel.ModelMenuDropdownList, "Value", "Text", 0), "--- Select Parent Menu ---", new { @id = "menu-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileMenuViewModel.ModelMenuId)
+                                                                                    <span id="menu-id-error" class="error modal-input-error d-none"> Please Select Name Of Menu.</span>
+                                                                                </div>
+
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Main Menu")
+                                                                                    @Html.DropDownListFor(m => m.UserProfileMenuViewModel.MainMenuId, new List<SelectListItem>(), "Select Parent Menu", new { @id = "main-menu-id", @class = "form-control modal-input", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileMenuViewModel.MainMenuId)
+                                                                                </div>
+
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Sub Menu")
+                                                                                    @Html.ListBoxFor(m => m.UserProfileMenuViewModel.MultiSubMenuId, new List<SelectListItem>(), new { @id = "sub-menu-id", @class = "form-control modal-select-list", @multiple = "multiple", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileMenuViewModel.MultiSubMenuId)
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileMenuViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-menu", @class = "form-control mandatory-mark deny-next-financial-year-date deny-past-date activation-date modal-input set-current-date", @Type = "date", required = "required", @Onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileMenuViewModel.ActivationDate)
+                                                                                    <span id="activation-date-menu-error" class="error modal-input-error d-none"> Please Enter Valid Activation Date.</span>
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileMenuViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-menu", @class = "form-control expiry-date modal-input", @Type = "date" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileMenuViewModel.ExpiryDate)
+                                                                                    <span id="expiry-date-menu-error" class="error modal-input-error d-none"> Please Enter Valid Expiry Date.</span>
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileMenuViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-menu", @class = "form-control deny-future-date-from-reference-date modal-input", @Type = "date", onclick = "DenyFutureDateFromReferenceDate('activation-date-menu')" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileMenuViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.UserProfileMenuViewModel.Note, new { @id = "note-menu", @class = "form-control modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileMenuViewModel.Note)
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="form-group d-none">
+                                                                                @Html.CustomLabel("ReasonForModification")
+                                                                                @Html.TextAreaFor(m => m.UserProfileMenuViewModel.ReasonForModification, new { @id = "reason-for-modification-menu", @class = "form-control deny-multiple-space", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                                @Html.ValidationMessageFor(m => m.UserProfileMenuViewModel.ReasonForModification)
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-menu-modal" class="btn btn-success">Add</button>
+                                                                                <button type="button" id="btn-update-menu-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*Menu Data Table*@
+                                                                <div class="card-body">
+                                                                    <table id="tbl-menu" class="table compact table-striped table-bordered " width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select-all" id="select-all-menu" /></th>
+                                                                                <th class="d-none">MenuId</th>
+                                                                                <th>NameOfMenu</th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">ReasonForModification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<UserProfileMenuViewModel> UserProfileMenuviewModelList = (IEnumerable<UserProfileMenuViewModel>)HttpContext.Current.Session["UserProfileMenu"];
+
+                                                                                foreach (UserProfileMenuViewModel viewModel in UserProfileMenuviewModelList)
+                                                                                {
+                                                                                    <tr class="hoverlightblue">
+                                                                                        <th><input type="checkbox" name="check_all" class="checks" /></th>
+                                                                                        <td class="d-none">@viewModel.ModelMenuId</td>
+                                                                                        <td>@viewModel.NameOfMenu</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 7 - User Profile Special Permission*@
+                                            <div id="heading-special-permission" class="card mt-3">
+                                                <div class="card-header " id="special-permission-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-special-permission" data-target="#collapse-special-permission">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Special Permision</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="special-permission-data-table-error" class="error d-none"> Special Permission Data Table Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-special-permission" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-special-permission" data-target="#collapse-special-permission">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-special-permission" class="collapse" aria-labelledby="heading-special-permission" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Special Permission Modal / Popup Page*@
+                                                                <div class="modal fade" id="special-permission-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title text-center">Add</h4>
+                                                                                <button type="button" class="close-special-permission-modal" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                @*NameOfSpecialPermission*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Name Of Special Permission")
+                                                                                    @Html.DropDownListFor(m => m.UserProfileSpecialPermissionViewModel.MultiSpecialPermissionId, new SelectList(userProfileDetailViewModel.SpecialPermissionDropdownList, "Value", "Text", 0), new { @id = "special-permission-id", @class = "form-control mandatory-mark modal-input", @multiple = "multiple", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileSpecialPermissionViewModel.MultiSpecialPermissionId)
+                                                                                    <span id="special-permission-id-error" class="error modal-input-error d-none"> Please Select Name Of Special Permission.</span>
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileSpecialPermissionViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-special-permission", @class = "form-control mandatory-mark activation-date deny-past-date deny-next-financial-year-date modal-input set-current-date", @Type = "date", required = "required", @Onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileSpecialPermissionViewModel.ActivationDate)
+                                                                                    <span id="activation-date-special-permission-error" class="error modal-input-error d-none"> Please Enter Valid Activation Date.</span>
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileSpecialPermissionViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-special-permission", @class = "form-control expiry-date  modal-input", @Type = "date" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileSpecialPermissionViewModel.ExpiryDate)
+                                                                                    <span id="expiry-date-special-permission-error" class="error modal-input-error d-none"> Please Enter Valid Expiry Date.</span>
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileSpecialPermissionViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-special-permission", @class = "form-control deny-future-date-from-reference-date modal-input", @Type = "date", onclick = "DenyFutureDateFromReferenceDate('activation-date-special-permission')" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileSpecialPermissionViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.UserProfileSpecialPermissionViewModel.Note, new { @id = "note-special-permission", @class = "form-control modal-input deny-multiple-space", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileSpecialPermissionViewModel.Note)
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-special-permission-modal" class="btn btn-success">Add</button>
+                                                                                <button type="button" id="btn-update-special-permission-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*Special Permission Data Table*@
+                                                                <div class="card-body">
+                                                                    <table id="tbl-special-permission" class="table compact table-striped table-bordered " width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select-all" id="select-all-special-permission" /></th>
+                                                                                <th class="d-none">SpecialPermissionId</th>
+                                                                                <th>NameOfSpecialPermission</th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">Reason For Modification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center read-only">
+                                                                            @{
+                                                                                IEnumerable<UserProfileSpecialPermissionViewModel> UserProfileSpecialPermissionviewModelList = (IEnumerable<UserProfileSpecialPermissionViewModel>)HttpContext.Current.Session["UserProfileSpecialPermission"];
+
+                                                                                foreach (UserProfileSpecialPermissionViewModel viewModel in UserProfileSpecialPermissionviewModelList)
+                                                                                {
+                                                                                    <tr class="hoverlightblue">
+                                                                                        <th><input type="checkbox" name="check_all" class="checks" /></th>
+                                                                                        <td class="d-none">@viewModel.SpecialPermissionId</td>
+                                                                                        <td>@viewModel.NameOfSpecialPermission</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 8 - User Profile  TransactionLimit*@
+                                            <div id="heading-transaction-limit" class="card mt-3">
+                                                <div class="card-header " id="transaction-limit-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-transaction-limit" data-target="#collapse-transaction-limit">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Transaction Limit</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="transaction-limit-data-table-error" class="error d-none"> Transaction Limit Data Table Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-transaction-limit" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-transaction-limit" data-target="#collapse-transaction-limit">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-transaction-limit" class="collapse" aria-labelledby="heading-transaction-limit" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Business Office Transaction Limit Modal / Popup Page*@
+                                                                <div class="modal fade" id="transaction-limit-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title  text-center">Add</h4>
+                                                                                <button type="button" class="close-transaction-limit-modal" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                @*NameOfGeneralLedger*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Name Of General Ledger")
+                                                                                    @Html.DropDownListFor(m => m.UserProfileTransactionLimitViewModel.GeneralLedgerId, new SelectList(userProfileDetailViewModel.GLParentDropdownList, "Value", "Text", 0), "--- Select Name Of General Ledger ---", new { @id = "general-ledger-transaction-limit-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.GeneralLedgerId)
+                                                                                    <span id="general-ledger-transaction-limit-id-error" class="error modal-input-error d-none"> Please Select Name Of General Ledger.</span>
+                                                                                </div>
+
+                                                                                @*Copy From*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Copy From")
+                                                                                    <div class="mr-3">
+                                                                                        @Html.DropDownListFor(m => m.UserProfileTransactionLimitViewModel.GeneralLedgerId, new SelectList(userProfileDetailViewModel.GLParentDropdownList, "Value", "Text"), "--- Select General Ledger ---", new { @id = "general-ledger-transaction-limit-id-prvchk modal-input", @class = "form-control" })
+                                                                                        @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.GeneralLedgerId)
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                @*NameOfTransactionType*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Name Of Transaction Type")
+                                                                                    @Html.DropDownListFor(m => m.UserProfileTransactionLimitViewModel.MultiTransactionTypeId, new SelectList(userProfileDetailViewModel.TransactionTypeDropdownList, "Value", "Text", 0), new { @id = "transaction-type-id", @class = "form-control mandatory-mark modal-input", @multiple = "multiple", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.TransactionTypeId)
+                                                                                    <span id="transaction-type-id-error" class="error modal-input-error d-none"> Please Select Name Of Transaction Limit.</span>
+                                                                                </div>
+
+                                                                                @*MinimumAmountLimitForTransaction*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Minimum Amount Limit For Transaction")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.MinimumAmountLimitForTransaction, new { @id = "minimum-amount-transaction", @class = "form-control mandatory-mark min-number modal-input", @Type = "number", @min = 1, @max = 999999999, required = "required", @placeholder = "Enter Minimum Amount Limit For Transaction" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.MinimumAmountLimitForTransaction)
+                                                                                    <span id="minimum-amount-transaction-error" class="error modal-input-error d-none"> Please Enter Valid Minimum Amount Limit For Transaction.</span>
+                                                                                </div>
+
+                                                                                @*MaximumAmountLimitForTransaction*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Amount Limit For Transaction")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.MaximumAmountLimitForTransaction, new { @id = "maximum-amount-transaction", @class = "form-control mandatory-mark max-number modal-input", @Type = "number", @min = 1, @max = 999999999, required = "required", @placeholder = "Enter Maximum Amount Limit For Transaction" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.MaximumAmountLimitForTransaction)
+                                                                                    <span id="maximum-amount-transaction-error" class="error modal-input-error d-none"> Please Enter Valid Maximum Amount Limit For Transaction.</span>
+                                                                                </div>
+
+                                                                                @*MaximumNumberOfBackDaysForTransaction*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Number Of Back Days For Transaction")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForTransaction, new { @id = "maximum-number-transaction", @class = "form-control default-zero mandatory-mark real-number max-number modal-input", @Type = "number", @min = 1, @max = 365, required = "required", @placeholder = "Enter Maximum Number Of Back Days For Transaction" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForTransaction)
+                                                                                    <span id="maximum-number-transaction-error" class="error modal-input-error d-none"> Please Enter Valid Maximum Number Of Back Days For Transaction.</span>
+                                                                                </div>
+
+                                                                                @*MinimumAmountLimitForVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Minimum Amount Limit For Verification")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.MinimumAmountLimitForVerification, new { @id = "minimum-amount-verification", @class = "form-control mandatory-mark min-number modal-input", @Type = "number", @min = 1, @max = 999999999, required = "required", @placeholder = "Enter Minimum Amount Limit For Verification" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.MinimumAmountLimitForVerification)
+                                                                                    <span id="minimum-amount-verification-error" class="error modal-input-error d-none"> Please Enter Valid Minimum Amount Limit For Verification.</span>
+                                                                                </div>
+
+                                                                                @*MaximumAmountLimitForVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Amount Limit For Verification")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.MaximumAmountLimitForVerification, new { @id = "maximum-amount-verification", @class = "form-control mandatory-mark max-number modal-input", @Type = "number", @min = 1, @max = 999999999, required = "required", @placeholder = "Enter Maximum Amount Limit For Verification" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.MaximumAmountLimitForVerification)
+                                                                                    <span id="maximum-amount-verification-error" class="error modal-input-error d-none"> Please Enter Valid Maximum Amount Limit For Verification.</span>
+                                                                                </div>
+
+                                                                                @*MaximumNumberOfBackDaysForVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Number Of Back Days ForVerification")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForVerification, new { @id = "maximum-number-verification", @class = "form-control default-zero  real-number mandatory-mark max-number modal-input", @Type = "number", @min = 1, @max = 365, required = "required", @placeholder = "Enter Maximum Number Of Back Days For Verification" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForVerification)
+                                                                                    <span id="maximum-number-verification-error" class="error modal-input-error d-none"> Please Enter Valid Maximum Number Of Back Days For Verification.</span>
+                                                                                </div>
+
+                                                                                @*MinimumAmountLimitForAutoVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Minimum Amount Limit For Auto Verification")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.MinimumAmountLimitForAutoVerification, new { @id = "minimum-amount-auto-verification", @class = "form-control mandatory-mark real-number min-number modal-input", @Type = "number", @min = 1, @max = 999999999, required = "required", @placeholder = "Enter Minimum Amount Limit For Auto Verification" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.MinimumAmountLimitForAutoVerification)
+                                                                                    <span id="minimum-amount-auto-verification-error" class="error modal-input-error d-none"> Please Enter Valid Minimum Amount Limit For Auto Verification.</span>
+                                                                                </div>
+
+                                                                                @*MaximumAmountLimitForAutoVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Amount Limit For Auto Verification")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.MaximumAmountLimitForAutoVerification, new { @id = "maximum-amount-auto-verification", @class = "form-control mandatory-mark max-number modal-input", @Type = "number", @min = 1, @max = 999999999, required = "required", @placeholder = "Enter Maximum Amount Limit For Auto Verification" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.MaximumAmountLimitForAutoVerification)
+                                                                                    <span id="maximum-amount-auto-verification-error" class="error modal-input-error d-none"> Please Enter Valid Maximum Amount Limit For Auto Verification.</span>
+                                                                                </div>
+
+                                                                                @*MaximumNumberOfBackDaysForAutoVerification*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Maximum Number Of Back Days For Auto Verification")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForAutoVerification, new { @id = "maximum-number-auto-verification", @class = "form-control default-zero real-number mandatory-mark max-number modal-input", required = "required", @Type = "number", @min = 1, @max = 365, @placeholder = "Enter Maximum Number Of Back Days For Auto Verification" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.MaximumNumberOfBackDaysForAutoVerification)
+                                                                                    <span id="maximum-number-auto-verification-error" class="error modal-input-error d-none"> Please Enter Valid Maximum Number Of Back Days For Auto Verification.</span>
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-transaction-limit", @class = "form-control mandatory-mark activation-date deny-next-financial-year-date deny-past-date modal-input set-current-date", @Type = "date", required = "required", @Onclick = "DenyPastDate()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.ActivationDate)
+                                                                                    <span id="activation-date-transaction-limit-error" class="error modal-input-error d-none"> Please Enter Valid Activation Date.</span>
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-transaction-limit", @class = "form-control expiry-date modal-input", @Type = "date" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.ExpiryDate)
+                                                                                    <span id="expiry-date-transaction-limit-error" class="error modal-input-error d-none"> Please Enter Valid Expiry Date.</span>
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.UserProfileTransactionLimitViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-transaction-limit", @class = "form-control deny-future-date-from-reference-date modal-input", @Type = "date", onclick = "DenyFutureDateFromReferenceDate('activation-date-transaction-limit')" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.UserProfileTransactionLimitViewModel.Note, new { @id = "note-transaction-limit", @class = "form-control deny-multiple-space", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserProfileTransactionLimitViewModel.Note)
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-transaction-limit-modal" class="btn btn-success">Add</button>
+                                                                                <button type="button" id="btn-update-transaction-limit-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*Transaction Limit Data Table*@
+                                                                <div class="card-body">
+                                                                    <table id="tbl-transaction-limit" class="table compact table-striped table-bordered " width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select-all" id="select-all-transaction-limit" /></th>
+                                                                                <th class="d-none">GeneralLedgerId</th>
+                                                                                <th>NameOfGeneralLedger</th>
+                                                                                <th class="d-none">TransactionTypeId</th>
+                                                                                <th>NameOfTransactionType</th>
+                                                                                <th>MinimumAmountLimitForTransaction</th>
+                                                                                <th>MaximumAmountLimitForTransaction</th>
+                                                                                <th>MaximumNumberOfBackDaysForTransaction</th>
+                                                                                <th>MinimumAmountLimitForVerification</th>
+                                                                                <th>MaximumAmountLimitForVerification</th>
+                                                                                <th>MaximumNumberOfBackDaysForVerification</th>
+                                                                                <th>MinimumAmountLimitForAutoVerification</th>
+                                                                                <th>MaximumAmountLimitForAutoVerification</th>
+                                                                                <th>MaximumNumberOfBackDaysForAutoVerification</th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">ReasonForModification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<UserProfileTransactionLimitViewModel> UserProfileTransactionLimitviewModelList = (IEnumerable<UserProfileTransactionLimitViewModel>)HttpContext.Current.Session["UserProfileTransactionLimit"];
+
+                                                                                foreach (UserProfileTransactionLimitViewModel viewModel in UserProfileTransactionLimitviewModelList)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <th><input type="checkbox" name="check_all" class="checks" /></th>
+                                                                                        <td class="d-none">@viewModel.GeneralLedgerId</td>
+                                                                                        <td>@viewModel.NameOfGL</td>
+                                                                                        <td class="d-none">@viewModel.TransactionTypeId</td>
+                                                                                        <td>@viewModel.NameOfTransaction</td>
+                                                                                        <td>@viewModel.MinimumAmountLimitForTransaction</td>
+                                                                                        <td>@viewModel.MaximumAmountLimitForTransaction</td>
+                                                                                        <td>@viewModel.MaximumNumberOfBackDaysForTransaction</td>
+                                                                                        <td>@viewModel.MinimumAmountLimitForVerification</td>
+                                                                                        <td>@viewModel.MaximumAmountLimitForVerification</td>
+                                                                                        <td>@viewModel.MaximumNumberOfBackDaysForVerification</td>
+                                                                                        <td>@viewModel.MinimumAmountLimitForAutoVerification</td>
+                                                                                        <td>@viewModel.MaximumAmountLimitForAutoVerification</td>
+                                                                                        <td>@viewModel.MaximumNumberOfBackDaysForAutoVerification</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 9 - User Profile Role Profile*@
+                                            <div id="heading-user-profile-role-profile" class="card mt-3">
+                                                <div class="card-header " id="user-profile-role-profile-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-user-profile-role-profile" data-target="#collapse-user-profile-role-profile">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Role Profile</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="role-profile-data-table-error" class="error d-none"> User Profile Role Profile Data Table Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-user-profile-role-profile" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-user-profile-role-profile" data-target="#collapse-user-profile-role-profile">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-user-profile-role-profile" class="collapse" aria-labelledby="heading-user-profile-role-profile" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*User Profile Role Profile / Popup Page*@
+                                                                <div class="modal fade" id="role-profile-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title  text-center">Add</h4>
+                                                                                <button type="button" class="close-role-profile-modal" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                @*Business Office*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Business Office")
+                                                                                    <div class="mr-3">
+                                                                                        @Html.DropDownListFor(m => m.UserRoleProfileViewModel.BusinessOfficeId, new SelectList(userProfileDetailViewModel.BusinessOfficeDropdownList, "Value", "Text"), "--- Select Business Office ---", new { @id = "business-office-role-profile-id", @class = "form-control mandatory-mark modal-input" })
+                                                                                        @Html.ValidationMessageFor(m => m.UserRoleProfileViewModel.BusinessOfficeId)
+                                                                                        <span id="business-office-role-profile-id-error" class="error modal-input-error d-none"> Please Select BusinessOffice Name.</span>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                @*Role Profile*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Role Profile")
+                                                                                    <div class="mr-3">
+                                                                                        @Html.ListBoxFor(m => m.UserRoleProfileViewModel.MultiRoleProfileId, new SelectList(userProfileDetailViewModel.RoleProfileDropDownList, "Value", "Text"), new { @id = "user-role-profile-id", @class = "form-control mandatory-mark modal-input", @multiple = "multiple" })
+                                                                                        @Html.ValidationMessageFor(m => m.UserRoleProfileViewModel.MultiRoleProfileId)
+                                                                                        <span id="user-role-profile-id-error" class="error modal-input-error d-none"> Please Select Role Profile Name.</span>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                @*ActivationDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Activation Date")
+                                                                                    @Html.TextBoxFor(m => m.UserRoleProfileViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark activation-date deny-next-financial-year-date deny-past-date modal-input set-current-date", @id = "activation-date-role-profile", @Type = "date", @placeholder = "Enter Activation Date", onclick = "DenyPastDate()", required = "required" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserRoleProfileViewModel.ActivationDate)
+                                                                                    <span id="activation-date-role-profile-error" class="error modal-input-error d-none">Please Enter Activation Date.</span>
+                                                                                </div>
+
+                                                                                @*ExpiryDate*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Expiry Date")
+                                                                                    @Html.TextBoxFor(m => m.UserRoleProfileViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control expiry-date modal-input", @id = "expiry-date-role-profile", @Type = "date", @placeholder = "Enter Expiry Date" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserRoleProfileViewModel.ExpiryDate)
+                                                                                    <span id="expiry-date-role-profile-error" class="error modal-input-error d-none">Please Enter Expiry Date.</span>
+                                                                                </div>
+
+                                                                                @*CloseDate*@
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("Close Date")
+                                                                                    @Html.TextBoxFor(m => m.UserRoleProfileViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @class = "form-control modal-input", @Type = "date", @id = "close-date-role-profile" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserRoleProfileViewModel.CloseDate)
+                                                                                </div>
+
+                                                                                @*Note*@
+                                                                                <div class="form-group">
+                                                                                    @Html.CustomLabel("Note")
+                                                                                    @Html.TextAreaFor(m => m.UserRoleProfileViewModel.Note, new { @id = "note-role-profile", @class = "form-control deny-multiple-space modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserRoleProfileViewModel.Note)
+                                                                                </div>
+
+                                                                                <div class="form-group d-none">
+                                                                                    @Html.CustomLabel("ReasonForModification")
+                                                                                    @Html.TextAreaFor(m => m.UserRoleProfileViewModel.ReasonForModification, new { @id = "reason-for-modification-role-profile", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                                    @Html.ValidationMessageFor(m => m.UserRoleProfileViewModel.ReasonForModification)
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" id="btn-add-role-profile-modal" class="btn btn-success ">Add</button>
+                                                                                <button type="button" id="btn-update-role-profile-modal" class="btn btn-primary">Update</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*User Profile Role Profile / Popup Page*@
+                                                                <div class="card-body">
+                                                                    <table id="tbl-role-profile" class="table compact  table-striped table-bordered text-nowrap" cellspacing="0" width="100">
+                                                                        <thead class="text-center">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="check_all" id="select-all-role-profile" /></th>
+                                                                                <th class="d-none">BusinessOfficeID</th>
+                                                                                <th>Name Of Business Office</th>
+                                                                                <th class="d-none">RoleProfileId</th>
+                                                                                <th>Name Of RoleProfile</th>
+                                                                                <th>Activation Date</th>
+                                                                                <th>Expiry Date</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">ReasonForModification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center">
+                                                                            @{
+                                                                                IEnumerable<UserRoleProfileViewModel> UserRoleProfileviewModelList = (IEnumerable<UserRoleProfileViewModel>)HttpContext.Current.Session["UserRoleProfile"];
+
+                                                                                foreach (UserRoleProfileViewModel viewModel in UserRoleProfileviewModelList)
+                                                                                {
+                                                                                    <tr class="hoverlightblue">
+                                                                                        <th><input type="checkbox" name="check_all" class="checks" /></th>
+                                                                                        <th class="d-none">@viewModel.BusinessOfficeId</th>
+                                                                                        <th>@viewModel.NameOfBusinessOffice</th>
+                                                                                        <td class="d-none">@viewModel.RoleProfileId</td>
+                                                                                        <td>@viewModel.NameOfRoleProfile</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*======= Fifth Row - Reason For Modification Input In Regional Language =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reason For Modification")
+                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Hiddent Field For UserProfilePrmKey*@
+                            @Html.HiddenFor(m => m.UserProfilePrmKey)
+
+                            @*Hiddent Field For UserProfileModificationPrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileModificationPrmKey)
+
+                            @*Hiddent Field For UserProfileBusinessOfficePrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileBusinessOfficeViewModel.UserProfileBusinessOfficePrmKey)
+
+                            @*Hiddent Field For UserProfileCurrencyPrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileCurrencyViewModel.UserProfileCurrencyPrmKey)
+
+                            @*Hiddent Field For UserProfileGeneralLedgerPrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileGeneralLedgerViewModel.UserProfileGeneralLedgerPrmKey)
+
+                            @*Hiddent Field For UserProfileHomeBusinessOfficePrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileHomeBusinessOfficeViewModel.UserProfileHomeBusinessOfficePrmKey)
+
+                            @*Hiddent Field For UserProfileLoginDevicePrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileLoginDevicePrmKey)
+
+                            @*Hiddent Field For UserProfileMenuPrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileMenuViewModel.UserProfileMenuPrmKey)
+
+                            @*Hiddent Field For UserProfilePasswordPolicyPrmKey*@
+                            @Html.HiddenFor(m => m.UserProfilePasswordPolicyViewModel.UserProfilePasswordPolicyPrmKey)
+
+                            @*Hiddent Field For UserProfileSpecialPermissionPrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileSpecialPermissionViewModel.UserProfileSpecialPermissionPrmKey)
+
+                            @*Hiddent Field For UserProfileTransactionLimitPrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileTransactionLimitViewModel.UserProfileTransactionLimitPrmKey)
+
+                            @*Hiddent Field For UserRoleProfilePrmKey*@
+                            @Html.HiddenFor(m => m.UserRoleProfileViewModel.UserRoleProfilePrmKey)
+
+                            @Html.OperationFooter("Modify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <link href="~/Content/css/jquery.multiselect.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+</body>
+</html>
+<script>
+    $('#multi-businessoffice, #currency-id, #general-ledger-id, #login-device-id, #special-permission-id, #transaction-type-id, #user-role-profile-id').multiselect({
+        columns: 1,
+        placeholder: 'Select Correct Name',
+        search: true,
+        selectAll: true,
+        reload: true,
+    });
+
+   $('#sub-menu-id').select2({
+        closeOnSelect: false
+   })
+
+    //Dropdown Select List For menu-add
+    $("#model-menu-id").on("change", function () {
+        debugger
+        $.ajax({
+            type: "post",
+            url: Modelmenuurl,
+            data: { MenuId: $('#model-menu-id').val() },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                debugger
+                $('#main-menu-id').empty();
+                //var MainMenuList = '<option value="All">--Select All Menu--</option>';
+                var MainMenuList;
+                for (var i = 0; i < data.length; i++) {
+                    MainMenuList += "<option value=" + data[i].Value + ">" + data[i].Text + "</option>";
+                }
+                debugger;
+                $('#main-menu-id').append(MainMenuList);
+            }
+        });
+    })
+
+    $("#main-menu-id").on("change", function () {
+        debugger
+        $.ajax({
+            type: "post",
+            url: "/RoleProfile/GetModel",
+            data: { MenuId: $('#main-menu-id').val() },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                debugger
+                $('#sub-menu-id').empty();
+                //var SubMenuList = '<option value="0">--Select Sub Menu--</option>';
+                var SubMenuList;
+                for (var i = 0; i < data.length; i++) {
+                    SubMenuList += "<option value=" + data[i].Value + ">" + data[i].Text + "</option>";
+                }
+                $('#sub-menu-id').append(SubMenuList);
+            }
+        });
+    });
+
+    var url = '@Url.Action("SaveDataTables", "UserProfile")';
+
+    var getPersonDropdownByUserType = "@Url.Action("GetPersonDropdownByUserType", "UserProfile")";
+
+    var Modelmenuurl = "@Url.Action("GetModel", "RoleProfile")";
+
+    var uniqueNameOfRoleProfile = "@Url.Action("GetUniqueRoleProfileName", "RoleProfile")";
+</script>
+<script src="~/Scripts/Custom/UserProfile.js"></script>

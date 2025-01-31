@@ -1,0 +1,106 @@
+﻿@model DemoProject.Services.ViewModel.Report.KReportViewModel
+@using DemoProject.Services.ViewModel.Report;
+@{
+    ViewBag.Title = "MemberIncrementReport";
+    KReportViewModel model = new KReportViewModel();
+    XtraReport report = (XtraReport)TempData["Report"];
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    @*Don't change script Location*@
+    <script>
+        // DevExpress Disable Parameter Windows
+        function DisableSystemReportParameterWindow(s, e) {
+            var rightpanelPart = e.GetById(DevExpress.Report.Preview.PreviewElements.RightPanel);
+            var index = e.Elements.indexOf(rightpanelPart);
+            e.Elements.splice(index, 1);
+        }
+        function ReportParameterWindow(s, e)
+        {
+            var filterbtn =
+            {
+                id: 'filterbtn',
+                imageClassName: 'custom-image-item',
+                text: 'Filters',
+                visible: true,
+                disabled: false,
+                hasSeparator: true,
+                hotKey:{ ctrlKey: true, keyCode: "F".charCodeAt(0) },
+                clickAction: function ()
+                {
+                    $('#member-increment-report').modal('show');
+                }
+            };
+
+            e.Actions.push(filterbtn);
+        }
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm("MemberIncrementReport", "SharesCapitalReport", FormMethod.Post))
+    {
+        <div class="modal fade" id="member-increment-report" tabindex="-1" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                <div class="modal-content bg-light">
+                    <div class="modal-header">
+                        <i class="fa fa-filter mt-2" aria-hidden="true"></i>
+                        <h5 class="modal-title ml-2" id="exampleModalLabel">Filters</h5>
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body bg-light">
+                        <div class="form-group">
+                            <label>BusinessOfficeId</label>
+                            @Html.DropDownListFor(m => m.BusinessOfficeId, new SelectList(model.BusinessOfficeDropdownList, "Value", "Text"), "---Please Select---", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label>FromYear</label>
+                            @Html.TextBoxFor(m => m.FromYear, new { @class = "form-control mandatory-mark", @type = "number", @placeholder = "Enter Year From", @autocomplete = "off" })
+                        </div>
+                        <div class="form-group">
+                            <label>ToYear</label>
+                            @Html.TextBoxFor(m => m.ToYear, new { @class = "form-control mandatory-mark", @type = "number", @placeholder = "Enter Year", @autocomplete = "off" })
+                        </div>
+                        <div class="form-group">
+                            <label>Language</label>
+                            @Html.DropDownListFor(m => m.RegionalLanguageId, new SelectList(model.LanguageDropdownList, "Value", "Text"), "---Please Select---", new { @class = "form-control" })
+                        </div>
+                        <div class="row form-group mt-4">
+                            <label class="col-9">IsBranchWise</label>
+                            <div class="col-2">
+                                <div class="text-left">
+                                    <label class="switch switch-left-right">
+                                        @Html.CheckBoxFor(m => m.IsBranchWise, new { @id = "is-branchWise", @class = "form-control switch-input" })
+                                        <span class="slider round">
+                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success btn-sm">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="container-fluid ml-1 mt-5">
+        @Html.DevExpress().WebDocumentViewer(settings =>
+        {
+            settings.Name = "WebDocumentViewer";
+            settings.MobileMode = false;
+            settings.ControlStyle.CssClass = "shadow";
+            settings.ClientSideEvents.CustomizeElements = "DisableSystemReportParameterWindow";
+            settings.ClientSideEvents.CustomizeMenuActions = "ReportParameterWindow";
+
+        }).Bind(report).GetHtml()
+    </div>
+</body>
+</html>
+

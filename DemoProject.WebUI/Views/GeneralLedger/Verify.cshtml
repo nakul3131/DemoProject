@@ -1,0 +1,574 @@
+﻿@model DemoProject.Services.ViewModel.Account.GL.GeneralLedgerViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.GL
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    GeneralLedgerDetailViewModel detailViewModel = new GeneralLedgerDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("GNLVRF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>General Ledger - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Verify", "GeneralLedger", FormMethod.Post, htmlAttributes: new { id = "form", @autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row read-only">
+                                    <div class="col-12">
+                                        @*GLCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("General Ledger Code")
+                                            @Html.TextBoxFor(m => m.GLCode, new { @class = "form-control mandatory-mark title-case alpha-numeric", @placeholder = "Enter General Ledger", required = "required", @maxlength = 20 })
+                                            @Html.ValidationMessageFor(m => m.GLCode)
+                                        </div>
+
+                                        @*ExistingGLNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Existing General Ledger Number")
+                                            @Html.TextBoxFor(m => m.ExistingGLNumber, new { @class = "form-control mandatory-mark title-case alpha-numeric", @placeholder = "Enter Existing General Ledger Number", required = "required", @maxlength = 20 })
+                                            @Html.ValidationMessageFor(m => m.ExistingGLNumber)
+                                        </div>
+
+                                        @*GLNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("General Ledger Number")
+                                            @Html.TextBoxFor(m => m.GLNumber, new { @class = "form-control real-number mandatory-mark alpha-numeric", @placeholder = "Enter General Ledger Number", @type = "number", required = "required", @min = 1, @max = 999999999 })
+                                            @Html.ValidationMessageFor(m => m.GLNumber)
+                                        </div>
+
+                                        @*NameOfGL*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of General Ledger")
+                                            @Html.TextBoxFor(m => m.NameOfGL, new { @id = "name-of-gl", @class = "form-control mandatory-mark title-case alpha-numeric", @placeholder = "Enter Name Of General Ledger", required = "required", @minlength = 3, @maxlength = 100, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfGL)
+                                        </div>
+
+                                        @*TransNameOfGL*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOfGLInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOfGL, null, new { @id = "trans-name-of-gl", @class = "form-control mandatory-mark deny-multiple-space", @placeholder = detailViewModel.NameOfGLPlaceHolderInRegionalLanguage, required = "required", @minlength = 3, @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfGL)
+                                        </div>
+
+                                        @*AliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control default-none title-case alpha-numeric", @placeholder = "Enter Alias Name", @maxlength = 10, onkeydown = "Maketranslation()", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, null, new { @id = "trans-alias-name", @class = "form-control default-none deny-multiple-space", @placeholder = detailViewModel.AliasNamePlaceHolderInRegionalLanguage, @maxlength = 10, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name On Report")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control default-none title-case alpha-numeric", @placeholder = "Enter Name On Report", @maxlength = 100, required = "required", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, null, new { @id = "trans-name-on-report", @class = "form-control default-none deny-multiple-space", @placeholder = detailViewModel.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = 100, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*AccountClass*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Account Class")
+                                            @Html.DropDownListFor(m => m.AccountClassId, new SelectList(detailViewModel.AccountClassDropdownList, "Value", "Text"), "--- Select Account Class ---", new { @id = "account-class-id", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.AccountClassId)
+                                        </div>
+
+                                        @*EnableCashTransactionFromDemandDepositAccount*@
+                                        <div class="row form-group mt-3 tenure demand-deposit">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Cash Transaction From Demand Deposit Account")
+                                            </div>
+
+                                            <div class="col-2">
+                                                <div class="text-left">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableCashTransactionFromDemandDepositAccount, new { @id = "enable-cash-transaction-from-demand-deposit-account", @class = "form-control switch-input show-block" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*BusinessOfficeAccess*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Business Office Access")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.BusinessOfficeAccess, "A", new { @id = "business-office-access-a", @class = "form-check-input", @name = "BusinessOfficeAccess", required = "required" })
+                                                        <label for="business-office-access-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.BusinessOfficeAccess, "D", new { @id = "business-office-access-d", @class = "form-check-input", @name = "BusinessOfficeAccess", required = "required" })
+                                                        <label for="business-office-access-d" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.BusinessOfficeAccess)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*CurrencyAccess*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Currency Access")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.CurrencyAccess, "A", new { @id = "currency-access-a", @class = "form-check-input", @name = "CurrencyAccess", required = "required" })
+                                                        <label for="currency-access-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.CurrencyAccess, "D", new { @id = "currency-access-d", @class = "form-check-input", @name = "CurrencyAccess", required = "required" })
+                                                        <label for="currency-access-d" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.CurrencyAccess)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*TransactionTypeAccess*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Transaction Type Access")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.TransactionTypeAccess, "A", new { @id = "transaction-type-access-a", @class = "form-check-input", @name = "TransactionTypeAccess", required = "required" })
+                                                        <label for="transaction-type-access-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.TransactionTypeAccess, "D", new { @id = "transaction-type-access-d", @class = "form-check-input", @name = "TransactionTypeAccess", required = "required" })
+                                                        <label for="transaction-type-access-d" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.TransactionTypeAccess)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*CustomerTypeAccess*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Customer Type Access")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.CustomerTypeAccess, "A", new { @id = "customer-type-access-a", @class = "form-check-input", @name = "CustomerTypeAccess", required = "required" })
+                                                        <label for="customer-type-access-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.CustomerTypeAccess, "D", new { @id = "customer-type-access-d", @class = "form-check-input", @name = "CustomerTypeAccess", required = "required" })
+                                                        <label for="customer-type-access-d" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.CustomerTypeAccess)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*ParentGL*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Parent General Ledger")
+                                            @Html.DropDownListFor(m => m.ParentGLId, new SelectList(detailViewModel.GLParentDropdownList, "Value", "Text"), "--- Select General Ledger ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ParentGLId)
+                                        </div>
+
+                                        @*ParentGLDescription*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Parent General Ledger Description")
+                                            @Html.TextAreaFor(m => m.ParentGLDescription, new { @id = "parent-gl-description", @class = "form-control default-none title-case alpha-numeric", @placeholder = "Enter Parent General Ledger Description", @maxlength = 1500, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.ParentGLDescription)
+                                        </div>
+
+                                        @*TransParentGLDescription*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.ParentGLDescriptionInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransParentGLDescription, new { @id = "trans-parent-gl-description", @class = "form-control default-none deny-multiple-space", @placeholder = detailViewModel.ParentGLDescriptionPlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                            @Html.ValidationMessageFor(m => m.TransParentGLDescription)
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark deny-past-date deny-next-financial-year-date set-current-date activation-date", @type = "date", onclick = "DenyPastDate()", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*ExpiryDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control deny-past-date-from-reference-date allow-future-date-upto-50y expiry-date", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control default-none title-case deny-multiple-space", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none deny-multiple-space", @placeholder = detailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*======= Fourth Row - Accordians =======*@
+                                <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                    @*Accordian 1 - BusinessOffice*@
+                                    <div id="heading-business-office" class="card mt-3">
+                                        <div class="card-header" id="business-office-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office" data-target="#collapse-business-office">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Business Office")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="business-office-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-business-office" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office" data-target="#collapse-business-office">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-business-office" class="collapse" aria-labelledby="heading-business-office" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="card-body">
+                                                                <table id="tbl-business-office" class="table compact table-striped table-bordered read-only" width="100">
+                                                                    <thead class="text-center read-only">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-business-office" /></th>
+                                                                            <th class="d-none">BusinessOfficeId</th>
+                                                                            <th>NameOfBusinessOffice</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center read-only">
+                                                                        @{
+                                                                            IEnumerable<GeneralLedgerBusinessOfficeViewModel> generalLedgerBusinessOfficeViewModelList = (IEnumerable<GeneralLedgerBusinessOfficeViewModel>)HttpContext.Current.Session["GeneralLedgerBusinessOffice"];
+
+                                                                            foreach (GeneralLedgerBusinessOfficeViewModel viewModel in generalLedgerBusinessOfficeViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.BusinessOfficeId</td>
+                                                                                    <td>@viewModel.NameOfBusinessOffice</td>
+                                                                                    <td>@viewModel.ActivationDate</td>
+                                                                                    <td>@viewModel.ExpiryDate</td>
+                                                                                    <td class="d-none" id="transactionCloseDate">@viewModel.CloseDate</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 2 - Currency*@
+                                    <div id="heading-currency" class="card mt-3">
+                                        <div class="card-header" id="currency-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-currency" data-target="#collapse-currency">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Currency")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="currency-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-currency" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-currency" data-target="#collapse-currency">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-currency" class="collapse" aria-labelledby="heading-currency" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="card-body">
+                                                                <table id="tbl-currency" class="table compact table-striped table-bordered read-only" width="100">
+                                                                    <thead class="text-center read-only">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-currency" /></th>
+                                                                            <th class="d-none">CurrencyId</th>
+                                                                            <th>NameOfCurrency</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center read-only">
+                                                                        @{
+                                                                            IEnumerable<GeneralLedgerCurrencyViewModel> generalLedgerCurrencyViewModelList = (IEnumerable<GeneralLedgerCurrencyViewModel>)HttpContext.Current.Session["GeneralLedgerCurrency"];
+
+                                                                            foreach (GeneralLedgerCurrencyViewModel viewModel in generalLedgerCurrencyViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.CurrencyId</td>
+                                                                                    <td>@viewModel.NameOfCurrency</td>
+                                                                                    <td>@viewModel.ActivationDate</td>
+                                                                                    <td>@viewModel.ExpiryDate</td>
+                                                                                    <td class="d-none" id="transactionCloseDate">@viewModel.CloseDate</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 4 - TransactionType*@
+                                    <div id="heading-transaction-type" class="card mt-3">
+                                        <div class="card-header" id="transaction-type-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-transaction-type" data-target="#collapse-transaction-type">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Transaction Type")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="transaction-type-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-transaction-type" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-transaction-type" data-target="#collapse-transaction-type">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-transaction-type" class="collapse" aria-labelledby="heading-transaction-type" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="card-body">
+                                                                <table id="tbl-transaction-type" class="table compact table-striped table-bordered read-only" width="100">
+                                                                    <thead class="text-center read-only">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-transaction-type" /></th>
+                                                                            <th class="d-none">TransactionTypeId</th>
+                                                                            <th>TransactionType</th>
+                                                                            <th>MinimumAmount</th>
+                                                                            <th>MaximumAmount</th>
+                                                                            <th>BackDaysEntry</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center read-only">
+                                                                        @{
+                                                                            IEnumerable<GeneralLedgerTransactionTypeViewModel> generalLedgerTransactionTypeViewModelList = (IEnumerable<GeneralLedgerTransactionTypeViewModel>)HttpContext.Current.Session["GeneralLedgerTransactionType"];
+
+                                                                            foreach (GeneralLedgerTransactionTypeViewModel viewModel in generalLedgerTransactionTypeViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.TransactionTypeId</td>
+                                                                                    <td>@viewModel.NameOfTransactionType</td>
+                                                                                    <td>@viewModel.MinimumAmountLimit</td>
+                                                                                    <td>@viewModel.MaximumAmountLimit</td>
+                                                                                    <td>@viewModel.AllowedMaximumNumberOfBackDaysEntry</td>
+                                                                                    <td>@viewModel.ActivationDate</td>
+                                                                                    <td>@viewModel.ExpiryDate</td>
+                                                                                    <td class="d-none" id="transactionCloseDate">@viewModel.CloseDate</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 5 - CustomerType*@
+                                    <div id="heading-customer-type" class="card mt-3">
+                                        <div class="card-header" id="customer-type-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-customer-type" data-target="#collapse-customer-type">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Customer Type")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="customer-type-data-table-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-customer-type" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-customer-type" data-target="#collapse-customer-type">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-customer-type" class="collapse" aria-labelledby="heading-customer-type" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="card-body">
+                                                                <table id="tbl-customer-type" class="table compact table-striped table-bordered read-only" width="100">
+                                                                    <thead class="text-center read-only">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-customer-type" /></th>
+                                                                            <th class="d-none">CustomerTypeId</th>
+                                                                            <th>CustomerType</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center read-only">
+                                                                        @{
+                                                                            IEnumerable<GeneralLedgerCustomerTypeViewModel> generalLedgerCustomerTypeViewModelList = (IEnumerable<GeneralLedgerCustomerTypeViewModel>)HttpContext.Current.Session["GeneralLedgerCustomerType"];
+
+                                                                            foreach (GeneralLedgerCustomerTypeViewModel viewModel in generalLedgerCustomerTypeViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td class="d-none">@viewModel.CustomerTypeId</td>
+                                                                                    <td>@viewModel.NameOfCustomerType</td>
+                                                                                    <td>@viewModel.ActivationDate</td>
+                                                                                    <td>@viewModel.ExpiryDate</td>
+                                                                                    <td class="d-none" id="transactionCloseDate">@viewModel.CloseDate</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Hiddent Field For GeneralLedgerPrmKey*@
+                                    @Html.HiddenFor(m => m.GeneralLedgerPrmKey)
+
+                                    @*Hiddent Field For GeneralLedgerModificationPrmKey*@
+                                    @Html.HiddenFor(m => m.GeneralLedgerModificationPrmKey)
+
+                                    @*Hiddent Field For GeneralLedgerTranslationPrmKey*@
+                                    @Html.HiddenFor(m => m.GeneralLedgerTranslationPrmKey)
+
+                                    @*Hiddent Field For GeneralLedgerBusinessOfficePrmKey*@
+                                    @Html.HiddenFor(m => m.GeneralLedgerBusinessOfficeViewModel.GeneralLedgerBusinessOfficePrmKey)
+
+                                    @*Hiddent Field For GeneralLedgerCurrencyPrmKey*@
+                                    @Html.HiddenFor(m => m.GeneralLedgerCurrencyViewModel.GeneralLedgerCurrencyPrmKey)
+
+                                    @*Hiddent Field For GeneralLedgerTransactionTypePrmKey*@
+                                    @Html.HiddenFor(m => m.GeneralLedgerTransactionTypeViewModel.GeneralLedgerTransactionTypePrmKey)
+
+                                    @*Hiddent Field For GeneralLedgerCustomerTypePrmKey*@
+                                    @Html.HiddenFor(m => m.GeneralLedgerCustomerTypeViewModel.GeneralLedgerCustomerTypePrmKey)
+
+                                </div>
+                            </div>
+
+                            @*Footer*@
+                            @Html.OperationFooter("Verify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/GeneralLedger.js"></script>
+
+

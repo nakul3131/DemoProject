@@ -1,0 +1,189 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonAdditionalIncomeDetailViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.HtmlHelpers
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PINMOD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>PersonAdditionalIncomeDetail - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                @*Page Title- Create*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+
+                                @{
+                                    <h5 class="ml-5 mt-5 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+
+                                @*======= Second Row - Data Entry Page =======*@
+                                @*Two Columns For Default Application Language (i.e. English) And Other For Regional Language Translation With Equal Length*@
+
+
+                                <div id="heading-income-details" class="ml-2 card-body">
+                                    <div class="mt-5 row">
+                                        <div class="col-12">
+                                            <div class="modal fade" id="income-detail-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title text-center" id="income-detail-text">Add</h4>
+                                                            <button type="button" class="close-income-detail-modal" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @*IncomeSourceId*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Income Source")
+                                                                @Html.DropDownListFor(m => m.IncomeSourceId, new SelectList(personDetailViewModel.IncomeSourceDropdownList, "Value", "Text", 0), "--- Select Income Source ---", new { @id = "income-source-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.IncomeSourceId)
+                                                                <span id="income-source-id-error" class="error modal-input-error d-none">Please Select Valid Income Source. </span>
+                                                            </div>
+
+                                                            @*AnnualIncome*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Annual Income")
+                                                                @Html.TextBoxFor(m => m.AnnualIncome, new { @id = "annual-incomes", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Annual Income", @type = "number", @min = 10000, @max = 999999999, required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.AnnualIncome)
+                                                                <span id="annual-incomes-error" class="error modal-input-error d-none">Please Enter Valid Annual Income. </span>
+                                                            </div>
+
+                                                            @*OtherDetails*@
+                                                            <div id="other-details-input" class="form-group d-none">
+                                                                @Html.CustomLabel("Other Details")
+                                                                @Html.TextAreaFor(m => m.OtherDetails, new { @id = "other-details", @class = "form-control mandatory-mark deny-multiple-space title-case modal-input", @placeholder = "Enter Other Details", @maxlength = 500, onkeyup = "ToTextCapitalize()", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.OtherDetails)
+                                                                <span id="other-details-error" class="error modal-input-error d-none">Please Enter Valid Other Details. </span>
+                                                            </div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Note")
+                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-income-detail", @class = "form-control default-none deny-multiple-space modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                            </div>
+
+                                                            @*ReasonForModification*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Reason For Modification")
+                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-income-detail", @class = "form-control deny-multiple-space default-none modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" id="btn-add-income-detail-modal" class="btn btn-success ">Add</button>
+                                                            <button type="button" id="btn-update-income-detail-modal" class="btn btn-primary">Update</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive" style="min-height:200px;">
+                                                    <table id="tbl-income-detail" class="table compact  table-striped table-bordered" width="100">
+                                                        <thead class="text-center">
+                                                            <tr>
+                                                                <th><input type="checkbox" name="check_all" id="select-all-income-detail" /></th>
+                                                                <th class="d-none">IncomeSourceId</th>
+                                                                <th>IncomeSource</th>
+                                                                <th>AnnualIncome</th>
+                                                                <th>OtherDetails</th>
+                                                                <th>Note</th>
+                                                                <th>ReasonForModification</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="text-center">
+                                                            @{
+                                                                IEnumerable<PersonAdditionalIncomeDetailViewModel> additionalIncomeDetailViewModelList = (IEnumerable<PersonAdditionalIncomeDetailViewModel>)HttpContext.Current.Session["PersonAdditionalIncomeDetail"];
+                                                                if (additionalIncomeDetailViewModelList != null)
+                                                                {
+                                                                    foreach (PersonAdditionalIncomeDetailViewModel viewModel in additionalIncomeDetailViewModelList)
+                                                                    {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                            <td class="d-none">@viewModel.IncomeSourceId</td>
+                                                                            <td>@viewModel.NameOfIncomeSource</td>
+                                                                            <td>@viewModel.AnnualIncome</td>
+                                                                            <td>@viewModel.OtherDetails</td>
+                                                                            <td>@viewModel.Note</td>
+                                                                            <td>@viewModel.ReasonForModification</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For PrmKey*@
+                                @Html.HiddenFor(m => m.PrmKey)
+
+                                @*Hiddent Field For PersonPrmKey*@
+                                @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                @*Hiddent Field For CenterOccupationPrmKey*@
+                                @Html.HiddenFor(m => m.PersonAdditionalIncomeDetailPrmKey)
+
+                                @*Hiddent Field For PersonAddressTranslationPrmKey*@
+                                @Html.HiddenFor(m => m.PersonId)
+
+                            </div>
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Modify", "Exit", "Home", "")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    var SaveIncomeDetailDataTable = "@Url.Action("SaveIncomeDetailDataTable", "PersonAdditionalIncomeDetail")";
+</script>
+<script src="~/Scripts/Custom/PersonAdditionalIncome.js"></script>

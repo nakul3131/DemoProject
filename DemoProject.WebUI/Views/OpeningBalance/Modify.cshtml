@@ -1,0 +1,93 @@
+﻿@model DemoProject.Services.ViewModel.Account.Transaction.OpeningBalanceViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Transaction;
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("OPNMDF");
+    OpeningBalanceViewModel openingBalanceViewModel = new OpeningBalanceViewModel();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Opening Balance</title>
+    <style>
+        table.dataTable th.focus,
+        table.dataTable td.focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+        <div class="modal fade" id="add-modify-opening-balance" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title  text-center" id="openingBalance-text">Add</h4>
+                        <button type="button" id="closeopeningBalance" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="body-modify-opening-balance" class="modal-body">
+                        @*Customer AcNo.*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Customer Ac No.")
+                            @Html.TextBoxFor(m => m.CustomerAccountId, new { @id = "customer-account-id", @class = "form-control mandatory-mark", @placeholder = "Enter Customer Account Number", @type = "number", @autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.CustomerAccountId)
+                        </div>
+
+                        @*CustomerAccountName*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Customer Account Name")
+                            @Html.DropDownListFor(m => m.CustomerAccountId, new List<SelectListItem>(), "Select Customer Account Name", new { @id = "customer-account-name", @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                            @Html.ValidationMessageFor(m => m.CustomerAccountId)
+                        </div>
+
+                        @*ProductMinBalance*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Product Min Balance")
+                            @Html.TextBoxFor(m => m.ProductMinBalance, new { @id = "product-min-balance", @class = "form-control mandatory-mark", @placeholder = "Enter Product Minimum Balance", @type = "number", @autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.ProductMinBalance)
+                        </div>
+
+                        @*Hiddent Field For PrmKey*@
+                        @Html.HiddenFor(m => m.PrmKey)
+
+                        @*Hiddent Field For EntryStatus*@
+                        @Html.HiddenFor(m => m.EntryStatus, new { @id = "entrystatus" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-modify-opening-balance" class="btn btn-success">Modify</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @using (Html.BeginForm("Modify", "OpeningBalance", FormMethod.Post))
+        {
+
+
+            @*@Html.OperationFooter("Modify", "Exit", "Home", "None")*@
+        }
+    </div>
+</body>
+</html>
+<script>
+    //$(document).ready(function () {
+    //    $("#add-modify-opening-balance").modal('show');
+    //});
+
+    var url = '@Url.Action("SaveDataTables", "OpeningBalance")';
+</script>
+<script src="~/Scripts/Custom/OpeningBalance.js"></script>

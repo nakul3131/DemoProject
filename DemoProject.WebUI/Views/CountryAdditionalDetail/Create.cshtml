@@ -1,0 +1,97 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.Master.CountryAdditionalDetailViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.PersonInformation.Master
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    CountryAdditionalDetailViewModel model = new CountryAdditionalDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("CADCRT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>CountryAdditionalDetail- Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+                        @*======= First Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title =======*@
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Create</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @*MinorAge*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Minor Age")
+                            @Html.TextBoxFor(m => m.MinorAge, new { @class = "form-control", @placeholder = "Enter Minor Age", @type = "number", @autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.MinorAge)
+                        </div>
+
+                        @*TimeZone*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Time Zone")
+                            @Html.DropDownListFor(m => m.WorldWideTimeZoneId, new SelectList(model.WorldWideTimeZoneDropdownList, "Value", "Text"), "--- Select Time Zone ---", new { @class = "form-control mandatory-mark", required = "required", @autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.WorldWideTimeZonePrmKey)
+                        </div>
+
+                        @*InternationalDialingCodes*@
+                        <div class="form-group">
+                            @Html.CustomLabel("International Dialing Codes")
+                            @Html.TextBoxFor(m => m.InternationalDialingCodes, new { @class = "form-control", @placeholder = "Enter International Dialing Codes", @type = "number", @autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.InternationalDialingCodes)
+                        </div>
+
+                        @*Currency*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Currency")
+                            @Html.DropDownListFor(m => m.CurrencyId, new SelectList(model.Currencies, "Value", "Text"), "--- Select Currency ---", new { @class = "form-control mandatory-mark", required = "required", @autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.CurrencyId)
+                        </div>
+
+                        @*Hiddent Field For CenterPrmKey*@
+                        @Html.HiddenFor(m => m.CenterPrmKey)
+                    </div>
+
+                            // Footer - Save/Submit Button
+                            @Html.OperationFooter("Create", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

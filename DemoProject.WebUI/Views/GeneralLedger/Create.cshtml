@@ -1,0 +1,751 @@
+﻿@model DemoProject.Services.ViewModel.Account.GL.GeneralLedgerViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.GL
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    GeneralLedgerDetailViewModel detailViewModel = new GeneralLedgerDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("GNLCRT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>General Ledger - Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Create", "GeneralLedger", FormMethod.Post, htmlAttributes: new { @autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Create</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*GLCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("General Ledger Code")
+                                            @Html.TextBoxFor(m => m.GLCode, new { @class = "form-control mandatory-mark title-case alpha-numeric", @placeholder = "Enter General Ledger", required = "required", @maxlength = 20 })
+                                            @Html.ValidationMessageFor(m => m.GLCode)
+                                        </div>
+
+                                        @*ExistingGLNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Existing General Ledger Number")
+                                            @Html.TextBoxFor(m => m.ExistingGLNumber, new { @class = "form-control mandatory-mark title-case alpha-numeric", @placeholder = "Enter Existing General Ledger Number", required = "required", @maxlength = 20 })
+                                            @Html.ValidationMessageFor(m => m.ExistingGLNumber)
+                                        </div>
+
+                                        @*GLNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("General Ledger Number")
+                                            @Html.TextBoxFor(m => m.GLNumber, new { @class = "form-control real-number mandatory-mark alpha-numeric", @placeholder = "Enter General Ledger Number", @type = "number", required = "required", @min = 1, @max = 999999999 })
+                                            @Html.ValidationMessageFor(m => m.GLNumber)
+                                        </div>
+
+                                        @*NameOfGL*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of General Ledger")
+                                            @Html.TextBoxFor(m => m.NameOfGL, new { @id = "name-of-gl", @class = "form-control mandatory-mark title-case alpha-numeric", @placeholder = "Enter Name Of General Ledger", required = "required", @minlength = 3, @maxlength = 100, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfGL)
+                                        </div>
+
+                                        @*TransNameOfGL*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOfGLInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOfGL, null, new { @id = "trans-name-of-gl", @class = "form-control mandatory-mark deny-multiple-space", @placeholder = detailViewModel.NameOfGLPlaceHolderInRegionalLanguage, required = "required", @minlength = 3, @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfGL)
+                                        </div>
+
+                                        @*AliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control default-none title-case alpha-numeric", @placeholder = "Enter Alias Name", @maxlength = 10, onkeydown = "Maketranslation()", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, null, new { @id = "trans-alias-name", @class = "form-control default-none deny-multiple-space", @placeholder = detailViewModel.AliasNamePlaceHolderInRegionalLanguage, @maxlength = 10, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name On Report")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control default-none title-case alpha-numeric", @placeholder = "Enter Name On Report", @maxlength = 100, required = "required", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, null, new { @id = "trans-name-on-report", @class = "form-control default-none deny-multiple-space", @placeholder = detailViewModel.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = 100, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*AccountClass*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Account Class")
+                                            @Html.DropDownListFor(m => m.AccountClassId, new SelectList(detailViewModel.AccountClassDropdownList, "Value", "Text"), "--- Select Account Class ---", new { @id = "account-class-id", @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.AccountClassId)
+                                        </div>
+
+                                        @*EnableCashTransactionFromDemandDepositAccount*@
+                                        <div class="row form-group mt-3 tenure demand-deposit">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Cash Transaction From Demand Deposit Account")
+                                            </div>
+
+                                            <div class="col-2">
+                                                <div class="text-left">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableCashTransactionFromDemandDepositAccount, new { @id = "enable-cash-transaction-from-demand-deposit-account", @class = "form-control switch-input show-block" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*BusinessOfficeAccess*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Business Office Access")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.BusinessOfficeAccess, "A", new { @id = "business-office-access-a", @class = "form-check-input", @name = "BusinessOfficeAccess", required = "required" })
+                                                        <label for="business-office-access-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.BusinessOfficeAccess, "D", new { @id = "business-office-access-d", @class = "form-check-input", @name = "BusinessOfficeAccess", required = "required" })
+                                                        <label for="business-office-access-d" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.BusinessOfficeAccess)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*CurrencyAccess*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Currency Access")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.CurrencyAccess, "A", new { @id = "currency-access-a", @class = "form-check-input", @name = "CurrencyAccess", required = "required" })
+                                                        <label for="currency-access-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        @Html.RadioButtonFor(m => m.CurrencyAccess, "D", new { @id = "currency-access-d", @class = "form-check-input", @name = "CurrencyAccess", required = "required" })
+                                                        <label for="currency-access-d" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.CurrencyAccess)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*TransactionTypeAccess*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Transaction Type Access")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.TransactionTypeAccess, "A", new { @id = "transaction-type-access-a", @class = "form-check-input", @name = "TransactionTypeAccess", required = "required" })
+                                                        <label for="transaction-type-access-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.TransactionTypeAccess, "D", new { @id = "transaction-type-access-d", @class = "form-check-input", @name = "TransactionTypeAccess", required = "required" })
+                                                        <label for="transaction-type-access-d" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.TransactionTypeAccess)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*CustomerTypeAccess*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Customer Type Access")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.CustomerTypeAccess, "A", new { @id = "customer-type-access-a", @class = "form-check-input", @name = "CustomerTypeAccess", required = "required" })
+                                                        <label for="customer-type-access-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Allowed")</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        @Html.RadioButtonFor(m => m.CustomerTypeAccess, "D", new { @id = "customer-type-access-d", @class = "form-check-input", @name = "CustomerTypeAccess", required = "required" })
+                                                        <label for="customer-type-access-d" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Disallowed")</label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.CustomerTypeAccess)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*ParentGL*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Parent General Ledger")
+                                            @Html.DropDownListFor(m => m.ParentGLId, new SelectList(detailViewModel.GLParentDropdownList, "Value", "Text"), "--- Select General Ledger ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ParentGLId)
+                                        </div>
+
+                                        @*ParentGLDescription*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Parent General Ledger Description")
+                                            @Html.TextAreaFor(m => m.ParentGLDescription, new { @id = "parent-gl-description", @class = "form-control default-none title-case alpha-numeric", @placeholder = "Enter Parent General Ledger Description", @maxlength = 1500, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.ParentGLDescription)
+                                        </div>
+
+                                        @*TransParentGLDescription*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.ParentGLDescriptionInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransParentGLDescription, new { @id = "trans-parent-gl-description", @class = "form-control default-none deny-multiple-space", @placeholder = detailViewModel.ParentGLDescriptionPlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                            @Html.ValidationMessageFor(m => m.TransParentGLDescription)
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark deny-past-date deny-next-financial-year-date set-current-date activation-date", @type = "date", onclick = "DenyPastDate()", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*ExpiryDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control deny-past-date-from-reference-date allow-future-date-upto-50y expiry-date", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control default-none title-case deny-multiple-space", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none deny-multiple-space", @placeholder = detailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*======= Fourth Row - Accordians =======*@
+                                <div id="accordion" class="accordion md-accordion accordion-blocks">
+
+                                    @*Accordian 1 - BusinessOffice*@
+                                    <div id="heading-business-office" class="card mt-3">
+                                        <div class="card-header" id="business-office-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office" data-target="#collapse-business-office">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Business Office")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="business-office-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-business-office" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office" data-target="#collapse-business-office">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-business-office" class="collapse" aria-labelledby="heading-business-office" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="modal fade" id="business-office-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title text-center" id="business-office-text">Add</h4>
+                                                                            <button type="button" class="close-business-office-modal" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            @*NameOfBusinessOffice*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Name Of Business Office")
+                                                                                @Html.ListBoxFor(m => m.GeneralLedgerBusinessOfficeViewModel.MultiBusinessOfficeId, new SelectList(detailViewModel.BusinessOfficeDropdownList, "Value", "Text"), new { @id = "business-office-id", @class = "form-control mandatory-mark modal-input modal-multi-check-select", @multiple = "multiple", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerBusinessOfficeViewModel.MultiBusinessOfficeId)
+                                                                                <span id="business-office-id-error" class="error d-none">Please Select Valid Name Of Business Office. </span>
+                                                                            </div>
+
+                                                                            @*ActivationDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Activation Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerBusinessOfficeViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-business-office", @class = "form-control mandatory-mark deny-past-date deny-future-date deny-next-financial-year-date set-current-date activation-date", @type = "date", @autocomplete = "on", @placeholder = "Enter Activation Date", onclick = "DenyPastDate()", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerBusinessOfficeViewModel.ActivationDate)
+                                                                                <span id="activation-date-business-office-error" class="error d-none">Please Select Valid Activation Date. </span>
+                                                                            </div>
+
+                                                                            @*ExpiryDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Expiry Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerBusinessOfficeViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-business-office", @class = "form-control deny-past-date-from-reference-date expiry-date allow-future-date-upto-50y modal-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date-business-office')" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerBusinessOfficeViewModel.ExpiryDate)
+                                                                                <span id="expiry-date-business-office-error" class="error d-none">Please Select Valid Expiry Date. </span>
+                                                                            </div>
+
+                                                                            @*CloseDate*@
+                                                                            <div class="form-group d-none">
+                                                                                @Html.CustomLabel("Close Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerBusinessOfficeViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-business-office", @class = "form-control deny-past-date-from-reference-date modal-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('expiry-date-business-office')" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerBusinessOfficeViewModel.CloseDate)
+                                                                            </div>
+
+                                                                            @*Note*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Note")
+                                                                                @Html.TextAreaFor(m => m.GeneralLedgerBusinessOfficeViewModel.Note, new { @id = "note-business-office", @class = "form-control title-case deny-multiple-space default-none modal-input", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerBusinessOfficeViewModel.Note)
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" id="btn-add-business-office-modal" class="btn btn-success">Add</button>
+                                                                            <button type="button" id="btn-update-business-office-modal" class="btn btn-primary">Update</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card-body">
+                                                                <table id="tbl-business-office" class="table compact table-striped table-bordered" width="100">
+                                                                    <thead class="text-center">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-business-office" /></th>
+                                                                            <th class="d-none">BusinessOfficeId</th>
+                                                                            <th>NameOfBusinessOffice</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 2 - Currency*@
+                                    <div id="heading-currency" class="card mt-3">
+                                        <div class="card-header" id="currency-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-currency" data-target="#collapse-currency">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Currency")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="currency-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-currency" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-currency" data-target="#collapse-currency">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-currency" class="collapse" aria-labelledby="heading-currency" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="modal fade" id="currency-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title text-center" id="currency-text">Add</h4>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            @*NameOfCurrency*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Name Of Currency")
+                                                                                @Html.ListBoxFor(m => m.GeneralLedgerCurrencyViewModel.MultiCurrencyId, new SelectList(detailViewModel.CurrencyDropdownList, "Value", "Text"), new { @id = "currency-id", @class = "form-control mandatory-mark modal-input modal-multi-check-select", @multiple = "multiple", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCurrencyViewModel.MultiCurrencyId)
+                                                                                <span id="currency-id-error" class="error d-none"> Please Select Currancy.</span>
+                                                                            </div>
+
+                                                                            @*ActivationDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Activation Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerCurrencyViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-currency", @class = "form-control mandatory-mark deny-next-financial-year-date deny-past-date modal-input set-current-date activation-date", @type = "date", @placeholder = "Enter Activation Date", onclick = "DenyPastDate()", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCurrencyViewModel.ActivationDate)
+                                                                                <span id="activation-date-currency-error" class="error d-none"> Please Enter Activation Date.</span>
+                                                                            </div>
+
+                                                                            @*ExpiryDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Expiry Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerCurrencyViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-currency", @class = "form-control deny-past-date-from-reference-date allow-future-date-upto-50y expiry-date modal-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date-currency')" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCurrencyViewModel.ExpiryDate)
+                                                                                <span id="expiry-date-currency-error" class="error d-none">Please Select Valid Expiry Date. </span>
+                                                                            </div>
+
+                                                                            @*CloseDate*@
+                                                                            <div class="form-group d-none">
+                                                                                @Html.CustomLabel("Close Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerCurrencyViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-currency", @class = "form-control deny-past-date-from-reference-date modal-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('expiry-date-currency')" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCurrencyViewModel.CloseDate)
+                                                                            </div>
+
+                                                                            @*Note*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Note")
+                                                                                @Html.TextAreaFor(m => m.GeneralLedgerCurrencyViewModel.Note, new { @id = "note-currency", @class = "form-control title-case deny-multiple-space default-none modal-input", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCurrencyViewModel.Note)
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" id="btn-add-currency-modal" class="btn btn-success">Add</button>
+                                                                            <button type="button" id="btn-update-currency-modal" class="btn btn-primary">Update</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card-body">
+                                                                <table id="tbl-currency" class="table compact table-striped table-bordered" width="100">
+                                                                    <thead class="text-center">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-currency" /></th>
+                                                                            <th class="d-none">CurrencyId</th>
+                                                                            <th>NameOfCurrency</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 4 - TransactionType*@
+                                    <div id="heading-transaction-type" class="card mt-3">
+                                        <div class="card-header" id="transaction-type-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-transaction-type" data-target="#collapse-transaction-type">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Transaction Type")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="transaction-type-data-table-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-transaction-type" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-transaction-type" data-target="#collapse-transaction-type">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-transaction-type" class="collapse" aria-labelledby="heading-transaction-type" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="modal fade" id="transaction-type-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title text-center" id="transaction-type-text">Add</h4>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            @*TransactionType*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Transaction Type")
+                                                                                @Html.ListBoxFor(m => m.GeneralLedgerTransactionTypeViewModel.MultiTransactionTypeId, new SelectList(detailViewModel.TransactionTypeDropdownList, "Value", "Text"), new { @id = "transaction-type-id", @class = "form-control mandatory-mark modal-input modal-multi-check-select", @multiple = "multiple", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerTransactionTypeViewModel.MultiTransactionTypeId)
+                                                                                <span id="transaction-type-id-error" class="error d-none"> Please Select Transaction Type.</span>
+                                                                            </div>
+                                                                            
+                                                                            @*MinimumAmountLimit*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Minimum Amount Limit")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerTransactionTypeViewModel.MinimumAmountLimit, new { @id = "minimum-amount-limit", @class = "form-control default-one mandatory-mark min-number modal-input", @placeholder = "Enter Minimum Amount Limit", required = "required", @type = "number", @min = 1, @max = 9999999 })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerTransactionTypeViewModel.MinimumAmountLimit)
+                                                                                <span id="minimum-amount-limit-error" class="error d-none"> Please Enter Minimum Amount Limit.</span>
+                                                                            </div>
+
+                                                                            @*MaximumAmountLimit*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Maximum Amount Limit")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerTransactionTypeViewModel.MaximumAmountLimit, new { @id = "maximum-amount-limit", @class = "form-control default-one mandatory-mark max-number modal-input", @placeholder = "Enter Maximum Amount Limit", required = "required", @type = "number", @min = 1, @max = 999999999 })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerTransactionTypeViewModel.MaximumAmountLimit)
+                                                                                <span id="maximum-amount-limit-error" class="error d-none"> Please Enter Maximum Amount Limit.</span>
+                                                                            </div>
+
+                                                                            @*AllowedMaximumNumberOfBackDaysEntry*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Allowed Maximum Number Of Back Days Entry")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerTransactionTypeViewModel.AllowedMaximumNumberOfBackDaysEntry, new { @id = "allowed-max-no-of-back-days-entry", @class = "form-control default-one real-number mandatory-mark modal-input", @placeholder = "Enter Allowed Maximum Number Of Back Days Entry", required = "required", @type = "number", @min = 1, @max = 255 })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerTransactionTypeViewModel.AllowedMaximumNumberOfBackDaysEntry)
+                                                                                <span id="allowed-max-no-of-back-days-entry-error" class="error d-none"> Please Enter Allowed Maximum Number Of Back Days Entry.</span>
+                                                                            </div>
+
+                                                                            @*ActivationDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Activation Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerTransactionTypeViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-transaction-type", @class = "form-control mandatory-mark deny-next-financial-year-date deny-past-date modal-input set-current-date activation-date", @type = "date", @placeholder = "Enter Activation Date", onclick = "DenyPastDate()", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerTransactionTypeViewModel.ActivationDate)
+                                                                                <span id="activation-date-transaction-type-error" class="error d-none"> Please Enter Activation Date.</span>
+                                                                            </div>
+
+                                                                            @*ExpiryDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Expiry Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerTransactionTypeViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-transaction-type", @class = "form-control deny-past-date-from-reference-date allow-future-date-upto-50y expiry-date modal-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date-transaction-type')" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerTransactionTypeViewModel.ExpiryDate)
+                                                                            </div>
+
+                                                                            @*CloseDate*@
+                                                                            <div class="form-group d-none">
+                                                                                @Html.CustomLabel("Close Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerTransactionTypeViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-transaction-type", @class = "form-control deny-past-date-from-reference-date modal-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('expiry-date-transaction-type')" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerTransactionTypeViewModel.CloseDate)
+                                                                            </div>
+
+                                                                            @*Note*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Note")
+                                                                                @Html.TextAreaFor(m => m.GeneralLedgerTransactionTypeViewModel.Note, new { @id = "note-transaction-type", @class = "form-control title-case deny-multiple-space default-none modal-input", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerTransactionTypeViewModel.Note)
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" id="btn-add-transaction-type-modal" class="btn btn-success">Add</button>
+                                                                            <button type="button" id="btn-update-transaction-type-modal" class="btn btn-primary">Update</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card-body">
+                                                                <table id="tbl-transaction-type" class="table compact table-striped table-bordered" width="100">
+                                                                    <thead class="text-center">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-transaction-type" /></th>
+                                                                            <th class="d-none">TransactionTypeId</th>
+                                                                            <th>TransactionType</th>
+                                                                            <th>MinimumAmount</th>
+                                                                            <th>MaximumAmount</th>
+                                                                            <th>BackDaysEntry</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 5 - CustomerType*@
+                                    <div id="heading-customer-type" class="card mt-3">
+                                        <div class="card-header" id="customer-type-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-customer-type" data-target="#collapse-customer-type">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>@Html.TextWithRegionalLanguage("Customer Type")</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="customer-type-data-table-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-customer-type" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-customer-type" data-target="#collapse-customer-type">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-customer-type" class="collapse" aria-labelledby="heading-customer-type" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="modal fade" id="customer-type-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title text-center" id="customer-type-text">Add</h4>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+
+                                                                        <div class="modal-body">
+                                                                            @*CustomerType*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Customer Type")
+                                                                                @Html.ListBoxFor(m => m.GeneralLedgerCustomerTypeViewModel.MultiCustomerTypeId, new SelectList(detailViewModel.CustomerTypeDropdownList, "Value", "Text"), new { @id = "customer-type-id", @class = "form-control mandatory-mark modal-input modal-multi-check-select", @multiple = "multiple", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCustomerTypeViewModel.MultiCustomerTypeId)
+                                                                                <span id="customer-type-id-error" class="error d-none"> Please Select Customer Type.</span>
+                                                                            </div>
+
+                                                                            @*ActivationDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Activation Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerCustomerTypeViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-customer-type", @class = "form-control mandatory-mark deny-next-financial-year-date deny-past-date modal-input set-current-date activation-date", @type = "date", @placeholder = "Enter Activation Date", onclick = "DenyPastDate()", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCustomerTypeViewModel.ActivationDate)
+                                                                                <span id="activation-date-customer-type-error" class="error d-none"> Please Enter Activation Date.</span>
+                                                                            </div>
+
+                                                                            @*ExpiryDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Expiry Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerCustomerTypeViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-customer-type", @class = "form-control deny-past-date-from-reference-date allow-future-date-upto-50y expiry-date modal-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date-customer-type')" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCustomerTypeViewModel.ExpiryDate)
+                                                                            </div>
+
+                                                                            @*CloseDate*@
+                                                                            <div class="form-group d-none">
+                                                                                @Html.CustomLabel("Close Date")
+                                                                                @Html.TextBoxFor(m => m.GeneralLedgerCustomerTypeViewModel.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-customer-type", @class = "form-control deny-past-date-from-reference-date modal-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('expiry-date-customer-type')" })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCustomerTypeViewModel.CloseDate)
+                                                                            </div>
+
+                                                                            @*Note*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Note")
+                                                                                @Html.TextAreaFor(m => m.GeneralLedgerCustomerTypeViewModel.Note, new { @id = "note-customer-type", @class = "form-control title-case deny-multiple-space default-none modal-input", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                                @Html.ValidationMessageFor(m => m.GeneralLedgerCustomerTypeViewModel.Note)
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" id="btn-add-customer-type-modal" class="btn btn-success">Add</button>
+                                                                            <button type="button" id="btn-update-customer-type-modal" class="btn btn-primary">Update</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card-body">
+                                                                <table id="tbl-customer-type" class="table compact table-striped table-bordered" width="100">
+                                                                    <thead class="text-center">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-customer-type" /></th>
+                                                                            <th class="d-none">CustomerTypeId</th>
+                                                                            <th>CustomerType</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Create", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <link href="~/Content/css/jquery.multiselect.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+</body>
+</html>
+
+<script>
+    var url = "@Url.Action("GetUniqueGLName", "GeneralLedger")";
+    var urlForDataTable = "@Url.Action("SaveDataTables", "GeneralLedger")";
+</script>
+
+<script>
+    $('#business-office-id, #currency-id,#transaction-type-id, #customer-type-id').multiselect({
+        columns: 1,
+        placeholder: 'Select Correct Name',
+        search: true,
+        selectAll: true,
+        reload: true,
+    });
+</script>
+
+<script src="~/Scripts/Custom/GeneralLedger.js"></script>

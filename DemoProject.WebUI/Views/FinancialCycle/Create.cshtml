@@ -1,0 +1,202 @@
+﻿@model DemoProject.Services.ViewModel.Account.Master.FinancialCycleViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Master
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    FinancialCycleViewModel model = new FinancialCycleViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("FINCRT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FinancialCycle - Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Create</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*FinancialCycleCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Financial Cycle Code")
+                                            @Html.TextBoxFor(m => m.FinancialCycleCode, new { @id = "financial-cycle-code", @class = "form-control mandatory-mark", @placeholder = "Enter Financial Cycle Code", required = "required", @maxlength = 9, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.FinancialCycleCode)
+                                        </div>
+
+                                        @*StartDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Start Date")
+                                            @Html.TextBoxFor(m => m.StartDate, "{0:yyyy-MM-dd}", new { @id = "start-date", @class = "form-control mandatory-mark set-current-date", @Type = "date", required = "required", onchange = "StartDate()" })
+                                            @Html.ValidationMessageFor(m => m.StartDate)
+                                        </div>
+
+                                        @*EndDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("End Date")
+                                            @Html.TextBoxFor(m => m.EndDate, "{0:yyyy-MM-dd}", new { @id = "end-date", @class = "form-control mandatory-mark set-current-date", @Type = "date", required = "required", onchange = "EndDate()" })
+                                            @Html.ValidationMessageFor(m => m.EndDate)
+                                        </div>
+
+                                        @*FinancialCycleStatus*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Financial Cycle Status")
+                                            @Html.TextBoxFor(m => m.FinancialCycleStatus, new { @id = "financial-cycle-status", @class = "form-control mandatory-mark", @placeholder = "Enter Financial Cycle Status", required = "required", @maxlength = 3, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.FinancialCycleStatus)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control default-none", @placeholder = "Enter Note", @maxlength = 1500, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                    @*Accordian 1 - PeriodCode*@
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-header collapsed p-3" id="heading-period-code" aria-expanded="false" data-toggle="collapse" href="#collapse-period-code">
+                                                    <a class="card-title">
+                                                        <b>@Html.TextWithRegionalLanguage("Period Code")</b>
+                                                    </a>
+                                                </div>
+                                                <div id="collapse-period-code" class="collapse" aria-labelledby="heading-period-code" data-parent="#accordion">
+
+                                                    <div class="modal fade" id="add-period-code" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+
+                                                                    <h4 class="modal-title text-center" id="period-code-text">Add</h4>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+
+                                                                    @*Code*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Code")
+                                                                        @Html.TextBoxFor(m => m.Code, new { @id = "code-period", @class = "form-control mandatory-mark", @placeholder = "Enter Code", required = "required", @maxlength = 5, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                        @Html.ValidationMessageFor(m => m.Code)
+                                                                    </div>
+
+                                                                    @*StartDate*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Start Date")
+                                                                        @Html.TextBoxFor(m => m.StartDate, "{0:yyyy-MM-dd}", new { @id = "start-date-period-code", @class = "form-control mandatory-mark set-current-date", @Type = "date", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.StartDate)
+                                                                    </div>
+
+                                                                    @*EndDate*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("End Date")
+                                                                        @Html.TextBoxFor(m => m.EndDate, "{0:yyyy-MM-dd}", new { @id = "end-date-period-code", @class = "form-control mandatory-mark set-current-date", @Type = "date", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.EndDate)
+                                                                    </div>
+
+                                                                    @*PeriodCodeStatus*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Period Code Status")
+                                                                        @Html.TextBoxFor(m => m.PeriodCodeStatus, new { @id = "period-code-status", @class = "form-control mandatory-mark", @placeholder = "Enter Period Code Status", required = "required", @maxlength = 3, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                        @Html.ValidationMessageFor(m => m.PeriodCodeStatus)
+                                                                    </div>
+
+                                                                    @*Note*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Note")
+                                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-period-code", @class = "form-control default-none", @placeholder = "Enter Note", @maxlength = 1500, @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button" id="btn-add-period-code" class="btn btn-success ">Add</button>
+                                                                    <button type="button" id="btn-update-period-code" class="btn btn-primary ">Update</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <table id="period-code" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100">
+                                                            <thead class="text-center">
+                                                                <tr>
+                                                                    <th><input type="checkbox" name="check_all" id="select-all-period-code" style="margin-left:11px;" /></th>
+                                                                    @*<th class="d-none">FinancialCycleId</th>*@
+                                                                    <th>Code</th>
+                                                                    <th>StartDate</th>
+                                                                    <th>EndDate</th>
+                                                                    <th>PeriodCodeStatus</th>
+                                                                    <th>Note</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="text-center"></tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Create", "SaveDataTables", "FinancialCycle", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/Custom/PeriodCode.js"></script>
+<script>
+    var urlPeriodCode = '@Url.Action("SaveDataTables", "FinancialCycle")';
+</script>

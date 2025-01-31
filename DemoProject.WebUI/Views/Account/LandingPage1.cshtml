@@ -1,0 +1,68 @@
+﻿@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <!------ Include the above in your HEAD tag ---------->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+    <link href="~/Content/Custom.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid bg-landing">
+        <div class="bg-landing-text">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="wow  slideInRight bg-landing-text-style mb-5 mr-5" data-wow-duration="2s">SCS-PathPranali</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <button class="btn px-4 py-2 wow slideInUp bg-dark text-white mt-2 mr-5 mb-5" data-wow-duration="2s" onclick="openPopup()"> LOGIN </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        wow = new WOW
+            (
+              {
+                  animateClass: 'animated',
+                  offset: 100,
+                    callback: function (box)
+                    {
+                      console.log("WOW: animating <" + box.tagName.toLowerCase() + ">")
+                    }
+              }
+            );
+        wow.init();
+        document.getElementById('moar').onclick = function ()
+        {
+            var section = document.createElement('section');
+            section.className = 'section--purple wow fadeInDown';
+            this.parentNode.insertBefore(section, this);
+        };
+
+        var popup;
+        function openPopup()
+        {
+            var url = '@Url.Action("Login", "Account")';
+            popup = window.open(url, "popup_window", "fullscreen=yes");
+
+            if (popup.outerWidth < screen.availWidth || popup.outerHeight < screen.availHeight)
+            {
+                popup.moveTo(0, 0);
+                popup.resizeTo(screen.availWidth, screen.availHeight);
+            }
+        }
+    </script>
+</body>
+</html>

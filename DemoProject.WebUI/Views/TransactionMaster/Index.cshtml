@@ -1,0 +1,73 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.Account.Layout.SchemeNumberOfTransactionLimitViewModel>
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    // Make Proper Menu Parameter
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("SNOVIN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>SchemeNumberOfTransactionLimit - Index </title>
+</head>
+<body>
+    @*======= First Row - For Header =======*@
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+
+        @*======= Second Row - For Data Entry =======*@
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body no-footer">
+                        <table id="example" class="display table table-striped table-hover dt-responsive nowrap cell-border">
+                            <thead>
+                                <tr>
+                                    <th>SR.</th>
+                                    <th>Name Of Scheme</th>
+                                    <th>Entry Date</th>
+                                    <th>User Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (var item in Model)
+                                    {
+                                        <tr class="hoverlightblue">
+                                            <td></td>
+                                            <td>@item.NameOfScheme</td>
+                                            <td>@item.MakerEntryDateTime</td>
+                                            <td>@item.NameOfUser</td>
+                                            <td>
+                                                @if (@item.Operation == "CRT")
+                                                {
+                                                    <button class="btn btn-link" onclick="location.href='@Url.Action("Create","SchemeNumberOfTransactionLimit",new {@item.SchemeId })'">Create </button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-link" onclick="location.href='@Url.Action("Modify","SchemeNumberOfTransactionLimit",new {@item.SchemeId })'">Modify </button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

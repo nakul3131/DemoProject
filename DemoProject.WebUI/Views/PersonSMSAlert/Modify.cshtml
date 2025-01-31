@@ -1,0 +1,200 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonSMSAlertViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonSMSAlertViewModel model = new PersonSMSAlertViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PSAMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Person SMS Alert - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="card-body ml-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="modal fade" id="sms-alert-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title  text-center" id="title">Add</h4>
+                                                            <button type="button" class="close-sms-alert-modal" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @*NoticeTypeId*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Notice Type")
+                                                                @Html.DropDownListFor(m => m.NoticeTypeId, new SelectList(personDetailViewModel.PersonInformationParameterDropdownList, "Value", "Text", 0), "--- Select Notice Type ---", new { @id = "alert-type-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.NoticeTypeId)
+                                                                <span id="alert-type-id-error" class="error modal-input-error d-none">Please Select Notice Type. </span>
+                                                            </div>
+
+                                                            @*Language*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Language")
+                                                                @Html.DropDownListFor(m => m.AppLanguageId, new SelectList(personDetailViewModel.AppLanguageDropdownList, "Value", "Text", 0), "--- Select Language ---", new { @id = "notice-language-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.AppLanguageId)
+                                                                <span id="notice-language-id-error" class="error modal-input-error d-none">Please Enter Language. </span>
+                                                            </div>
+
+                                                            @*ScheduleTime*@
+                                                            @Html.CustomLabel("Schedule Time")
+                                                            <div class="field_wrapper">
+                                                                <div class="row">
+                                                                    <div class="col-xs-11 col-sm-11 col-md-11" id="mydiv">
+                                                                        <div class="form-group">
+                                                                            @Html.TextBoxFor(m => m.SendingTime, new { @id = "sending-time", @class = "form-control mandatory-mark psmsa modal-input schedule-time", @placeholder = "Enter Sending Time", required = "required", @Type = "time" })
+                                                                            <span id="sending-time-error" class="error modal-input-error d-none">Please Select Schedule Time. </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-1 col-sm-1 col-md-1" id="removebtn" style="margin-left:-5%;">
+                                                                        <div class="input-group-append">
+                                                                            <button class="btn btn-success add_button"><i class="fas fa-plus"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Note")
+                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-sms-alert", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                            </div>
+
+                                                            @*ReasonForModification*@
+                                                            <div id="sms-div" class="form-group">
+                                                                @Html.CustomLabel("Reason For Modification")
+                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-sms-alert", @class = "form-control modal-input default-none", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" id="btn-add-sms-alert-modal" class="btn btn-success">Add</button>
+                                                            <button type="button" id="btn-update-sms-alert-modal" class="btn btn-primary">Update</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <table id="tbl-sms-alert" class="table compact  table-striped table-bordered" cellspacing="0" width="100">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check_all" id="select-all-sms-alert" /></th>
+                                                            <th class="d-none">AlertTypeId</th>
+                                                            <th>NoticeType</th>
+                                                            <th class="d-none">AppLanguageId</th>
+                                                            <th>Language</th>
+                                                            <th>SendingTime</th>
+                                                            <th>Note</th>
+                                                            <th>ReasonForModification</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable<PersonSMSAlertViewModel> personSMSAlertViewModelList = (IEnumerable<PersonSMSAlertViewModel>)HttpContext.Current.Session["SMSAlert"];
+                                                            if (personSMSAlertViewModelList != null)
+                                                            {
+                                                                foreach (PersonSMSAlertViewModel viewModel in personSMSAlertViewModelList)
+                                                                {
+                                                                    <tr>
+                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                        <td class="d-none">@viewModel.NoticeTypeId</td>
+                                                                        <td>@viewModel.NameOfNoticeType</td>
+                                                                        <td class="d-none">@viewModel.AppLanguageId</td>
+                                                                        <td>@viewModel.NameOfAppLanguage</td>
+                                                                        <td>@viewModel.SendingTime</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For PrmKey*@
+                                @Html.HiddenFor(m => m.PrmKey)
+
+                                @*Hiddent Field For PersonPrmKey*@
+                                @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                @*Hiddent Field For PersonSMSAlertPrmKey*@
+                                @Html.HiddenFor(m => m.PersonSMSAlertPrmKey)
+
+                                @*Hiddent Field For PersonAddressTranslationPrmKey*@
+                                @Html.HiddenFor(m => m.PersonId)
+                            </div>
+
+                            @Html.OperationFooter("Modify", "SaveSMSAlertDataTables", "PersonSMSAlert", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var saveDataTableURL = "@Url.Action("SaveSMSAlertDataTables", "PersonSMSAlert")";
+    </script>
+    <script src="~/Scripts/Custom/PersonSMSAlert.js"></script>
+</body>
+</html>

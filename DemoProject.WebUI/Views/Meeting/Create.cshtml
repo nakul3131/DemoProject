@@ -1,0 +1,644 @@
+﻿@model DemoProject.Services.ViewModel.Management.Conference.MeetingViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Management.Conference
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    MeetingViewModel model = new MeetingViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("METCRT");
+}
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Meeting - Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Create", "Meeting", FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Create</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*MeetingTypePrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Meeting Type")
+                                            @Html.DropDownListFor(m => m.MeetingTypeId, new SelectList(model.MeetingTypeDropdownList, "Value", "Text"), "--- Select Meeting Type ---", new { @class = "form-control mandatory-mark", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.MeetingTypeId)
+                                        </div>
+
+                                        @*Title*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Title")
+                                            @Html.TextBoxFor(m => m.Title, new { @id = "title", @class = "form-control mandatory-mark", @placeholder = "Enter Title", required = "required", @maxlength = 500,onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Title)
+                                        </div>
+
+                                        @*TransTitle*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.TitleInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransTitle, new { @id = "trans-title", @class = "form-control", @placeholder = model.TitlePlaceHolderInRegionalLanguage, @maxlength = 500 })
+                                            @Html.ValidationMessageFor(m => m.TransTitle)
+                                        </div>
+
+                                        @*Objective*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Objective")
+                                            @Html.TextBoxFor(m => m.Objective, new { @id = "objective", @class = "form-control default-none", @placeholder = "Enter Objective", @maxlength = 3500, @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Objective)
+                                        </div>
+
+                                        @*TransObjective*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.ObjectiveInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransObjective, null, new { @id = "trans-objective", @class = "form-control", @placeholder = model.ObjectivePlaceHolderInRegionalLanguage,@maxlength = 3500 })
+                                            @Html.ValidationMessageFor(m => m.TransObjective)
+                                        </div>
+
+                                        @*MeetingDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Meeting Date")
+                                            @Html.TextBoxFor(m => m.MeetingDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark set-current-date", required = "required", @Type = "date" })
+                                            @Html.ValidationMessageFor(m => m.MeetingDate)
+                                        </div>
+
+                                        @*FullAddress*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Full Address")
+                                            @Html.TextBoxFor(m => m.FullAddress, new { @id = "full-address", @class = "form-control default-none", @placeholder = "Enter Full Address", @maxlength = 1500,onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.FullAddress)
+                                        </div>
+
+                                        @*TransFullAddress*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.FullAddressInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransFullAddress, new { @id = "trans-full-address", @class = "form-control default-none", @placeholder = model.FullAddressPlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                            @Html.ValidationMessageFor(m => m.TransFullAddress)
+                                        </div>
+
+                                        @*ArrivalTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Arrival Time")
+                                            @Html.TextBoxFor(m => m.ArrivalTime, new { @id = "arrival-time", @class = "form-control mandatory-mark", @placeholder = "Enter Arrival Time", required = "required", @Type = "time" })
+                                            @Html.ValidationMessageFor(m => m.ArrivalTime)
+                                        </div>
+
+                                        @*IsAllowancePayble*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Is Allowance Payble")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.IsAllowancePayble, new { @id = "is-allowance-payble", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*IsPayByCash*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Is Pay By Cash")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.IsPayByCash, new { @id = "is-pay-by-cash", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*CommencementTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Commencement Time")
+                                            @Html.TextBoxFor(m => m.CommencementTime, new { @id = "commencement-time", @class = "form-control mandatory-mark", @placeholder = "Enter Commencement Time", required = "required", @Type = "time" })
+                                            @Html.ValidationMessageFor(m => m.CommencementTime)
+                                        </div>
+
+                                        @*AdjournmentTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Adjournment Time")
+                                            @Html.TextBoxFor(m => m.AdjournmentTime, new { @id = "adjournment-time", @class = "form-control mandatory-mark", @placeholder = "Enter Adjournment Time", required = "required", @Type = "time" })
+                                            @Html.ValidationMessageFor(m => m.AdjournmentTime)
+                                        </div>
+
+                                        @*StartTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Start Time")
+                                            @Html.TextBoxFor(m => m.StartTime, new { @id = "start-time", @class = "form-control mandatory-mark", @placeholder = "Enter Start Time", required = "required", @Type = "time" })
+                                            @Html.ValidationMessageFor(m => m.StartTime)
+                                        </div>
+
+                                        @*EndTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("End Time")
+                                            @Html.TextBoxFor(m => m.EndTime, new { @id = "end-time", @class = "form-control mandatory-mark", @placeholder = "Enter End Time", required = "required", @Type = "time" })
+                                            @Html.ValidationMessageFor(m => m.EndTime)
+                                        </div>
+
+                                        @*NextMeetingDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Next Meeting Date")
+                                            @Html.TextBoxFor(m => m.NextMeetingDate, "{0:yyyy-MM-dd}", new { @id = "next-meeting-date", @class = "form-control mandatory-mark set-current-date", required = "required", @Type = "date" })
+                                            @Html.ValidationMessageFor(m => m.NextMeetingDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control default-none", @placeholder = "Enter Note", @maxlength = 1500, @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none", @placeholder = model.NotePlaceHolderInRegionalLanguage, @maxlength = 1500, @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*======= Forth Row - Accordians =======*@
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                            @*Accordion 1 - Meeting Agenda*@
+                                            <div id="heading-meeting-agenda" class="card mt-3">
+                                                <div class="card-header" id="meeting-agenda-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-meeting-agenda" data-target="#collapse-meeting-agenda">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Meeting Agenda")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="agenda-data-table-error" class="error d-none"> This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-meeting-agenda" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-meeting-agenda" data-target="#collapse-meeting-agenda">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-meeting-agenda" class="collapse" aria-labelledby="heading-meeting-agenda" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="card-body">
+                                                                    <div class="modal fade" id="agenda-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h4 class="modal-title text-center">Add</h4>
+                                                                                    <button type="button" class="close-agenda-modal" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    @*Agenda*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Agenda")
+                                                                                        @Html.DropDownListFor(m => m.AgendaId, new SelectList(model.AgendaDropdownList, "Value", "Text", 0), "--- Select Agenda ---", new { @id = "agenda-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.AgendaId)
+                                                                                        <span id="agenda-id-error" class="error modal-input-error d-none"> Please Select Agenda.</span>
+                                                                                    </div>
+
+                                                                                    @*SequenceNumber*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Sequence Number")
+                                                                                        @Html.TextBoxFor(m => m.SequenceNumber, new { @id = "sequence-number", @class = "form-control mandatory-mark modal-input", @Value = "0", @type = "number", required = "required", @placeholder = "Enter Sequence Number" })
+                                                                                        @Html.ValidationMessageFor(m => m.SequenceNumber)
+                                                                                        <span id="sequence-number-error" class="error modal-input-error d-none"> Please Enter Valid Sequence Number.</span>
+                                                                                    </div>
+
+                                                                                    @*Suggestive Member Number*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Suggestive Member Number")
+                                                                                        @Html.TextBoxFor(m => m.SuggestiveMemberNumber, new { @id = "suggestive-member-number", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Suggestive Member Number", @maxlength = 50, required = "required", onkeyup = "ToTextCapitalize()" })
+                                                                                        @Html.ValidationMessageFor(m => m.SuggestiveMemberNumber)
+                                                                                        <span id="suggestive-member-number-error" class="error modal-input-error d-none"> Please Enter Valid Suggestive Member Number.</span>
+                                                                                    </div>
+
+                                                                                    @*Permissive Member Number*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Permissive Member Number")
+                                                                                        @Html.TextBoxFor(m => m.PermissiveMemberNumber, new { @id = "permissive-member-number", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Permissive Member Number", @maxlength = 50, required = "required", onkeyup = "ToTextCapitalize()" })
+                                                                                        @Html.ValidationMessageFor(m => m.PermissiveMemberNumber)
+                                                                                        <span id="permissive-member-number-error" class="error modal-input-error d-none"> Please Enter Valid Permissive Member Number.</span>
+                                                                                    </div>
+
+                                                                                    @*Note*@
+                                                                                    <div class="form-group mt-1">
+                                                                                        @Html.CustomLabel("Note")
+                                                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-meeting-agenda", @class = "form-control modal-input default-none", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" id="btn-add-agenda-modal" class="btn btn-success">Add</button>
+                                                                                    <button type="button" id="btn-update-agenda-modal" class="btn btn-primary">Update</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    @*Meeting Agenda Data Table*@
+                                                                    <div class="card-body">
+                                                                        <table id="tbl-agenda" class="table compact table-striped table-bordered text-nowrap" width="100%">
+                                                                            <thead class="text-center">
+                                                                                <tr>
+                                                                                    <th><input type="checkbox" name="select-all" id="select-all-agenda" /></th>
+                                                                                    <th class="d-none">AgendaId</th>
+                                                                                    <th>NameOfAgenda</th>
+                                                                                    <th>SequenceNumber</th>
+                                                                                    <th>SuggestiveMemberNumber</th>
+                                                                                    <th>PermissiveMemberNumber</th>
+                                                                                    <th>Note</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="text-center"></tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 2 - Meeting Invitee Board Of Director*@
+                                            <div id="heading-board-of-director" class="card mt-3">
+                                                <div class="card-header" id="board-of-director-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-board-of-director" data-target="#collapse-board-of-director">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Meeting Invitee Board Of Director")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="board-of-director-data-table-error" class="error d-none"> This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-board-of-director" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-board-of-director" data-target="#collapse-board-of-director">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-board-of-director" class="collapse" aria-labelledby="heading-board-of-director" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="card-body">
+                                                                    <div class="modal fade" id="board-of-director-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h4 class="modal-title text-center">Add</h4>
+                                                                                    <button type="button" class="close-board-of-director-modal" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    @*Board Of Director*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Board Of Director")
+                                                                                        @Html.DropDownListFor(m => m.BoardOfDirectorId, new SelectList(model.BoardOfDirectorDropdownList, "Value", "Text", 0), "--- Select Board Of Director ---", new { @id = "board-of-director-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.BoardOfDirectorId)
+                                                                                        <span id="board-of-director-id-error" class="error modal-input-error d-none"> Please Select Board Of Director.</span>
+                                                                                    </div>
+
+                                                                                    @*Notice Reference Number*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Notice Reference Number")
+                                                                                        @Html.TextBoxFor(m => m.NoticeReferenceNumber, new { @id = "notice-reference-number-board-of-director", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Notice Reference Number", onkeyup = "ToTextCapitalize()", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.NoticeReferenceNumber)
+                                                                                        <span id="notice-reference-number-board-of-director-error" class="error modal-input-error d-none"> Please Enter Notice Reference Number.</span>
+                                                                                    </div>
+
+                                                                                    @*Notice Status*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Notice Status")
+                                                                                        @Html.TextBoxFor(m => m.NoticeStatus, new { @id = "notice-status-board-of-director", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Notice Status", @maxlength = 3, onkeyup = "ToTextCapitalize()", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.NoticeStatus)
+                                                                                        <span id="notice-status-board-of-director-error" class="error modal-input-error d-none"> Please Enter Notice Status.</span>
+                                                                                    </div>
+
+                                                                                    @*Attendance Status*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Attendance Status")
+                                                                                        @Html.TextBoxFor(m => m.AttendanceStatus, new { @id = "attendance-status-board-of-director", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Attendance Status", @maxlength = 3, onkeyup = "ToTextCapitalize()", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.AttendanceStatus)
+                                                                                        <span id="attendance-status-board-of-director-error" class="error modal-input-error d-none"> Please Enter Attendance Status.</span>
+                                                                                    </div>
+
+                                                                                    @*Note*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Note")
+                                                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-board-of-director", @class = "form-control default-none modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" id="btn-add-board-of-director-modal" class="btn btn-success ">Add</button>
+                                                                                    <button type="button" id="btn-update-board-of-director-modal" class="btn btn-primary ">Update</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <table id="tbl-board-of-director" class="table compact table-striped table-bordered" width="100%">
+                                                                            <thead class="text-center">
+                                                                                <tr>
+                                                                                    <th><input type="checkbox" name="select-all" id="select-all-board-of-director" /></th>
+                                                                                    <th class="d-none">BoardOfDirectorId</th>
+                                                                                    <th>NameOfBoardOfDirector</th>
+                                                                                    <th>NoticeReferenceNumber</th>
+                                                                                    <th>NoticeStatus</th>
+                                                                                    <th>AttendanceStatus</th>
+                                                                                    <th>Note</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="text-center"></tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 3 - Meeting Invitee Member*@
+                                            <div id="heading-meeting-invitee-member" class="card mt-3">
+                                                <div class="card-header" id="meeting-invitee-member-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-meeting-invitee-member" data-target="#collapse-meeting-invitee-member">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Meeting Invitee Member")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="invitee-member-data-table-error" class="error d-none"> This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-meeting-invitee-member" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-meeting-invitee-member" data-target="#collapse-meeting-invitee-member">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-meeting-invitee-member" class="collapse" aria-labelledby="heading-meeting-invitee-member" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="card-body">
+                                                                    <div class="modal fade" id="invitee-member-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h4 class="modal-title text-center">Add</h4>
+                                                                                    <button type="button" class="close-invitee-member-modal" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    @*Customer Shares Capital Account*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Customer Shares Capital Account")
+                                                                                        @Html.DropDownListFor(m => m.CustomerSharesCapitalAccountId, new SelectList(model.CustomerSharesCapitalAccountDropdownList, "Value", "Text", 0), "---Select Customer Shares Capital Account ---", new { @id = "customer-shares-capital-account-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.CustomerSharesCapitalAccountId)
+                                                                                        <span id="customer-shares-capital-account-id-error" class="error modal-input-error d-none"> Please Select Customer Shares Capital Account.</span>
+                                                                                    </div>
+
+                                                                                    @*Notice Reference Number*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Notice Reference Number")
+                                                                                        @Html.TextBoxFor(m => m.NoticeReferenceNumber, new { @id = "notice-reference-number-invitee-member", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Notice Reference Number", onkeyup = "ToTextCapitalize()", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.NoticeReferenceNumber)
+                                                                                        <span id="notice-reference-number-invitee-member-error" class="error modal-input-error d-none"> Please Enter Valid Notice Reference Number.</span>
+                                                                                    </div>
+
+                                                                                    @*Notice Status*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Notice Status")
+                                                                                        @Html.TextBoxFor(m => m.NoticeStatus, new { @id = "notice-status-invitee-member", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Notice Status", @maxlength = 3, onkeyup = "ToTextCapitalize()", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.NoticeStatus)
+                                                                                        <span id="notice-status-invitee-member-error" class="error modal-input-error d-none"> Please Enter Valid Notice Status.</span>
+                                                                                    </div>
+
+                                                                                    @*Attendance Status*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Attendance Status")
+                                                                                        @Html.TextBoxFor(m => m.AttendanceStatus, new { @id = "attendance-status-invitee-member", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Attendance Status", @maxlength = 3, onkeyup = "ToTextCapitalize()", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.AttendanceStatus)
+                                                                                        <span id="attendance-status-invitee-member-error" class="error modal-input-error d-none"> Please Enter Valid Attendance Status.</span>
+                                                                                    </div>
+
+                                                                                    @*Note*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Note")
+                                                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-invitee-member", @class = "form-control default-none modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                                                        <span id="note-invitee-member-error" class="error modal-input-error d-none"> Please Enter Valid Note.</span>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" id="btn-add-invitee-member-modal" class="btn btn-success ">Add</button>
+                                                                                    <button type="button" id="btn-update-invitee-member-modal" class="btn btn-primary ">Update</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    @*Meeting Invitee Member Data Table*@
+                                                                    <div class="card-body">
+                                                                        <table id="tbl-invitee-member" class="table compact table-striped table-bordered text-nowrap" width="100%">
+                                                                            <thead class="text-center">
+                                                                                <tr>
+                                                                                    <th><input type="checkbox" name="select-all" id="select-all-invitee-member" /></th>
+                                                                                    <th class="d-none">CustomerSharesCapitalAccountId</th>
+                                                                                    <th>NameOfCustomerSharesCapitalAccount</th>
+                                                                                    <th>NoticeReferenceNumber</th>
+                                                                                    <th>NoticeStatus</th>
+                                                                                    <th>AttendanceStatus</th>
+                                                                                    <th>Note</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="text-center"></tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 4 - Meeting Notice*@
+                                            <div id="heading-meeting-notice" class="card mt-3">
+                                                <div class="card-header" id="meeting-notice-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-meeting-notice" data-target="#collapse-meeting-notice">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Meeting Notice")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="notice-data-table-error" class="error d-none"> This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-meeting-notice" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-meeting-notice" data-target="#collapse-meeting-notice">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-meeting-notice" class="collapse" aria-labelledby="heading-meeting-notice" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="card-body">
+                                                                    <div class="modal fade" id="notice-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h4 class="modal-title text-center">Add</h4>
+                                                                                    <button type="button" class="close-notice-modal" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    @*NoticeMedia*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Notice Media")
+                                                                                        @Html.DropDownListFor(m => m.NoticeMediaId, new SelectList(model.NoticeMediaDropdownList, "Value", "Text", 0), "--- Select Notice Media ---", new { @id = "notice-media-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.NoticeMediaId)
+                                                                                        <span id="notice-media-id-error" class="error modal-input-error d-none"> Please Select Notice Media.</span>
+                                                                                    </div>
+
+                                                                                    @*Schedule*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Schedule")
+                                                                                        @Html.DropDownListFor(m => m.ScheduleId, new SelectList(model.ScheduleDropdownList, "Value", "Text", 0), "--- Select Schedule ---", new { @id = "schedule-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.ScheduleId)
+                                                                                        <span id="schedule-id-error" class="error modal-input-error d-none"> Please Select Schedule.</span>
+                                                                                    </div>
+
+                                                                                    @*NoticeFormat*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Notice Format")
+                                                                                        @Html.DropDownListFor(m => m.MenuId, new SelectList(model.NoticeFormatDropdownList, "Value", "Text", 0), "--- Select Notice Format ---", new { @id = "notice-format-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.MenuId)
+                                                                                        <span id="notice-format-id-error" class="error modal-input-error d-none"> Please Select Notice Format.</span>
+                                                                                    </div>
+
+                                                                                    @*Note*@
+                                                                                    <div class="form-group">
+                                                                                        @Html.CustomLabel("Note")
+                                                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-meeting-notice", @class = "form-control default-none modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()", required = "required" })
+                                                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" id="btn-add-notice-modal" class="btn btn-success">Add</button>
+                                                                                    <button type="button" id="btn-update-notice-modal" class="btn btn-primary">Update</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <table id="tbl-notice" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100%">
+                                                                            <thead class="text-center">
+                                                                                <tr>
+                                                                                    <th><input type="checkbox" name="select-all" id="select-all-notice" /></th>
+                                                                                    <th class="d-none">NoticeMediaId</th>
+                                                                                    <th>NameOfNoticeMedia</th>
+                                                                                    <th class="d-none">ScheduleId</th>
+                                                                                    <th>NameOfSchedule</th>
+                                                                                    <th class="d-none">NoticeFormatId</th>
+                                                                                    <th>NameOfNoticeFormat</th>
+                                                                                    <th>Note</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="text-center"></tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Create", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+<script>
+    var saveDataTableUrl = '@Url.Action("SaveDataTables", "Meeting")';
+</script>
+
+/
+<script src="~/Scripts/Custom/Meeting.js"></script>

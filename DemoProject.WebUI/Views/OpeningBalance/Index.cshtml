@@ -1,0 +1,92 @@
+﻿@model DemoProject.Services.ViewModel.Account.Transaction.OpeningBalanceViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Transaction;
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("OPNIND");
+    OpeningBalanceViewModel openingBalanceViewModel = new OpeningBalanceViewModel();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Opening Balance</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+        @using (Html.BeginForm())
+        {
+            <div class="modal fade" id="add-modal-opening-balance" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title  text-center" id="userProfileBusinessOffice-text">Add</h4>
+                            <button type="button" id="closeuserProfileBusinessOffice" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @*GeneralLedger*@
+                            <div class="form-group">
+                                @Html.CustomLabel("General Ledger")
+                                @Html.DropDownListFor(m => m.GeneralLedgerId, new SelectList(openingBalanceViewModel.GeneralLedgerDropdownList, "Value", "Text", 0), "Select General Ledger", new { @id = "general-ledger-id", @class = "form-control mandatory-mark forScheme", @autocomplete = "off", required = "required" })
+                                @Html.ValidationMessageFor(m => m.GeneralLedgerId)
+                            </div>
+
+                            @*Hiddent Field For EntryStatus*@
+                            @Html.HiddenFor(m => m.EntryStatus, new { @id = "entrystatus" })
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btn-add-opening-balance" class="btn btn-success">Add</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            if (Model.EntryStatus == "NON")
+            {
+                @Html.Hidden("RedirectTo", Url.Action("Create", "OpeningBalance"));
+            }
+
+            else if (Model.EntryStatus == "AMN")
+            {
+                @Html.Hidden("RedirectTo", Url.Action("Verify", "OpeningBalance"));
+            }
+
+            else if (Model.EntryStatus == "REJ")
+            {
+                @Html.Hidden("RedirectTo", Url.Action("Amend", "OpeningBalance"));
+            }
+
+            else if (Model.EntryStatus == "VRF")
+            {
+                @Html.Hidden("RedirectTo", Url.Action("Modify", "OpeningBalance"));
+            }
+
+            @Html.OperationFooter("None", "Exit", "Home", "None")
+        }
+    </div>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        $("#add-modal-opening-balance").modal('show');
+    });
+
+    var getOpeningBalance = '@Url.Action("GetOpeningBalance", "OpeningBalance")';
+
+    var modelCustomerAccountUrl = '@Url.Action("GetCustomerAccount", "OpeningBalance")';
+
+    var getSchemeType = '@Url.Action("GetSchemeType", "OpeningBalance")';
+</script>
+<script src="~/Scripts/Custom/OpeningBalance.js"></script>

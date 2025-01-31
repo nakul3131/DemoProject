@@ -1,0 +1,412 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonAgricultureAssetViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.HtmlHelpers
+@{
+    PersonAgricultureAssetViewModel model = new PersonAgricultureAssetViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PAAAMN");
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>PersonAgricultureAsset - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm("Amend", "PersonAgricultureAsset", FormMethod.Post, new { enctype = "multipart/form-data", id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="modal fade" id="add-agriculture-document" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+
+                                                        <h4 class="modal-title  text-center" id="asset-text">Add</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @*AgricultureLandType*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Agriculture Land Type")
+                                                            @Html.DropDownListFor(m => m.AgricultureLandTypeId, new SelectList(model.AgricultureLandTypeDropdownList, "Value", "Text", 0), "-- Please Select Agriculture Land Type -- ", new { @id = "agriculture-land-type-id", @class = "form-control mandatory-mark", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.AgricultureLandTypeId)
+                                                        </div>
+
+                                                        @*AgricultureLandDescription*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Agriculture Land Description")
+                                                            @Html.TextBoxFor(m => m.AgricultureLandDescription, new { @id = "agriculture-land-description", @class = "form-control mandatory-mark text-capitalize", @placeholder = "Enter Agriculture Land Description", required = "required", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                            @Html.ValidationMessageFor(m => m.AgricultureLandDescription)
+                                                        </div>
+
+                                                        @*SurveyNumber*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Survey Number")
+                                                            @Html.TextBoxFor(m => m.SurveyNumber, new { @id = "survey-number", @class = "form-control mandatory-mark text-capitalize", @placeholder = "Enter Survey Number", required = "required", @maxlength = "50", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                            @Html.ValidationMessageFor(m => m.SurveyNumber)
+                                                        </div>
+
+                                                        @*GroupNumber*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Group Number")
+                                                            @Html.TextBoxFor(m => m.GroupNumber, new { @id = "group-number", @class = "form-control mandatory-mark text-capitalize", @placeholder = "Enter Group Number", required = "required", @maxlength = "50", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                            @Html.ValidationMessageFor(m => m.GroupNumber)
+                                                        </div>
+
+                                                        @*AreaOfLand*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Area Of Land")
+                                                            @Html.TextBoxFor(m => m.AreaOfLand, new { @id = "area-of-land", @class = "form-control mandatory-mark", @placeholder = "Enter Area Of Land", @type = "number", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.AreaOfLand)
+                                                        </div>
+
+                                                        @*Volume*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Volume")
+                                                            @Html.TextBoxFor(m => m.Volume, new { @id = "volume", @class = "form-control mandatory-mark", @placeholder = "Enter Volume", @type = "number", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.Volume)
+                                                        </div>
+
+                                                        @*OwnershipType*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Ownership Type")
+                                                            @Html.DropDownListFor(m => m.OwnershipTypeId, new SelectList(model.OwnershipTypeDropdownList, "Value", "Text", 0), "-- Please Select Ownership Type -- ", new { @id = "ownership-type-id", @class = "form-control mandatory-mark", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.OwnershipTypeId)
+                                                        </div>
+
+                                                        @*CurrentMarketValue*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Current Market Value")
+                                                            @Html.TextBoxFor(m => m.CurrentMarketValue, new { @id = "current-market-value", @class = "form-control mandatory-mark", @placeholder = "Enter Current Market Value", @type = "number", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.CurrentMarketValue)
+                                                        </div>
+
+                                                        @*IsOnlyRainFedTypeIrrigation*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Is Only Rain Fed Type Irrigation")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.IsOnlyRainFedTypeIrrigation, new { @id = "is-only-rain-fed-type-irrigation", @class = "form-control switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @*HasCanalRiverIrrigationSource*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Has Canal River Irrigation Source")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.HasCanalRiverIrrigationSource, new { @id = "has-canal-river-irrigation-source", @class = "form-control switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @*HasWellsIrrigationSource*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Has Wells Irrigation Source")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.HasWellsIrrigationSource, new { @id = "has-wells-irrigation-source", @class = "form-control switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @*HasFarmLakeSource*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Has Farm Lake Source")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.HasFarmLakeSource, new { @id = "has-farm-lake-source", @class = "form-control switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @*AnnualIncomeFromLand*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Annual Income From Land")
+                                                            @Html.TextBoxFor(m => m.AnnualIncomeFromLand, new { @id = "annual-income-from-land", @class = "form-control mandatory-mark", @placeholder = "Enter Annual Income From Land", @type = "number", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.AnnualIncomeFromLand)
+                                                        </div>
+
+                                                        @*HasAnyCourtCase*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Has Any Court Case")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.HasAnyCourtCase, new { @id = "has-any-court-case", @class = "form-control switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @*CourtCaseFullDetails*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Court Case Full Details")
+                                                            @Html.TextBoxFor(m => m.CourtCaseFullDetails, new { @id = "court-case-full-details", @class = "form-control mandatory-mark", @placeholder = "Enter Court Case Full Details", @type = "number", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.CourtCaseFullDetails)
+                                                        </div>
+
+                                                        @*HasAnyMortgage*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Has Any Mortgage")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.HasAnyMortgage, new { @id = "has-any-mortgage", @class = "form-control switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        @*IsOwnershipDeceased*@
+                                                        <div class="row form-group">
+                                                            <div class="col-10">
+                                                                @Html.CustomLabel("Is Ownership Deceased")
+                                                            </div>
+                                                            <div class="text-right">
+                                                                <label class="switch switch-left-right">
+                                                                    @Html.CheckBoxFor(m => m.IsOwnershipDeceased, new { @id = "is-ownership-deceased", @class = "form-control switch-input" })
+                                                                    <span class="slider round">
+                                                                        <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="@((Model.AgricultureAssetDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Photo")
+                                                                <div>
+                                                                    @Html.TextBoxFor(m => m.PhotoPathAgree, new { @id = "PhotoPathAgree", @class = "form-control text-capitalize", type = "file", name = "PhotoPath", onchange = "document.getElementById('imagepreview').src = window.URL.createObjectURL(this.files[0])", @autocomplete = "off", @placeholder = "Enter Photo", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PhotoPathAgree)
+                                                                </div>
+                                                            </div>
+                                                            <hr />
+                                                            <div><img id="imagepreview" src="" width="200" height="200" /></div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("FileCaption")
+                                                                @Html.TextBoxFor(m => m.FileCaption, new { @id = "file-caption", @class = "form-control text-capitalize default-none", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.FileCaption)
+                                                            </div>
+
+                                                            @*Hiddent Field For AgricultureAssetDocumentUpload*@
+                                                            @Html.HiddenFor(m => m.AgricultureAssetDocumentUpload, new { @id = "agriculture-asset-document-upload" })
+
+                                                            @*Hiddent Field For PersonAgricultureAssetDocumentPrmKey*@
+                                                            @Html.HiddenFor(m => m.EnableAgricultureAssetDocumentUploadInLocalStorage, new { @id = "enable-Agriculture-asset-document-upload" })
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" id="btn-add-agriculture-document" class="btn btn-success ">Add</button>
+                                                        <button type="button" id="btn-update-agriculture-document" class="btn btn-primary ">Update</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <table id="Agriculture-asset-document-table" class="table compact table-striped table-bordered" width="100">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th><input type="checkbox" name="check_all" id="select-all-asset-document" /></th>
+                                                        <th class="d-none">AgricultureLandType</th>
+                                                        <th>NameOfAgricultureLandType</th>
+                                                        <th>AgricultureLandDescription</th>
+                                                        <th>SurveyNumber</th>
+                                                        <th>GroupNumber</th>
+                                                        <th>AreaOfLand</th>
+                                                        <th>Volume</th>
+                                                        <th class="d-none">OwnershipType</th>
+                                                        <th>NameOfOwnershipType</th>
+                                                        <th>CurrentMarketValue</th>
+                                                        <th>IsOnlyRainFedTypeIrrigation</th>
+                                                        <th>HasCanalRiverIrrigationSource</th>
+                                                        <th>HasWellsIrrigationSource</th>
+                                                        <th>HasFarmLakeSource</th>
+                                                        <th>AnnualIncomeFromLand</th>
+                                                        <th>HasAnyCourtCase</th>
+                                                        <th>CourtCaseFullDetails</th>
+                                                        <th>HasAnyMortgage</th>
+                                                        <th>IsOwnershipDeceased</th>
+                                                        <th>Photopath</th>
+                                                        <th>Photo</th>
+                                                        <th>FileCaption</th>
+                                                        <th class="d-none">PrmKey</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="text-center">
+                                                    @{
+                                                        byte counter = 0;
+                                                        string photoId = "";
+                                                        string fileId = "";
+                                                        IEnumerable<PersonAgricultureAssetViewModel> personAgricultureAssetViewModels = (IEnumerable<PersonAgricultureAssetViewModel>)HttpContext.Current.Session["PersonAgricultureAsset"];
+
+                                                        foreach (PersonAgricultureAssetViewModel viewModel in personAgricultureAssetViewModels)
+                                                        {
+                                                            counter += 1;
+                                                            photoId = "photo-id" + counter.ToString();
+                                                            fileId = "file-id" + counter.ToString();
+                                                            <tr>
+                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                <td class="d-none">@viewModel.AgricultureLandTypeId</td>
+                                                                <td>@viewModel.NameOfAgricultureLandType</td>
+                                                                <td>@viewModel.AgricultureLandDescription</td>
+                                                                <td>@viewModel.SurveyNumber</td>
+                                                                <td>@viewModel.GroupNumber</td>
+                                                                <td>@viewModel.AreaOfLand</td>
+                                                                <td>@viewModel.Volume</td>
+                                                                <td class="d-none">@viewModel.OwnershipTypeId</td>
+                                                                <td>@viewModel.NameOfOwnershipType</td>
+                                                                <td>@viewModel.CurrentMarketValue</td>
+                                                                <td>@viewModel.IsOnlyRainFedTypeIrrigation</td>
+                                                                <td>@viewModel.HasCanalRiverIrrigationSource</td>
+                                                                <td>@viewModel.HasWellsIrrigationSource</td>
+                                                                <td>@viewModel.HasFarmLakeSource</td>
+                                                                <td>@viewModel.AnnualIncomeFromLand</td>
+                                                                <td>@viewModel.HasAnyCourtCase</td>
+                                                                <td>@viewModel.CourtCaseFullDetails</td>
+                                                                <td>@viewModel.HasAnyMortgage</td>
+                                                                <td>@viewModel.IsOwnershipDeceased</td>
+                                                                <td>
+                                                                    <input type="file" id=@fileId name="DocPath" disabled />
+                                                                </td>
+                                                                <td>
+                                                                    @if (viewModel.EnableAgricultureAssetDocumentUploadInLocalStorage == true)
+                                                                    {
+                                                                        <img src="~/Document/Person/@viewModel.NameOfFile" id=@photoId width="50" height="50" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                        var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                        <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                        string filename = Path.GetFileName(imgsrc);
+                                                                    }
+                                                                </td>
+                                                                <td>@viewModel.FileCaption</td>
+                                                                <td class="d-none">@viewModel.PersonAgricultureAssetDocumentPrmKey</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control text-capitalize", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*Hiddent Field For PersonPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                        @*Hiddent Field For PersonAgricultureAssetPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonAgricultureAssetPrmKey)
+
+                                        @*Hiddent Field For PersonAgricultureAssetDocumentPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonAgricultureAssetDocumentPrmKey)
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Amend", "SaveAgricultureDataTables", "PersonAgricultureAsset", "None")
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    debugger;
+    var SaveAgreeDataTables = '@Url.Action("SaveAgricultureDataTables", "PersonAgricultureAsset")';
+
+</script>
+<script>
+    var GetDocumentValidationFields = '@Url.Action("GetDocumentValidationFields", "PersonAgricultureAsset")';
+    debugger;
+
+</script>
+<script src="~/Scripts/Custom/PersonAgricultureAsset.js"></script>

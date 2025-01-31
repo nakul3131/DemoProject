@@ -1,0 +1,433 @@
+﻿@model DemoProject.Services.ViewModel.Account.Parameter.DepositSchemeParameterViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Account.Parameter
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("DSPAMN");
+    DepositSchemeParameterViewModel viewModel = new DepositSchemeParameterViewModel();
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Deposit Scheme Parameter - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title If Screen Large Then Column - 12 Otherwise Col - 6 For Create And Remaining For Translation*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checkar Remark")
+                                            @Html.TextBoxFor(m => m.Remark, new { @id = "name-of-center", @class = "form-control mandatory-mark " })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*Effective Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Effective Date")
+                                            @Html.TextBoxFor(m => m.EffectiveDate, "{0:yyyy-MM-dd}", new { @id = "Effective Date", @class = "form-control mandatory-mark deny-past-date deny-next-financial-year-date", @Type = "date", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.EffectiveDate)
+                                        </div>
+
+                                        @*EnableLockInPeriodParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable LockIn Period Parameter ")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableLockInPeriodParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableTenureListParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Tenure List Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableTenureListParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableApplicationParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Application Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableApplicationParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableDepositCertificateParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Deposit Certificate Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableDepositCertificateParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnablePassbookParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Passbook Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnablePassbookParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableAgentIncentiveParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Agent Incentive Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableAgentIncentiveParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableBankingChannelParameter*@
+                                        <div class="row form-group @(viewModel.HasCoreBankingFeature ? "" : "d-none")">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Banking Channel Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableBankingChannelParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableBusinessOfficeParameter*@
+                                        <div class="row form-group @(viewModel.NumberOfBranches == 0 ? "d-none" : "")">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Business Office Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableBusinessOfficeParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableSmsServiceParameter Visible Only If App Enable SMS Service Features*@
+                                        <div class="row form-group @(viewModel.IsEnabledSmsService ? "" : "d-none")">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Sms Service Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableSmsServiceParameter, new { @id = "enable-sms-service", @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableEmailServiceParameter Visible Only If App Enable Email Service Features*@
+                                        <div class="row form-group @(viewModel.IsEnabledEmailService ? "" : "d-none")">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Email Service Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableEmailServiceParameter, new { @id = "enable-email-service", @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableNoticeScheduleParameter Visible Only If App Enable Sms Or Email Service Features*@
+                                        <div id="notice-schedule" class="row form-group @(viewModel.IsEnabledSmsService || viewModel.IsEnabledEmailService ? "" : "d-none")">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Notice Schedule Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableNoticeScheduleParameter, new { @id = "enable-notice-schedule", @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableClosingChargesParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Closing Charges Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableClosingChargesParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableTargetGroupParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Target Group Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableTargetGroupParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableTargetEstimationParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Target Estimation Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableTargetEstimationParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableNumberOfTransactionLimitParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Number Of Transaction Limit Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableNumberOfTransactionLimitParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableTransactionAmountLimitParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Transaction Amount Limit Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableTransactionAmountLimitParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableReportFormatParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Report Format Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableReportFormatParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableLimitParameter*@
+                                        <div class="row form-group">
+                                            <div class="col-8">
+                                                @Html.CustomLabel("Enable Limit Parameter")
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableLimitParameter, new { @class = "form-control switch-input" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control default-none deny-multiple-space", @placeholder = "Enter Note", @autocomplete = "off", @maxlength = "1500", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*ReasonForModification*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reason For Modification")
+                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control default-none deny-multiple-space", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Hiddent Field For PrmKey*@
+                            @Html.HiddenFor(m => m.PrmKey)
+
+                            @*Hiddent Field For SharesCapitalSchemeParameterPrmKey*@
+                            @Html.HiddenFor(m => m.DepositSchemeParameterPrmKey)
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $('#enable-sms-service').change(function () {
+        if ($(this).is(':checked')) {
+            $('#notice-schedule').removeClass('d-none');
+            $('#enable-notice-schedule').prop('checked', false);
+        }
+        else if ($('#enable-email-service').is(':checked') == false)
+            $('#notice-schedule').addClass('d-none');
+        $('#enable-notice-schedule').prop('checked', false);
+    })
+
+    $('#enable-email-service').change(function () {
+        if ($(this).is(':checked')) {
+            $('#notice-schedule').removeClass('d-none');
+            $('#enable-notice-schedule').prop('checked', false);
+        }
+        else if ($('#enable-sms-service').is(':checked') == false)
+            $('#notice-schedule').addClass('d-none');
+        $('#enable-notice-schedule').prop('checked', false);
+    })
+</script>

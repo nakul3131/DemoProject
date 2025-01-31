@@ -1,0 +1,2334 @@
+﻿@using DemoProject.Services.ViewModel.Configuration
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_DashBoard.cshtml";
+    LanguageViewModel languageViewModel = new LanguageViewModel();
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
+    <style>
+        .c-dashboardInfo {
+            margin-bottom: 15px;
+        }
+
+            .c-dashboardInfo .wrap {
+                background: #ffffff;
+                box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+                border-radius: 7px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+                padding: 40px 25px 20px;
+                height: 100%;
+            }
+
+        .c-dashboardInfo__title,
+        .c-dashboardInfo__subInfo {
+            color: #6c6c6c;
+            font-size: 1.18em;
+        }
+
+        .c-dashboardInfo span {
+            display: block;
+        }
+
+        .c-dashboardInfo__count {
+            font-weight: 600;
+            font-size: 2.5em;
+            line-height: 64px;
+            color: #323c43;
+        }
+
+        .c-dashboardInfo .wrap:after {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            content: "";
+        }
+
+        .c-dashboardInfo:nth-child(1) .wrap:after {
+            background: linear-gradient(82.59deg, #00c48c 0%, #00a173 100%);
+        }
+
+        .c-dashboardInfo:nth-child(2) .wrap:after {
+            background: linear-gradient(81.67deg, #0084f4 0%, #1a4da2 100%);
+        }
+
+        .c-dashboardInfo:nth-child(3) .wrap:after {
+            background: linear-gradient(69.83deg, #0084f4 0%, #00c48c 100%);
+        }
+
+        .c-dashboardInfo:nth-child(4) .wrap:after {
+            background: linear-gradient(81.67deg, #ff647c 0%, #1f5dc5 100%);
+        }
+
+        .c-dashboardInfo__title svg {
+            color: #d7d7d7;
+            margin-left: 5px;
+        }
+
+        .MuiSvgIcon-root-19 {
+            fill: currentColor;
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            font-size: 24px;
+            transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .widget-content {
+            padding: 1rem;
+            flex-direction: row;
+            align-items: center
+        }
+
+            .widget-content .widget-content-wrapper {
+                display: flex;
+                flex: 1;
+                position: relative;
+                align-items: center
+            }
+
+            .widget-content .widget-content-left .widget-heading {
+                opacity: .8;
+                font-weight: 700
+            }
+
+            .widget-content .widget-content-left .widget-subheading {
+                opacity: .5
+            }
+
+            .widget-content .widget-content-right {
+                margin-left: auto
+            }
+
+            .widget-content .widget-numbers {
+                font-weight: 700;
+                font-size: 1.8rem;
+                display: block
+            }
+
+            .widget-content .widget-content-outer {
+                display: flex;
+                flex: 1;
+                flex-direction: column
+            }
+
+            .widget-content .widget-progress-wrapper {
+                margin-top: 1rem
+            }
+
+                .widget-content .widget-progress-wrapper .progress-sub-label {
+                    margin-top: .33333rem;
+                    opacity: .5;
+                    display: flex;
+                    align-content: center;
+                    align-items: center
+                }
+
+                    .widget-content .widget-progress-wrapper .progress-sub-label .sub-label-right {
+                        margin-left: auto
+                    }
+
+            .widget-content .widget-content-right.widget-content-actions {
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity .2s
+            }
+
+            .widget-content:hover .widget-content-right.widget-content-actions {
+                visibility: visible;
+                opacity: 1
+            }
+    </style>
+
+
+</head>
+<body>
+    <div class="container-fluid ml-2 mr-2">
+        @{
+            string id = Convert.ToString(HttpContext.Current.Request.RequestContext.HttpContext.Session["UserProfilePrmKey"]);
+
+            switch (id)
+            {
+                case "11":
+
+                    <div class="row mt-4 mb-3">
+                        <div class="col-md-3  col-xs-4">
+                            <div class="card text-center shadow">
+                                <div class="card-body card-counter primary">
+                                    <div class="col-xs-3 pull-left">
+                                        <span class="icon"><i class="fa fa-code-fork"></i></span>
+                                    </div>
+                                    <span class="count-numbers pull-right" data-value="67">67</span>
+                                    <span class="count-name pull-right mt-1">Panding <span class="prec"></span></span>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    <span class="pull-left count-text " style="margin-top:-1%;">View Details</span>
+                                    <span class="pull-right" style="margin-top:-1%;"><a href="#"><i class="fa fa-arrow-circle-right"></i></a></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center shadow">
+                                <div class="card-body card-counter danger">
+                                    <div class="col-xs-3 pull-left">
+                                        <span class="icon"><i class="fa fa-comments"></i></span>
+                                    </div>
+                                    <span class="count-numbers pull-right" data-value="55" id="count">55</span>
+                                    <span class="count-name pull-right mt-1">Flowz <span class="prec"></span></span>
+                                </div>
+
+                                <div class="card-footer text-muted">
+                                    <span class="pull-left count-text " style="margin-top:-1%;">View Details</span>
+                                    <span class="pull-right" style="margin-top:-1%;"><a href="#"><i class="fa fa-arrow-circle-right text-danger"></i></a></span>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center shadow">
+                                <div class="card-body card-counter  success">
+                                    <div class="col-xs-3 pull-left">
+                                        <span class="icon"><i class="fa fa-database"></i></span>
+                                    </div>
+                                    <span class="count-numbers pull-right">96</span>
+                                    <span class="count-name pull-right">Flowz</span>
+
+                                </div>
+                                <div class="card-footer text-muted">
+                                    <span class="pull-left count-text " style="margin-top:-1%;">View Details</span>
+                                    <span class="pull-right" style="margin-top:-1%;"><a href="#"><i class="fa fa-arrow-circle-right text-success"></i></a></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center shadow">
+                                <div class="card-body card-counter  info">
+                                    <div class="col-xs-3 pull-left">
+                                        <span class="icon"><i class="fa fa-users"></i></span>
+                                    </div>
+                                    <span class="count-numbers pull-right">7</span>
+                                    <span class="count-name pull-right">User</span>
+
+                                </div>
+                                <div class="card-footer text-muted">
+                                    <span class="pull-left count-text " style="margin-top:-1%;">View Details</span>
+                                    <span class="pull-right" style="margin-top:-1%;"><a href="#"><i class="fa fa-arrow-circle-right text-info"></i></a></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                            <div class="card bg-white shadow">
+                                <div class="card-header bg-white">
+                                    <i class="fas fa-calendar"></i>
+                                    Calendar
+
+                                    <button class="fa fa-minus btn btn-sm badge-info float-right mr-2 " aria-hidden="true" data-toggle="collapse" href="#multiCollapseExample1" le="button" aria-expanded="false" aria-controls="multiCollapseExample1"></button>
+
+                                    <button class="fa fa-bars btn  btn-sm badge-info   float-right mr-2 " data-toggle="dropdown" id="dropdownMenu"></button>
+
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                        <a class="dropdown-item" href="@Url.Action("UnverifiedIndex", "Designation")">Add new event</a>
+                                        <button class="dropdown-item" type="button">Clear events</button>
+                                        <button class="dropdown-item" type="button">View calendar</button>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="multiCollapseExample1">
+                                    <!-- Tab panes -->
+                                    <div class="box-body no-padding">
+                                        <!--The calendar -->
+                                        <div id="calender"></div>
+                                    </div><!-- /.box-body -->
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="card bg-white shadow" id="timlinecard">
+                                <div class="card-header bg-white">
+                                    <i class="fa fa-clock"></i> TimeLine
+                                    <button class="fa fa-minus btn btn-sm badge-info float-right mr-2 " aria-hidden="true" data-toggle="collapse" href="#multiCollapseExample2" le="button" aria-expanded="false" aria-controls="multiCollapseExample2"></button>
+
+                                    <button class="fa fa-bars btn  btn-sm badge-info   float-right mr-2 " data-toggle="dropdown" id="dropdownMenu"></button>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                                        <a class="dropdown-item" href="@Url.Action("UnverifiedIndex", "Designation")">Action</a>
+                                        <button class="dropdown-item" type="button">Another action</button>
+                                        <button class="dropdown-item" type="button">Something else here</button>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="multiCollapseExample2">
+
+                                    <ul class="timeline">
+
+                                        <li class="timeline-item ">
+                                            <div class="timeline-badge"><a></a></div>
+                                            <div class="timeline-panel bg-white rounded shadow">
+                                                <div class="timeline-heading"><span style="font-family:'Javanese Text';font-style:italic;"> Scs PathPranali</span></div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-item">
+                                            <div class="timeline-badge"><a href="#"></a></div>
+                                            <div class="timeline-panel bg-white rounded  shadow">
+                                                <div class="timeline-heading">
+                                                    <div class="timeline-date"><i class="fa fa-clock-o"></i> <span style="font-family:'Javanese Text';font-style:italic;color:#242424;"> July 19, 2021</span></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-item">
+                                            <div class="timeline-badge"><a href="#"></a></div>
+                                            <div class="timeline-panel bg-white rounded  shadow">
+                                                <div id="services" class="timeline-heading"><span style="font-family:'Javanese Text';font-style:italic;color:#242424;"> July 19, 2021</span></div>
+                                                <div class="timeline-content">
+                                                    <p>Eu pid nunc urna integer, Massa vut, habitasse, tincidunt!</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-item">
+                                            <div class="timeline-badge"><a href="#"></a></div>
+                                            <div class="timeline-panel bg-white rounded  shadow">
+                                                <div class="timeline-heading">
+                                                    Minor Update
+                                                    <div class="timeline-date"><i class="fa fa-clock-o"></i><span style="font-family:'Javanese Text';font-style:italic;color:#242424;"> July 19, 2021</span></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-item">
+                                            <div class="timeline-badge"><a href="#"></a></div>
+                                            <div class="timeline-panel bg-white rounded  shadow">
+                                                <div id="services" class="timeline-heading">Services Timeline</div>
+                                                <div class="timeline-content">
+                                                    <p>Eu pid nunc urna,<span style="font-family:'Javanese Text';font-style:italic;color:#242424;">CBS Pathpranil </span></p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="timeline-item">
+                                            <div class="timeline-badge"><a href="#"></a></div>
+                                            <div class="timeline-panel bg-white rounded  shadow">
+                                                <div class="timeline-heading">
+                                                    Minor Update
+
+                                                    <div class="timeline-date"><i class="fa fa-clock-o"></i> <span style="font-family:'Javanese Text';font-style:italic;color:#242424;"> July 19, 2021</span></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    break;
+                case "4":                    
+                    <div id="root">
+                        <div class="row align-items-stretch pt-5">
+                            <div class="c-dashboardInfo col-lg-3 col-md-6">
+                                <div class="wrap">
+                                    <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                        Portfolio Balance<svg class="MuiSvgIcon-root-19" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                                            <path fill="none" d="M0 0h24v24H0z"></path>
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                            </path>
+                                        </svg>
+                                    </h4><span class="hind-font caption-12 c-dashboardInfo__count">₹10,500</span>
+                                </div>
+                            </div>
+                            <div class="c-dashboardInfo col-lg-3 col-md-6">
+                                <div class="wrap">
+                                    <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                        Rental income<svg class="MuiSvgIcon-root-19" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                                            <path fill="none" d="M0 0h24v24H0z"></path>
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                            </path>
+                                        </svg>
+                                    </h4><span class="hind-font caption-12 c-dashboardInfo__count">₹500</span><span class="hind-font caption-12 c-dashboardInfo__subInfo">Last month: €30</span>
+                                </div>
+                            </div>
+                            <div class="c-dashboardInfo col-lg-3 col-md-6">
+                                <div class="wrap">
+                                    <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                        Available funds<svg class="MuiSvgIcon-root-19" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                                            <path fill="none" d="M0 0h24v24H0z"></path>
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                            </path>
+                                        </svg>
+                                    </h4><span class="hind-font caption-12 c-dashboardInfo__count">₹5000</span>
+                                </div>
+                            </div>
+                            <div class="c-dashboardInfo col-lg-3 col-md-6">
+                                <div class="wrap">
+                                    <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                        Rental return<svg class="MuiSvgIcon-root-19" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                                            <path fill="none" d="M0 0h24v24H0z"></path>
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                            </path>
+                                        </svg>
+                                    </h4><span class="hind-font caption-12 c-dashboardInfo__count">6,40%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Area Chart -->
+                    <div class="row my-3">
+                        <div class="col">
+                            <h4></h4>
+                        </div>
+                    </div>
+
+                    <div class="row my-2">
+                        <div class="col-md-6 py-1">
+                            <div class="card">
+                                <h5 class="card-header d-flex justify-content-between align-items-center">
+                                    Title
+                                    <select id="searchDateRange" class="float-right form-control w-25">
+                                        <option value=" All" selected="selected">All</option>
+                                        <option value=" day">Today</option>
+                                        <option value="1 days">Yesterday</option>
+                                        <option value="7 days">7 days</option>
+                                        <option value="30 days">30 days</option>
+                                        <option value="60 days">60 days</option>
+                                        <option value="90 days">90 days</option>
+                                        <option value="1 year">1 year</option>
+                                        <option value="this Month">This Month</option>
+                                    </select>
+                                </h5>
+                                <div class="card-body">
+                                    <canvas id="chBar"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 py-1">
+                            <div class="card">
+                                <h5 class="card-header d-flex justify-content-between align-items-center">
+                                    Title
+                                    <select id="searchDateRange1" class="float-right form-control w-25">
+                                        <option value=" day" selected="selected">Today</option>
+                                        <option value="1 days">Yesterday</option>
+                                        <option value="7 days">7 days</option>
+                                        <option value="30 days">30 days</option>
+                                        <option value="60 days">60 days</option>
+                                        <option value="90 days">90 days</option>
+                                        <option value="1 year">1 year</option>
+                                        <option value="this Month">This Month</option>
+                                    </select>
+                                    @*<input id="searchDateRange1" />*@
+                                </h5>
+                                <div class="card-body">
+                                    <canvas id="chLine"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row py-2">
+                        <div class="col-md-4 py-1">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    Featured
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="chDonut1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 py-1">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    Featured
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="chDonut2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 py-1">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    Featured
+                                </div>
+                                <div class="card-body">
+                                    @*<div id="container1"></div>*@
+                                    <canvas id="myChart"></canvas>
+                                    @*<div id="container1211" style="width: 350px; height: 350px; margin: 0 auto"></div>*@
+                                    @*<canvas id="chDonut3"></canvas>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="main-card mb-3 card">
+                                <div class="card-header">
+                                    Active Users
+                                    <div class="btn-actions-pane-right float-right">
+                                        <div role="group" class="btn-group-sm btn-group">
+                                            <button class="active btn btn-focus bg-light">Last Week</button>
+                                            <button class="btn btn-focus">All Month</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Name</th>
+                                                <th class="text-center">City</th>
+                                                <th class="text-center">Status</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center text-muted">#345</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="widget-content-left">
+                                                                    @*<img width="40" class="rounded-circle" src="assets/images/avatars/4.jpg" alt="">*@
+                                                                </div>
+                                                            </div>
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">John Doe</div>
+                                                                <div class="widget-subheading opacity-7">Web Developer</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">Pune</td>
+                                                <td class="text-center">
+                                                    <div class="badge badge-warning">Pending</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center text-muted">#347</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="widget-content-left">
+                                                                    @*<img width="40" class="rounded-circle" src="assets/images/avatars/3.jpg" alt="">*@
+                                                                </div>
+                                                            </div>
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">Mumbai</div>
+                                                                <div class="widget-subheading opacity-7">Etiam sit amet orci eget</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">Phaltan</td>
+                                                <td class="text-center">
+                                                    <div class="badge badge-success">Completed</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" id="PopoverCustomT-2" class="btn btn-primary btn-sm">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center text-muted">#321</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="widget-content-left">
+                                                                    @*<img width="40" class="rounded-circle" src="assets/images/avatars/2.jpg" alt="">*@
+                                                                </div>
+                                                            </div>
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">Elliot Huber</div>
+                                                                <div class="widget-subheading opacity-7">Lorem ipsum dolor sic</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">Satara</td>
+                                                <td class="text-center">
+                                                    <div class="badge badge-danger">In Progress</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" id="PopoverCustomT-3" class="btn btn-primary btn-sm">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center text-muted">#55</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="widget-content-left">
+                                                                    @*<img width="40" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">*@
+                                                                </div>
+                                                            </div>
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">Vinnie Wagstaff</div>
+                                                                <div class="widget-subheading opacity-7">UI Designer</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">Amsterdam</td>
+                                                <td class="text-center">
+                                                    <div class="badge badge-info">On Hold</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" id="PopoverCustomT-4" class="btn btn-primary btn-sm">Details</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    break;
+
+                case "5":
+                    <div id="root">
+                        <div class="row align-items-stretch pt-5">
+                            <div class="c-dashboardInfo col-lg-3 col-md-6">
+                                <div class="wrap">
+                                    <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                        Portfolio Balance<svg class="MuiSvgIcon-root-19" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                                            <path fill="none" d="M0 0h24v24H0z"></path>
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                            </path>
+                                        </svg>
+                                    </h4><span class="hind-font caption-12 c-dashboardInfo__count">₹10,500</span>
+                                </div>
+                            </div>
+                            <div class="c-dashboardInfo col-lg-3 col-md-6">
+                                <div class="wrap">
+                                    <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                        Rental income<svg class="MuiSvgIcon-root-19" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                                            <path fill="none" d="M0 0h24v24H0z"></path>
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                            </path>
+                                        </svg>
+                                    </h4><span class="hind-font caption-12 c-dashboardInfo__count">₹500</span><span class="hind-font caption-12 c-dashboardInfo__subInfo">Last month: €30</span>
+                                </div>
+                            </div>
+                            <div class="c-dashboardInfo col-lg-3 col-md-6">
+                                <div class="wrap">
+                                    <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                        Available funds<svg class="MuiSvgIcon-root-19" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                                            <path fill="none" d="M0 0h24v24H0z"></path>
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                            </path>
+                                        </svg>
+                                    </h4><span class="hind-font caption-12 c-dashboardInfo__count">₹5000</span>
+                                </div>
+                            </div>
+                            <div class="c-dashboardInfo col-lg-3 col-md-6">
+                                <div class="wrap">
+                                    <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                        Rental return<svg class="MuiSvgIcon-root-19" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                                            <path fill="none" d="M0 0h24v24H0z"></path>
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                            </path>
+                                        </svg>
+                                    </h4><span class="hind-font caption-12 c-dashboardInfo__count">6,40%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Area Chart -->
+
+                    <div class="row my-3">
+                        <div class="col">
+                            <h4></h4>
+                        </div>
+                    </div>
+
+                    <div class="row my-2">
+                        <div class="col-md-6 py-1">
+                            <div class="card">
+                                <h5 class="card-header d-flex justify-content-between align-items-center">
+                                    Title
+                                    <select id="searchDateRange" class="float-right form-control w-25">
+                                        <option value=" All" selected="selected">All</option>
+                                        <option value=" day">Today</option>
+                                        <option value="1 days">Yesterday</option>
+                                        <option value="7 days">7 days</option>
+                                        <option value="30 days">30 days</option>
+                                        <option value="60 days">60 days</option>
+                                        <option value="90 days">90 days</option>
+                                        <option value="1 year">1 year</option>
+                                        <option value="this Month">This Month</option>
+                                    </select>
+                                </h5>
+                                <div class="card-body">
+                                    <canvas id="chBar"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 py-1">
+                            <div class="card">
+                                <h5 class="card-header d-flex justify-content-between align-items-center">
+                                    Title
+                                    <select id="searchDateRange1" class="float-right form-control w-25">
+                                        <option value=" day" selected="selected">Today</option>
+                                        <option value="1 days">Yesterday</option>
+                                        <option value="7 days">7 days</option>
+                                        <option value="30 days">30 days</option>
+                                        <option value="60 days">60 days</option>
+                                        <option value="90 days">90 days</option>
+                                        <option value="1 year">1 year</option>
+                                        <option value="this Month">This Month</option>
+                                    </select>
+                                    @*<input id="searchDateRange1" />*@
+                                </h5>
+                                <div class="card-body">
+                                    <canvas id="chLine"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row py-2">
+                        <div class="col-md-4 py-1">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    Featured
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="chDonut1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 py-1">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    Featured
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="chDonut2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 py-1">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    Featured
+                                </div>
+                                <div class="card-body">
+                                    @*<div id="container1"></div>*@
+                                    <canvas id="myChart"></canvas>
+                                    @*<div id="container1211" style="width: 350px; height: 350px; margin: 0 auto"></div>*@
+                                    @*<canvas id="chDonut3"></canvas>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="main-card mb-3 card">
+                                <div class="card-header">
+                                    Active Users
+                                    <div class="btn-actions-pane-right float-right">
+                                        <div role="group" class="btn-group-sm btn-group">
+                                            <button class="active btn btn-focus bg-light">Last Week</button>
+                                            <button class="btn btn-focus">All Month</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Name</th>
+                                                <th class="text-center">City</th>
+                                                <th class="text-center">Status</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center text-muted">#345</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="widget-content-left">
+                                                                    @*<img width="40" class="rounded-circle" src="assets/images/avatars/4.jpg" alt="">*@
+                                                                </div>
+                                                            </div>
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">John Doe</div>
+                                                                <div class="widget-subheading opacity-7">Web Developer</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">Pune</td>
+                                                <td class="text-center">
+                                                    <div class="badge badge-warning">Pending</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center text-muted">#347</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="widget-content-left">
+                                                                    @*<img width="40" class="rounded-circle" src="assets/images/avatars/3.jpg" alt="">*@
+                                                                </div>
+                                                            </div>
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">Mumbai</div>
+                                                                <div class="widget-subheading opacity-7">Etiam sit amet orci eget</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">Phaltan</td>
+                                                <td class="text-center">
+                                                    <div class="badge badge-success">Completed</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" id="PopoverCustomT-2" class="btn btn-primary btn-sm">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center text-muted">#321</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="widget-content-left">
+                                                                    @*<img width="40" class="rounded-circle" src="assets/images/avatars/2.jpg" alt="">*@
+                                                                </div>
+                                                            </div>
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">Elliot Huber</div>
+                                                                <div class="widget-subheading opacity-7">Lorem ipsum dolor sic</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">Satara</td>
+                                                <td class="text-center">
+                                                    <div class="badge badge-danger">In Progress</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" id="PopoverCustomT-3" class="btn btn-primary btn-sm">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center text-muted">#55</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="widget-content-left">
+                                                                    @*<img width="40" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">*@
+                                                                </div>
+                                                            </div>
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">Vinnie Wagstaff</div>
+                                                                <div class="widget-subheading opacity-7">UI Designer</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">Amsterdam</td>
+                                                <td class="text-center">
+                                                    <div class="badge badge-info">On Hold</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" id="PopoverCustomT-4" class="btn btn-primary btn-sm">Details</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    break;
+                default:
+                    //Admin layout
+
+                    <!-- Shares Capital -->
+                    <div class="card shadow mt-4">
+                        <!-- First Row -->
+                        <div class="row mt-5 mb-3 ml-1 mr-1">
+                            <!-- Total Members -->
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <h6 class="card-title text-muted float-left" data-toggle="tooltip" data-placement="right" title="एकूण सदस्य">TOTAL MEMEBERS</h6><br />
+                                                <div class="mt-2 mb-0 font-weight-bold text-success" style="font-size:2.1em;">12.5K</div>
+                                            </div>
+
+                                            <div class="col-2">
+                                                <div class="icons icon-shape bg-success text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-people-group"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <p class="mt-2 mb-0 text-right text-muted text-sm mytext">
+                                            <span class="text-success ml-4" id="up"><i class="fa fa-arrow-up"> </i> 3.48% </span>
+                                            <span class="text-danger ml-3" id="down"><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            <span class="text-nowrap textname ml-2" onclick="getdates()">since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Active Members -->
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <h5 class="card-title text-behance text-muted mb-0 float-left" data-toggle="tooltip" data-placement="right" title="सक्रिय सदस्य">ACTIVE MEMBERS</h5><br />
+                                                <span class="font-weight-bold mb-0" style="font-size:2.1em;">20.5K</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="icons icon-shape bg-behance text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-user-tie"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm ">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 1.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap textname" onclick="getdates()">since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Inactive Members -->
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0 float-left" data-toggle="tooltip" data-placement="right" title="निष्क्रिय सदस्य">Inactive Members</h5><br />
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">10.5 K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-warning text-white rounded-circle shadow">
+                                                    <i class="fa-regular fa-user"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 1.10%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 12.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since yesterday</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--  Second Row  -->
+                        <div class="row mt-4  mb-3 ml-1 mr-1 ">
+                            <!--  New Members  -->
+                            <div class="col-xl-4 col-md-6 float-md-right">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">New Member</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;" data-value="10.4">30.55 K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-lite-green text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-user-plus"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 12%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 17.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--  Resigned Members  -->
+                            <div class="col-xl-4 col-md-6 float-md-right pb-4">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Resigned Members</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">33.5 K</span>
+                                            </div>
+
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-danger text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-user-minus"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 12%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 17.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--  Total Nominal Members  -->
+                            <div class="col-xl-4 col-md-6 float-md-right pb-4">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Total Nominal Members</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">1.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-info text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-user-clock"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 12%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 17.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow mt-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <div class="col-xl-3 col-lg-6">
+                                <img src="~/Images/Fund-PNG-Cutout.png" class="float-left" width="70" height="70" data-toggle="tooltip" data-placement="right" title="Deposit/ठेव" />
+                                @*<i class="fas fa-sack-dollar fa-3x fa-3x float-left text-primary" data-toggle="tooltip" data-placement="right" title="Deposit/ठेव"></i>*@
+
+                            </div>
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="card-title text-muted mb-0 text-md-left ml-5 h5">Recipt</h4>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted">
+                                    <span class="text-success mr-2 h4 font-weight-bold text-md-left" style="font-size:1.9em;"><i class="fas fa-arrow-up"></i> 20.44K</span>
+                                </p>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 ">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="card-title  text-muted mb-0 text-md-center ml-4 h5"> Withdrawal </h4>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-md-center">
+                                    <span class="text-danger mr-2 h4 font-weight-bold" style="font-size:1.9em;"><i class="fas fa-arrow-down"></i> 12.33K</span>
+                                </p>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 ">
+                                <div class="row">
+                                    <div class="col ml-5">
+                                        <h4 class="card-title text-muted mb-0 mr-5 text-md-right h5">Balance</h4>
+                                        <p class="mt-3 mb-0 text-muted text-md-right mr-2">
+                                            <span class="text-primary mr-1 h2 font-weight-bold " style="font-size:1.9em;"> 40.33K</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="row mt-5 mb-3 ml-1 mr-1">
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">FD</h5>
+                                                <span class="h2 font-weight-bold mb-0 " style="font-size:1.7em;">12.5K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-success text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-money-bill"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success" id="up"><i class="fa fa-arrow-up"> </i> 3.48% </span>
+                                            <span class="text-danger" id="down"><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            <span class="text-nowrap textname ml-2 " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">RD</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">2.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-behance text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-coins"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm ">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname" onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">pigmi</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">9.2K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape l-bg-cherry text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-piggy-bank"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 1.10%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 12.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since yesterday</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mt-4  mb-3 ml-1 mr-1 ">
+                            <div class="col-xl-4 col-md-6 float-md-right">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Current</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">1.3K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-orenge text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-money-bill-transfer"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 12%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 17.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-md-6 float-md-right pb-4">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Saving</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">1.3K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-info text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-wallet"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 12%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 17.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-md-6 float-md-right pb-4">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">call Deposit</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">1.3K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape l-bg-orange text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-phone"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 12%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 17.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card shadow ">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <div class="col-xl-3 col-lg-6" style="color:#DC7633">
+                                @*<img src="~/Images/hand-money-rupee-coin-icon.png" class="float-left" width="70" height="70" data-toggle="tooltip" data-placement="right" title="Loan/कर्ज" />*@
+                                @*<i class="fa-solid fa-hand-holding-dollar fa-3x float-left" data-toggle="tooltip" data-placement="right" title="Loan/कर्ज"></i>*@
+                                <img src="~/Images/imgbin_mutual-fund-investment-funding-finance-company-png.png" class="float-left" width="70" height="70" data-toggle="tooltip" data-placement="right" title="Loan/कर्ज" />
+                            </div>
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="card-title text-muted mb-0 text-md-left ml-2 h5 ">Collection</h4>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted">
+                                    <span class="text-success mr-2 h4 font-weight-bold text-md-left" style="font-size:1.9em;"><i class="fas fa-arrow-up"></i> 20.44K</span>
+                                </p>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 ">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="card-title  text-muted mb-0 ml-2 text-md-center h5"> Withdrawal </h4>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-md-center">
+                                    <span class="text-danger mr-2 h4 font-weight-bold" style="font-size:1.7em;"><i class="fas fa-arrow-down"></i> 12.33K</span>
+                                </p>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 ">
+                                <div class="row">
+                                    <div class="col ml-5">
+                                        <h4 class="card-title text-muted mb-0 mr-4 text-md-right h5">Balance</h4>
+                                        <p class="mt-3 mb-0 text-muted text-md-right mr-3">
+                                            <span class="text-dark mr-2 h2 font-weight-bold" style="font-size:1.9em;"> 40.33K</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="row mt-5 mb-4 ml-1 mr-1">
+
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Member Loan</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">2.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-danger text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-user-group"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Personal Loan</h5>
+                                                <span class="h2 font-weight-bold mb-0 " style="font-size:1.7em;">12.5K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-warning text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-user-tie"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">vehicle Loan</h5>
+                                                <span class="h2 font-weight-bold mb-0 " style="font-size:1.7em;">12.5K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-dropbox text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-car"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 float-md-right">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Bike Loan</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">1.3K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-purple text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-motorcycle"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 12%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 17.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mt-4  mb-4 ml-1 mr-1">
+
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">FD Loan</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">9.2K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-purple text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-money-bill-wheat"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 1.10%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 12.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since yesterday</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 float-md-right">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Gold Loan</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">1.3K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-purple text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-scale-balanced"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 12%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 17.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Home Loan</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">9.2K</span>
+
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-purple text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-house"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm">
+                                            <span class="text-success mr-2">
+                                                <i class="fas fa-arrow-up"></i> 1.10%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 12.48%</span>
+                                            </span>
+
+                                            <span class="text-nowrap">Since yesterday</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Business Loan</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">2.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-purple text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-toolbox"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card shadow ">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <div class="col-xl-3 col-lg-6">
+                                @*<i class="fa-solid fa-chart-line fa-3x float-left text-c-purple" data-toggle="tooltip" data-placement="right" title="Investment/गुंतवणूक"></i>*@
+                                <img src="~/Images/kisspng-computer-icons-investment-portable-network-graphic-5c48c97c9ce777.9673797615482740446427.png" class="float-left text-blue" width="60" height="60" data-toggle="tooltip" data-placement="right" title="Investment/गुंतवणूक" />
+                            </div>
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="card-title text-muted mb-0 text-md-left ml-2 h5 ">Investment</h4>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted">
+                                    <span class="text-success mr-2 h4 font-weight-bold text-md-left" style="font-size:1.9em;"><i class="fas fa-arrow-up"></i> 20.44K</span>
+                                </p>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 ">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="card-title  text-muted mb-0 ml-2 text-md-center h5"> Withdrawal </h4>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-md-center">
+                                    <span class="text-danger mr-2 h4 font-weight-bold" style="font-size:1.7em;"><i class="fas fa-arrow-down"></i> 12.33K</span>
+                                </p>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 ">
+                                <div class="row">
+                                    <div class="col ml-5">
+                                        <h4 class="card-title text-muted mb-0 mr-4 text-md-right h5">Balance</h4>
+                                        <p class="mt-3 mb-0 text-muted text-md-right mr-3">
+                                            <span class="text-dark mr-2 h2 font-weight-bold" style="font-size:1.9em;"> 40.33K</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="row mt-5 mb-4 ml-1 mr-1">
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Cooperative Investment </h5>
+                                                <span class="h2 font-weight-bold mb-0 " style="font-size:1.7em;">12.5K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-green text-white rounded-circle shadow">
+                                                    <i class="fa-regular fa-handshake"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Other Bank Investment</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">2.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-warning text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-handshake-slash"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Other Investment</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">2.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-danger text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-globe"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card shadow ">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                            <div class="col-xl-3 col-lg-6" style="color:#DC7633">
+                                @*<i class="fa-solid fa-chart-line fa-3x float-left" data-toggle="tooltip" data-placement="right" title="Fund/निधी"></i>*@
+
+                                <i class="fa-solid fa-hand-holding-dollar fa-3x float-left" data-toggle="tooltip" data-placement="right" title="Fund/निधी"></i>
+
+                            </div>
+                            <div class="col-xl-3 col-lg-6">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="card-title text-muted mb-0 text-md-left ml-2 h5 ">Fund</h4>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted">
+                                    <span class="text-success mr-2 h4 font-weight-bold text-md-left" style="font-size:1.9em;"><i class="fas fa-arrow-up"></i> 20.44K</span>
+                                </p>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 ">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="card-title  text-muted mb-0 ml-2 text-md-center h5"> Withdrawal </h4>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-md-center">
+                                    <span class="text-danger mr-2 h4 font-weight-bold" style="font-size:1.7em;"><i class="fas fa-arrow-down"></i> 12.33K</span>
+                                </p>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 ">
+                                <div class="row">
+                                    <div class="col ml-5">
+                                        <h4 class="card-title text-muted mb-0 mr-4 text-md-right h5">Balance</h4>
+                                        <p class="mt-3 mb-0 text-muted text-md-right mr-3">
+                                            <span class="text-dark mr-2 h2 font-weight-bold" style="font-size:1.9em;"> 40.33K</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="row mt-5 mb-4 ml-1 mr-1">
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Resivred Fund</h5>
+                                                <span class="h2 font-weight-bold mb-0 " style="font-size:1.7em;">12.5K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-green text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-hand-holding-hand"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Building fund </h5>
+                                                <span class="h2 font-weight-bold mb-0 " style="font-size:1.7em;">12.5K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-c-blue text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-building"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Divident Fund</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">2.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-warning text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-money-bill-trend-up"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="row mt-5 mb-4 ml-1 mr-1">
+
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">member welfare fund</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">2.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-warning text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-people-roof"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Employee walfare fund</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">2.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-danger text-white rounded-circle shadow">
+                                                    <i class="fa-solid fa-users-between-lines"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="card card-stats mb-4 mb-xl-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title text-uppercase text-muted mb-0">Bad debt fund</h5>
+                                                <span class="h2 font-weight-bold mb-0" style="font-size:1.7em;">2.3K</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="icons icon-shape bg-danger text-white rounded-circle shadow">
+                                                    <i class="fa-brands fa-bitcoin"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted text-sm  mytext">
+                                            <span class="text-success mr-2">
+                                                <i class="fa fa-arrow-up"> </i> 3.48%
+                                                <span class="text-danger "><i class="fas fa-arrow-down"></i> 1.48%</span>
+                                            </span>
+                                            <span class="text-nowrap textname " onclick="getdates()">Since last month</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Area Chart -->
+
+                    <div class="row">
+                        <!-- Pie Chart -->
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="card shadow mb-4 mt-3">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Total Deposit</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+
+
+                                <div class="card-body">
+
+                                    @*<canvas id="myChart" style=" width: 100%; margin: 15px auto; height:200%;"></canvas>*@
+
+                                    <div id="chart-container3" class="chart"></div>
+
+                                    @*<div id="chartContainer" style="height: 300px; width: 100%;"></div>*@
+                                    @*<div id="pieChart1" style="height: 300px; width: 110%;">
+                                    </div>*@
+
+                                    @*<div class="mt-4 text-center small">
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-primary"></i> Direct
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-success"></i> Social
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-info"></i> Referral
+                                        </span>
+                                    </div>*@
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Area Chart -->
+                        <div class="col-xl-6 col-lg-7">
+                            <div class="card shadow mb-4 mt-3">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Total Loan</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        @*<canvas id="myChart" style=" width: 100%; margin: 15px auto; height:300%;"></canvas>*@
+                                        <div id="chart-container4" class="chart"></div>
+                                        @*<canvas id="myAreaChart"></canvas>*@
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <!-- Pie Chart -->
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="card shadow mb-4 mt-3">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Total Investment</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+
+
+                                <div class="card-body">
+
+                                    @*<canvas id="myChart" style=" width: 100%; margin: 15px auto; height:200%;"></canvas>*@
+
+                                    <div id="chart-container" class="chart"></div>
+
+                                    @*<div id="chartContainer" style="height: 300px; width: 100%;"></div>*@
+                                    @*<div id="pieChart1" style="height: 300px; width: 110%;">
+                                    </div>*@
+
+                                    @*<div class="mt-4 text-center small">
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-primary"></i> Direct
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-success"></i> Social
+                                        </span>
+                                        <span class="mr-2">
+                                            <i class="fas fa-circle text-info"></i> Referral
+                                        </span>
+                                    </div>*@
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Area Chart -->
+                        <div class="col-xl-6 col-lg-7">
+                            <div class="card shadow mb-4 mt-3">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Total Loan</h6>
+                                    <div class="dropdown no-arrow">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                             aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Dropdown Header:</div>
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        @*<canvas id="myChart" style=" width: 100%; margin: 15px auto; height:300%;"></canvas>*@
+                                        <div id="chart-container2" class="chart"></div>
+                                        @*<canvas id="myAreaChart"></canvas>*@
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    break;
+            }
+        }
+
+
+        <div id="popUpModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><span id="eventTitle"></span></h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <button id="btnDelete" class="btn btn-primary btn-sm pull-right"><i class="fas fa-trash ml-2 icon"></i>Delete</button>
+                        <button id="btnEdit" class="btn btn-success btn-sm pull-right" style="margin-right:5px;"><i class="far fa-edit ml-2 icon"></i>Edit</button>
+                        <p id="pDetails"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="myModalSave" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Save Event</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="col-md-12 form-horizontal">
+                            <input type="hidden" id="hdEventID" value="0" />
+
+                            <div class="form-group">
+                                <label>Name Of Event Type</label>
+                                <select id="eventTypeId" class="form-control mandatory-mark" autocomplete="off" required="required">
+                                    <option value="3">Default</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Name Of Event</label>
+                                <input type="text" id="name-of-event" class="form-control mandatory-mark" placeholder="Enter Name Of Event" required="required" maxlength="100" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>कार्यक्रमाचे नाव</label>
+                                <input type="text" id="trans-name-of-event" class="form-control mandatory-mark" placeholder="कृपया कार्यक्रमाचे नाव प्रविष्ट करा" required="required" maxlength="100" autocomplete="off" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Alias Name</label>
+                                <input type="text" id="alias-name" class="form-control default-none" placeholder="Enter Alias Name" maxlength="10" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>उर्फ नाव</label>
+                                <input type="text" id="trans-alias-name" class="form-control default-none" placeholder="कृपया उर्फ नाव प्रविष्ट करा" maxlength="10" autocomplete="off" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Name On Report</label>
+                                <input type="text" id="name-on-report" class="form-control default-none" placeholder="Enter Name On Report" required="required" maxlength="100" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>अहवालासाठी नाव</label>
+                                <input type="text" id="trans-name-on-report" class="form-control default-none" placeholder="अहवालासाठी नाव प्रविष्ट करा" maxlength="100" autocomplete="off" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Event Description</label>
+                                <input type="text" id="event-description" class="form-control mandatory-mark" placeholder="Enter Event Description" maxlength="1500" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            @*<div class="form-group">
+                                <label>इव्हेंट वर्णन</label>
+                                <input type="text" id = "trans-event-description" class = "form-control mandatory-mark" placeholder = "इव्हेंट वर्णन प्रविष्ट करा" maxlength = "1500" autocomplete = "off" />
+                            </div>*@
+
+                            <div class="form-group">
+                                <label>Scheduled From</label>
+                                <input id="scheduled-from" class="form-control mandatory-mark" Type="date" required="required" onchange="Activationdate()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Scheduled To</label>
+                                <input id="scheduled-to" class="form-control mandatory-mark" Type="date" required="required" onchange="Activationdate()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Triggered At</label>
+                                <input id="triggered-at" class="form-control mandatory-mark" Type="date" required="required" onchange="Activationdate()" />
+                            </div>
+
+                            <div class="row form-group mt-5">
+                                <div class="col-10">
+                                    <label>Is Full Day Event</label>
+                                </div>
+                                <div class="text-right">
+                                    <label class="switch switch-left-right">
+                                        <input type="checkbox" id="is-full-day-event" class="form-control switch-input" checked="checked" />
+                                        <span class="slider round">
+                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group mt-5">
+                                <div class="col-10">
+                                    <label>Is Active</label>
+                                </div>
+                                <div class="text-right">
+                                    <label class="switch switch-left-right">
+                                        <input type="checkbox" id="is-active" class="form-control switch-input" checked="checked" />
+                                        <span class="slider round">
+                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Redirect Url</label>
+                                <input type="text" id="redirect-url" class="form-control mandatory-mark" placeholder="Enter Redirected Url" required="required" maxlength="2048" autocomplete="off" />
+                            </div>
+
+                            <div class="row form-group mt-5">
+                                <div class="col-10">
+                                    <label>Enable Reminder</label>
+                                </div>
+                                <div class="text-right">
+                                    <label class="switch switch-left-right">
+                                        <input type="checkbox" id="enable-reminder" class="form-control switch-input" checked="checked" />
+                                        <span class="slider round">
+                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Note</label>
+                                <input type="text" id="note" class="form-control default-none" placeholder="Enter Note" maxlength="1500" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>टीप</label>
+                                <input type="text" id="trans-note" class="form-control default-none" placeholder="टीप प्रविष्ट करा" maxlength="1500" autocomplete="off" />
+                            </div>
+
+                            <button type="button" id="btnSave" class="btn btn-success">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div id="container11" style="width: 350px; height: 350px; margin: 0 auto"></div>*@
+    </div>
+</body>
+</html>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+@*<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />*@
+<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script>
+        var saveDataTables = '@Url.Action("Create", "EventMaster")';
+</script>
+<script>
+
+        $('#container11').highcharts({
+            colors: ['#9FD376', '#629AEC', '#FAD067', '#50C1E5', '#AD92E6', '#45CEB0', '#FB6C59', '#F087BB', '#6CC7CD', '#6CA0CD'],
+            chart: {
+                type: 'pie',
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                innerSize: '80%',
+                data: [
+                    ['Email', 2],
+                    ['Chat', 1],
+                    ['Facebook', 1],
+                    ['Phone', 2]
+                ]
+            }],
+            legend: {
+                enabled: true,
+                align: 'center',
+                verticalAlign: 'bottom',
+                itemMarginTop: 8,
+                itemStyle: {
+                    font: '14px "ProximaNovaRegular" ,sans-serif',
+                },
+                symbolHeight: 10,
+                symbolWidth: 10,
+                symbolRadius: 2
+            },
+            title: {
+                text: '<span id="agentCountId" class="ag-count">6</span><br><span class="ag-label">myTickets</span>',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: -45,
+                useHTML: true,
+            },
+            plotOptions: {
+                pie: {
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        connectorWidth: 0,
+                        distance: 5,
+                        formatter: function () {
+                            return '<b><span class="ag-title">' + this.percentage.toFixed(0) + '&#37; </span></b><br><span class="DvsubHead"> ' + this.point.name + '</span>';
+                        },
+                        style: {
+                            color: '#000000',
+                        },
+                        useHTML: true
+                    },
+                    showInLegend: true,
+                    startAngle: -180,
+                    endAngle: 180,
+                    minSize: 215,
+                    center: ['50%', '50%'],
+                    borderWidth: 0,
+                    point: {
+                        events: {
+
+                        }
+                    }
+                }
+            },
+            tooltip: {
+                backgroundColor: "rgba(255,255,255,0)",
+                borderWidth: 0,
+                shadow: false,
+                formatter: function () {
+                    return '<div class="MyChartTooltip"><span class="ag-title">' + this.key + ' &#40;' + this.percentage.toFixed(0) + '&#37;&#41;</span><br/> <span><span style="font-size:25px">' + Highcharts.numberFormat(this.y, 0) + '</span> myTickets</span></div>';
+                },
+                useHTML: true,
+            },
+        });
+
+        $('#container1').highcharts({
+            chart: {
+                type: 'pie',
+            },
+
+            credits: {
+                enabled: false
+            },
+
+            plotOptions: {
+                pie: {
+                    size: 150
+                }
+            },
+
+            series: [{
+                data: [
+                    ['Firefox', 44.2],
+                    ['IE7', 26.6],
+                    ['IE6', 20],
+                    ['Chrome', 3.1],
+                    ['Other', 5.4]
+                ],
+                //showInLegend: true,
+            }]
+        });
+</script>
+<script>
+     $("#searchDateRange").on('change', function () {
+            debugger;
+            if (typeof $('#searchDateRange').val() !== "undefined") {
+                var duration = $('#searchDateRange').val();
+                var durationBits = duration.split(" ");
+                var durationInt = durationBits[0];
+                var durationString = durationBits[1];
+                const today = new Date();
+
+                //This quarter START: moment().startOf('quarter')
+                //This quarter END: moment().endOf('quarter')
+                //Previous quarter START: moment().subtract(1, 'quarter').startOf('quarter')
+                //Previous quarter END: moment().subtract(1, 'quarter').endOf('quarter')
+                //Next quarter START: moment().add(1, 'quarter').startOf('quarter')
+                //Next quarter End: moment().add(1, 'quarter').endOf('quarter')
+
+                var Startdateoflastquarter = moment().subtract(durationInt, 'quarter').startOf('quarter');
+
+                var Enddateoflastquarter = moment().subtract(durationInt, 'quarter').endOf('quarter');
+
+                var Startdateofcurrentquarter = moment().startOf('quarter');
+
+               var Enddateofcurrentquarter = moment().endOf('quarter');
+
+                if (durationString === "day")
+                {
+                   var Today1 = moment().startOf(durationString).format("DD/MM/YYYY");
+                   var Today2 = moment().endOf(durationString).format("DD/MM/YYYY");
+                }
+                if (durationString === "Month") {
+                    var ThisMonth = moment().startOf(durationString).format("DD/MM/YYYY");
+                    var ThisMonth1 = moment().endOf(durationString).format("DD/MM/YYYY");
+                }
+                else  if(durationInt!= ""){
+                    var now = moment(today, "DD/MM/YYYY");
+                    var targetDate = now.subtract(durationInt, durationString);
+                    var t = new Date(targetDate).toLocaleDateString('en-GB');
+                }
+                if (durationString === "All") {
+                    return true;
+                }
+
+            }
+            })
+
+    //run code chart
+</script>
+
+

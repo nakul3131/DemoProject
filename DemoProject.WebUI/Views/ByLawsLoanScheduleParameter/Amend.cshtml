@@ -1,0 +1,777 @@
+﻿@model DemoProject.Services.ViewModel.Account.Parameter.ByLawsLoanScheduleParameterViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Parameter
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    ByLawsLoanScheduleParameterViewModel viewModel = new ByLawsLoanScheduleParameterViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("BLPAMD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Board Of Director Parameter - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+                        @*======= First  Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title =======*@
+                        <div class="row mt-2">
+                            @*Page Title If Screen Large Then Column - 12 Otherwise Col - 6 For Create And Remaining For Translation*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Amend</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @*======= Third Row - Data Entry Page =======*@
+                        <div class="row">
+                            <div class="col-12">
+                                @*Effective Date*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Effective Date")
+                                    @Html.TextBoxFor(m => m.EffectiveDate, "{0:yyyy-MM-dd}", new { @id = "effective-date", @class = "form-control mandatory-mark deny-future-date", @placeholder = "Enter Effective Date", @Type = "date" })
+                                    @Html.ValidationMessageFor(m => m.EffectiveDate)
+                                </div>
+
+                                @* Modification Number *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Modification Number")
+                                    @Html.TextBoxFor(m => m.ModificationNumber, new { @id = "modification-number", @class = "form-control mandatory-mark real-number", @placeholder = "Enter Modification Number", @type = "number", min = 0 })
+                                    @Html.ValidationMessageFor(m => m.ModificationNumber)
+                                </div>
+                                
+                                @* Sequence Number *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Sequence Number")
+                                    @Html.TextBoxFor(m => m.SequenceNumber, new { @id = "sequence-number", @class = "form-control mandatory-mark real-number", @placeholder = "Enter Sequence Number", @type = "number", @min = "2", @max = "18", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.SequenceNumber)
+                                </div>
+
+                                @* Schedule Title *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Schedule Title")
+                                    @Html.TextBoxFor(m => m.ScheduleTitle, new { @id = "schedule-title", @class = "form-control mandatory-mark deny-multiple-space", @maxlength = "50", @placeholder = "Enter Schedule Title", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.ScheduleTitle)
+                                </div>
+
+                                @* Minimum Working Capital *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Working Capital")
+                                    @Html.TextBoxFor(m => m.MinimumWorkingCapital, new { @id = "minimum-working-capital", @class = "form-control mandatory-mark min-number", @placeholder = "Enter Minimum Working Capital", @type = "number", @min = 1000, @max = 1000000000, required = "required" })
+                                    @Html.ValidationMessageFor(m => m.MinimumWorkingCapital)
+                                </div>
+
+                                @* Maximum Working Capital *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Working Capital")
+                                    @Html.TextBoxFor(m => m.MaximumWorkingCapital, new { @id = "maximum-working-capital", @class = "form-control mandatory-mark max-number", @placeholder = "Enter Maximum Working Capital", @type = "number", @min = 1000, @max = 1000000000, required = "required" })
+                                    @Html.ValidationMessageFor(m => m.MaximumWorkingCapital)
+                                </div>
+
+                                @* Minimum Tenure *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Tenure")
+                                    @Html.TextBoxFor(m => m.MinimumTenure, new { @id = "minimum-tenure", @class = "form-control mandatory-mark min-number real-number", @placeholder = "Enter Minimum Tenure", required = "required", @min = 6, @max = 199, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MinimumTenure)
+                                </div>
+                                @* Maximum Tenure *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Tenure")
+                                    @Html.TextBoxFor(m => m.MaximumTenure, new { @id = "maximum-tenure", @class = "form-control mandatory-mark max-number real-number", @placeholder = "Enter Maximum Tenure", required = "required", @min = 6, @max = 199, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MaximumTenure)
+                                </div>
+
+                                @* Enable Tenure Alteration *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Enable Tenure Alteration")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.EnableTenureAlteration, new { @id = "enable-tenure-alteration", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Sanction Loan Amount Limit *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Sanction Loan Amount Limit")
+                                    @Html.TextBoxFor(m => m.MinimumSanctionLoanAmountLimit, new { @id = "minimum-sanction-loan-amount-limit", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Sanction Loan Amount Limit", required = "required", @min = 1, @max = 1000000000, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MinimumSanctionLoanAmountLimit)
+                                </div>
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Sanction Loan Amount Limit")
+                                    @Html.TextBoxFor(m => m.MaximumSanctionLoanAmountLimit, new { @id = "maximum-sanction-loan-amount-limit", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Sanction Loan Amount Limit", required = "required", @min = 1, @max = 1000000000, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MaximumSanctionLoanAmountLimit)
+                                </div>
+
+                                @* Collateral Multiple Of Loan Amount *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Collateral Multiple Of Loan Amount")
+                                    @Html.TextBoxFor(m => m.CollateralMultipleOfLoanAmount, new { @id = "collateral-multiple-of-loan-amount", @class = "form-control", @placeholder = "Enter Collateral Multiple Of Loan Amount", required = "required", @min = 0, @max = 100, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.CollateralMultipleOfLoanAmount)
+                                </div>
+                                @* Margin Percentage *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Margin Percentage")
+                                    @Html.TextBoxFor(m => m.MarginPercentage, new { @id = "margin-percentage", @class = "form-control", @placeholder = "Enter Margin Percentage", required = "required", @min = 1, @max = 100, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MarginPercentage)
+                                </div>
+
+                                @*SanctionLoanAmountLimitPriority*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Sanction Loan Amount Limit Priority")
+                                    <div class="mt-1">
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.SanctionLoanAmountLimitPriority, "P", new { @id = "sanction-loan-amount-limit-priority-p", @class = "sanction-loan-amount-limit-priority" })
+                                                    <label for="sanction-loan-amount-limit-priority-p" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Percentage")</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.SanctionLoanAmountLimitPriority, "A", new { @id = "sanction-loan-amount-limit-priority-a", @class = "sanction-loan-amount-limit-priority" })
+                                                    <label for="sanction-loan-amount-limit-priority-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Amount")</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.SanctionLoanAmountLimitPriority, "L", new { @id = "sanction-loan-amount-limit-priority-l", @class = "sanction-loan-amount-limit-priority" })
+                                                    <label for="sanction-loan-amount-limit-priority-l" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Which Is Less")</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.SanctionLoanAmountLimitPriority, "H", new { @id = "sanction-loan-amount-limit-priority-h", @class = "sanction-loan-amount-limit-priority" })
+                                                    <label for="sanction-loan-amount-limit-priority-h" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Which Is Higher")</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.SanctionLoanAmountLimitPriority)
+                                </div>
+
+
+                                @* Minimum Loan Amount Limit For Individual *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Loan Amount Limit For Individual")
+                                    @Html.TextBoxFor(m => m.MinimumLoanAmountLimitForIndividual, new { @id = "minimum-loan-amount-limit-for-individual", @class = "form-control", @placeholder = "Enter Minimum Loan Amount Limit For Individual", required = "required", @min = 100, @max = 1000000000, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MinimumLoanAmountLimitForIndividual)
+                                </div>
+
+                                @* Maximum Loan Amount Limit For Individual *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Loan Amount Limit For Individual")
+                                    @Html.TextBoxFor(m => m.MaximumLoanAmountLimitForIndividual, new { @id = "maximum-loan-amount-limit-for-individual", @class = "form-control", @placeholder = "Enter Maximum Loan Amount Limit For Individual", required = "required", @min = 100, @max = 1000000000, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MaximumLoanAmountLimitForIndividual)
+                                </div>
+                                @* Self Fund Percentage For Maximum Loan Amount Limit Of Individuals *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Self Fund Percentage For Maximum Loan Amount Limit Of Individuals")
+                                    @Html.TextBoxFor(m => m.SelfFundPercentageForMaximumLoanAmountLimitOfIndividuals, new { @id = "self-fund-percentage-for-maximum-loan-amount-limit-of-individuals", @class = "form-control", @placeholder = "Enter Self Fund Percentage For Maximum Loan Amount Limit Of Individuals", required = "required", @min = 1, @max = 100, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.SelfFundPercentageForMaximumLoanAmountLimitOfIndividuals)
+                                </div>
+
+                                @* Minimum Loan Amount Limit For Group *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Loan Amount Limit For Group")
+                                    @Html.TextBoxFor(m => m.MinimumLoanAmountLimitForGroup, new { @id = "minimum-loan-amount-limit-for-group", @class = "form-control", @placeholder = "Enter Minimum Loan Amount Limit For Group", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MinimumLoanAmountLimitForGroup)
+                                </div>
+                                @* Maximum Loan Amount Limit For Group *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Loan Amount Limit For Group")
+                                    @Html.TextBoxFor(m => m.MaximumLoanAmountLimitForGroup, new { @id = "maximum-loan-amount-limit-for-group", @class = "form-control", @placeholder = "Enter Maximum Loan Amount Limit For Group", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MaximumLoanAmountLimitForGroup)
+                                </div>
+
+                                @* Self Fund Percentage For Maximum Loan Amount Limit Of Group *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Self Fund Percentage For Maximum Loan Amount Limit Of Group")
+                                    @Html.TextBoxFor(m => m.SelfFundPercentageForMaximumLoanAmountLimitOfGroup, new { @id = "self-fund-percentage-for-maximum-loan-amount-limit-of-group", @class = "form-control", @placeholder = "Enter Self Fund Percentage For Maximum Loan Amount Limit Of Group", required = "required", @min = 0, @max = 100, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.SelfFundPercentageForMaximumLoanAmountLimitOfGroup)
+                                </div>
+
+                                @*MaximumLoanAmountLimitPriority*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Loan Amount Limit Priority")
+                                    <div class="mt-1">
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.MaximumLoanAmountLimitPriority, "P", new { @id = "maximum-loan-amount-limit-priority-p", @class = "maximum-loan-amount-limit-priority" })
+                                                    <label for="maximum-loan-amount-limit-priority-p" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Percentage")</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.MaximumLoanAmountLimitPriority, "A", new { @id = "maximum-loan-amount-limit-priority-a", @class = "maximum-loan-amount-limit-priority" })
+                                                    <label for="maximum-loan-amount-limit-priority-a" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Amount")</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.MaximumLoanAmountLimitPriority, "L", new { @id = "maximum-loan-amount-limit-priority-l", @class = "maximum-loan-amount-limit-priority" })
+                                                    <label for="maximum-loan-amount-limit-priority-l" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Which Is Less")</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.MaximumLoanAmountLimitPriority, "H", new { @id = "maximum-loan-amount-limit-priority-h", @class = "maximum-loan-amount-limit-priority" })
+                                                    <label for="maximum-loan-amount-limit-priority-h" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Which Is Higher")</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="maximum-loan-amount-limit-priority"></div>
+                                    </div>
+                                    <span id="maximum-loan-amount-limit-priority-error" class="error modal-input-error d-none">Please Select Valid Maximum Loan Amount Limit Priority.</span>
+                                    @Html.ValidationMessageFor(m => m.MaximumLoanAmountLimitPriority)
+                                </div>
+
+                                @* Require A Class *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Require A Class")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.RequireAClass, new { @id = "require-a-class", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Require B Class *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Require B Class")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.RequireBClass, new { @id = "require-b-class", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Require C Class *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Require C Class")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.RequireCClass, new { @id = "require-c-class", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Require D Class *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Require D Class")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.RequireDClass, new { @id = "require-d-class", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Minimum Interest Rate *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Interest Rate")
+                                    @Html.TextBoxFor(m => m.MinimumInterestRate, new { @id = "minimum-interest-rate", @class = "form-control mandatory-mark min-number", @placeholder = "Enter Minimum Interest Rate", @type = "number", required = "required", @min = 0, @max = 100 })
+                                    @Html.ValidationMessageFor(m => m.MinimumInterestRate)
+                                </div>
+
+                                @* Maximum Interest Rate *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Interest Rate")
+                                    @Html.TextBoxFor(m => m.MaximumInterestRate, new { @id = "maximum-interest-rate", @class = "form-control mandatory-mark max-number", @placeholder = "Enter Maximum Interest Rate", required = "required", @min = 0, @max = 100, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MaximumInterestRate)
+                                </div>
+
+                                @* Minimum Fine Interest Rate *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Fine Interest Rate")
+                                    @Html.TextBoxFor(m => m.MinimumFineInterestRate, new { @id = "minimum-fine-interest-rate", @class = "form-control mandatory-mark min-number", @placeholder = "Enter Minimum Fine Interest Rate", required = "required", @min = 0, @max = 100, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MinimumFineInterestRate)
+                                </div>
+
+                                @* Maximum Fine Interest Rate *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Fine Interest Rate")
+                                    @Html.TextBoxFor(m => m.MaximumFineInterestRate, new { @id = "maximum-fine-interest-rate", @class = "form-control mandatory-mark max-number", @placeholder = "Enter Maximum Fine Interest Rate", required = "required", @min = 0, @max = 100, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MaximumFineInterestRate)
+                                </div>
+
+                                @* Maximum Loan Type Percentage Of Total Loan *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Loan Type Percentage Of Total Loan")
+                                    @Html.TextBoxFor(m => m.MaximumLoanTypePercentageOfTotalLoan, new { @id = "maximum-loan-type-percentage", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Loan Type Percentage Of Total Loan", required = "required", @min = 0, @max = 100, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MaximumLoanTypePercentageOfTotalLoan)
+                                </div>
+
+
+
+                                @* Enable Application *@
+                                <div class="row form-group mt4@((bool)(ViewBag.LoanSchemeParameter.EnableApplicationParameter) ? "" : "d-none")">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Enable Application")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.EnableApplication, new { @id = "enable-application", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Enable Passbook *@
+                                <div class="row form-group mt4 @((bool)(ViewBag.LoanSchemeParameter.EnablePassbookParameter) ? "" : "d-none")">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Enable Passbook")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.EnablePassbook, new { @id = "enable-passbook", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Enable Valuation *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Enable Valuation")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.EnableValuation, new { @id = "enable-valuation", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Enable Interest Capitalization *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Enable Interest Capitalization")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.EnableInterestCapitalization, new { @id = "enable-interest-capitalization", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Enable Overdues Calculation After Maturity *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Enable Overdues Calculation After Maturity")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.EnableOverDuesCalculationAfterMaturity, new { @id = "enable-overdues-calculation-after-maturity", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Enable NPA Calculation *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Enable NPA Calculation")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.EnableNPACalculation, new { @id = "enable-npa-calculation", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Is Allow Cross Guarantor *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Is Allow Cross Guarantor")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.IsAllowCrossGuarantor, new { @id = "is-allow-cross-guarantor", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Is Allow Defaulter Applicant *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Is Allow Defaulter Applicant")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.IsAllowDefaulterApplicant, new { @id = "is-allow-defaulter-applicant", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Is Allow Defaulter Guarantor *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Is Allow Defaulter Guarantor")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.IsAllowDefaulterGuarantor, new { @id = "is-allow-defaulter-guarantor", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Enable Guarantor Alteration *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Enable Guarantor Alteration")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.EnableGuarantorAlteration, new { @id = "enable-guarantor-alteration", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Is Allow Non Mortgage Loan To Board Of Director *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Is Allow Non Mortgage Loan To Board Of Director")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.IsAllowNonMortgageLoanToBoardOfDirector, new { @id = "is-allow-non-mortgage-loan-to-board-of-director", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Is Allow To Board Of Directors As Guarantor For Non Mortgage Loan *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Is Allow To Board Of Directors As Guarantor For Non Mortgage Loan")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.IsAllowToBoardOfDirectorsAsGuarantorForNonMortgageLoan, new { @id = "is-allow-to-board-of-directors-as-guarantor-for-non-mortgage-loan", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Is Allow To Renew Non Mortgage Loan By Board Of Directors *@
+                                <div class="row form-group mt4">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Is Allow To Renew Non Mortgage Loan By Board Of Directors")
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="text-left">
+                                            <label class="switch switch-left-right">
+                                                @Html.CheckBoxFor(m => m.IsAllowToRenewLoan, new { @id = "is-allow-to-renew-non-mortgage-loan-by-board-of-directors", @class = "form-control switch-input" })
+                                                <span class="slider round">
+                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*LoanDisbursementMethod*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Loan Disbursement Method")
+                                    <div class="mt-1">
+                                        <div class="row mt-2">
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.LoanDisbursementMethod, "BNS", new { @id = "loan-disbursement-method-bns", @class = "loan-disbursement-method" })
+                                                    <label for="loan-disbursement-method-bns" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Bank Saving")</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-xl-6">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.LoanDisbursementMethod, "OWS", new { @id = "loan-disbursement-method-ows", @class = "loan-disbursement-method" })
+                                                    <label for="loan-disbursement-method-ows" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Society Saving")</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.LoanDisbursementMethod)
+                                    </div>
+                                </div>
+                                @* Minimum Number Of Guarantor *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Number Of Guarantor")
+                                    @Html.TextBoxFor(m => m.MinimumNumberOfGuarantor, new { @id = "minimum-number-of-guarantor", @class = "form-control mandatory-mark min-number real-number", @placeholder = "Enter Minimum Number Of Guarantor", required = "required", @min = 0, @max = 10, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MinimumNumberOfGuarantor)
+                                </div>
+
+                                @* Maximum Number Of Guarantor *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Number Of Guarantor")
+                                    @Html.TextBoxFor(m => m.MaximumNumberOfGuarantor, new { @id = "maximum-number-of-guarantor", @class = "form-control mandatory-mark max-number real-number", @placeholder = "Enter Maximum Number Of Guarantor", required = "required", @min = 0, @max = 10, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MaximumNumberOfGuarantor)
+                                </div>
+
+                                @* Number Of Loan Guarantor From Applicant Family *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Number Of Loan Guarantor From Applicant Family")
+                                    @Html.TextBoxFor(m => m.NumberOfLoanGuarantorFromApplicantFamily, new { @id = "number-of-loan-guarantor-from-applicant-family", @class = "form-control mandatory-mark real-number ", @placeholder = "Enter Number Of Loan Guarantor From Applicant Family", required = "required", @min = 0, @max = 10, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.NumberOfLoanGuarantorFromApplicantFamily)
+                                </div>
+
+                                @* Number Of Loan Guarantor From Same Family *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Number Of Loan Guarantor From Same Family")
+                                    @Html.TextBoxFor(m => m.NumberOfLoanGuarantorFromSameFamily, new { @id = "number-of-loan-guarantor-from-same-family", @class = "form-control mandatory-mark real-number", @placeholder = "Enter Number Of Loan Guarantor From Same Family", required = "required", @min = 0, @max = 10, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.NumberOfLoanGuarantorFromSameFamily)
+                                </div>
+
+                                @* Maximum Guarantor Limit For Member *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Guarantor Limit For Member")
+                                    @Html.TextBoxFor(m => m.MaximumGuarantorLimitForMember, new { @id = "maximum-guarantor-limit-for-member", @class = "form-control mandatory-mark  real-number", @placeholder = "Enter Maximum Guarantor Limit For Member", required = "required", @min = 0, @max = 10, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MaximumGuarantorLimitForMember)
+                                </div>
+
+                                @* Loan Application Rejection Inform Days *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Loan Application Rejection Inform Days")
+                                    @Html.TextBoxFor(m => m.LoanApplicationRejectionInformDays, new { @id = "loan-application-rejection-inform-days", @class = "form-control mandatory-mark  real-number", @placeholder = "Enter Loan Application Rejection Inform Days", required = "required", @min = 1, @max = 199, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.LoanApplicationRejectionInformDays)
+                                </div>
+
+                                @* Loan Application Reconsideration Time After Rejection *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Loan Application Reconsideration Time After Rejection")
+                                    @Html.TextBoxFor(m => m.LoanApplicationReconsiderationTimeAfterRejection, new { @id = "loan-application-reconsideration-time-after-rejection", @class = "form-control mandatory-mark  real-number", @placeholder = "Enter Loan Application Reconsideration Time After Rejection", required = "required", @min = 1, @max = 199, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.LoanApplicationReconsiderationTimeAfterRejection)
+                                </div>
+
+                                @* Loan Cancellation Time After Sanction *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Loan Cancellation Time After Sanction")
+                                    @Html.TextBoxFor(m => m.LoanCancellationTimeAfterSanction, new { @id = "loan-cancellation-time-after-sanction", @class = "form-control mandatory-mark  real-number", @placeholder = "Enter Loan Cancellation Time After Sanction", required = "required", @min = 1, @max = 199, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.LoanCancellationTimeAfterSanction)
+                                </div>
+
+                                @* Maximum Loan Percentage Of Total Loan For Board Of Directors *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Loan Percentage Of Total Loan For Board Of Directors")
+                                    @Html.TextBoxFor(m => m.MaximumLoanPercentageOfTotalLoanForBoardOfDirectors, new { @id = "maximum-loan-percentage-for-board-of-directors", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Loan Percentage Of Total Loan For Board Of Directors", required = "required", @min = 100, @max = 1000000000, @type = "number" })
+                                    @Html.ValidationMessageFor(m => m.MaximumLoanPercentageOfTotalLoanForBoardOfDirectors)
+                                </div>
+
+                                @* Minimum Sanctioning Limit For Branch Manager *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Sanctioning Limit For Branch Manager")
+                                    @Html.TextBoxFor(m => m.MinimumSanctioningLimitForBranchManager, new { @id = "minimum-sanctioning-limit-branch-manager", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MinimumSanctioningLimitForBranchManager)
+                                </div>
+
+                                @* Maximum Sanctioning Limit For Branch Manager *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Sanctioning Limit For Branch Manager")
+                                    @Html.TextBoxFor(m => m.MaximumSanctioningLimitForBranchManager, new { @id = "maximum-sanctioning-limit-branch-manager", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MaximumSanctioningLimitForBranchManager)
+                                </div>
+
+                                @* Minimum Sanctioning Limit For Committee *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Sanctioning Limit For Committee")
+                                    @Html.TextBoxFor(m => m.MinimumSanctioningLimitForCommittee, new { @id = "minimum-sanctioning-limit-committee", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MinimumSanctioningLimitForCommittee)
+                                </div>
+
+                                @* Maximum Sanctioning Limit For Committee *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Sanctioning Limit For Committee")
+                                    @Html.TextBoxFor(m => m.MaximumSanctioningLimitForCommittee, new { @id = "maximum-sanctioning-limit-committee", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MaximumSanctioningLimitForCommittee)
+                                </div>
+
+                                @* Minimum Sanctioning Limit For Board Of Director *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Sanctioning Limit For Board Of Director")
+                                    @Html.TextBoxFor(m => m.MinimumSanctioningLimitForBoardOfDirector, new { @id = "minimum-sanctioning-limit-board-director", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MinimumSanctioningLimitForBoardOfDirector)
+                                </div>
+
+                                @* Maximum Sanctioning Limit For Board Of Director *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Sanctioning Limit For Board Of Director")
+                                    @Html.TextBoxFor(m => m.MaximumSanctioningLimitForBoardOfDirector, new {  @id = "maximum-sanctioning-limit-board-director", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MaximumSanctioningLimitForBoardOfDirector)
+                                </div>
+
+                                @* Minimum Sanctioning Limit For CEO *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Sanctioning Limit For CEO")
+                                    @Html.TextBoxFor(m => m.MinimumSanctioningLimitForCEO, new { @id = "minimum-sanctioning-limit-ceo", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MinimumSanctioningLimitForCEO)
+                                </div>
+
+                                @* Maximum Sanctioning Limit For CEO *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Sanctioning Limit For CEO")
+                                    @Html.TextBoxFor(m => m.MaximumSanctioningLimitForCEO, new {@id = "maximum-sanctioning-limit-ceo", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MaximumSanctioningLimitForCEO)
+                                </div>
+
+                                @* Minimum Sanctioning Limit For Chairman *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Minimum Sanctioning Limit For Chairman")
+                                    @Html.TextBoxFor(m => m.MinimumSanctioningLimitForChairman, new {  @id = "minimum-sanctioning-limit-chairman", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MinimumSanctioningLimitForChairman)
+                                </div>
+
+                                @* Maximum Sanctioning Limit For Chairman *@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Maximum Sanctioning Limit For Chairman")
+                                    @Html.TextBoxFor(m => m.MaximumSanctioningLimitForChairman, new { @id = "maximum-sanctioning-limit-chairman", @class = "form-control mandatory-mark", required = "required", @type = "number", @min = 100, @max = 1000000000 })
+                                    @Html.ValidationMessageFor(m => m.MaximumSanctioningLimitForChairman)
+                                </div>
+
+
+                                @*Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Note")
+                                    @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control default-none", @placeholder = "Enter Note", @maxlength = "1500", onkeyup = "ToTextCapitalize()" })
+                                    @Html.ValidationMessageFor(m => m.Note)
+                                </div>
+
+                            </div>
+                        </div>
+                        @*Hiddent Field For LoanTypePrmKey*@
+                        @Html.HiddenFor(m => m.LoanTypePrmKey)
+                        @*Hiddent Field For BoardOfDirectorParameterPrmKey*@
+                        @Html.HiddenFor(m => m.ByLawsLoanScheduleParameterPrmKey)
+                    </div>
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/ByLawsLoanScheduleParameter.js"></script>

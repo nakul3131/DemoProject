@@ -1,0 +1,171 @@
+﻿@model DemoProject.Services.ViewModel.Management.Master.ContentItemViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Management.Master
+
+@{
+    ContentItemViewModel model = new ContentItemViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("CTIAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>ContentItem - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "name-of-center", @class = "form-control mandatory-mark " })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*ContentItem*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of ContentItem")
+                                            @Html.TextBoxFor(m => m.NameOfContentItem, new { @id = "name-of-content-item", @class = "form-control title-case mandatory-mark", @placeholder = "Enter Name Of ContentItem", required = "required", @maxlength = 100, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfContentItem)
+                                        </div>
+
+                                        @*NameOfContentItem*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOfContentItemInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOfContentItem, null, new { @id = "trans-name-of-content-item", @class = "form-control mandatory-mark", @placeholder = model.NameOfContentItemPlaceHolderInRegionalLanguage, @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfContentItem)
+                                        </div>
+
+                                        @*AliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("AliasName")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control title-case default-none", @placeholder = "Enter Alias Name", @maxlength = 10, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, null, new { @id = "trans-alias-name", @class = "form-control default-none", @placeholder = model.AliasNamePlaceHolderInRegionalLanguage, @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("NameOnReport")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control title-case default-none", @placeholder = "Enter Name On Report", @maxlength = 100, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, null, new { @id = "trans-name-on-report", @class = "form-control default-none", @placeholder = model.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*Sequence Number*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Sequence Number")
+                                            @Html.TextBoxFor(m => m.SequenceNumber, new { @class = "form-control mandatory-mark", @placeholder = "Enter Sequence Number", @type = "number", @min = 1, @max = 255 })
+                                            @Html.ValidationMessageFor(m => m.SequenceNumber)
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark set-current-date", @Type = "date", onchange = "Activationdate()" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*ExpiryDate*@
+                                        <div class="form-group m-1">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control", @Type = "date", onchange = "Expirydate()" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control title-case default-none", @placeholder = "Enter Note", @maxlength = "1500", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none", @placeholder = model.NotePlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                        @*Hiddent Field For ContentItemPrmKey*@
+                                        @Html.HiddenFor(m => m.ContentItemPrmKey)
+
+                                        @*Hiddent Field For ContentItemModificationPrmKey*@
+                                        @Html.HiddenFor(m => m.ContentItemModificationPrmKey)
+
+                                        @*Hiddent Field For ContentItemTranslationPrmKey*@
+                                        @Html.HiddenFor(m => m.ContentItemTranslationPrmKey)
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Amend", "Exit", "Home", "None")
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+        var url = "@Url.Action("GetUniqueContentItemName", "ContentItem")";
+</script>
+<script src="~/Scripts/Custom/ContentItem.js"></script>

@@ -1,0 +1,79 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/Custom.css" rel="stylesheet" />
+    <script src="~/Scripts/myjquery.js"></script>
+    <link href="~/Content/my/style.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+    <title></title>
+</head>
+
+<body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
+    @*Nav bar For Copyright at bottom*@
+    @*<div class="d-none d-lg-block">
+        <nav class="navbar navbar-dark py-0 bg-primary navbar-expand-lg justify-content-center fixed-bottom py-md-0">
+            <div class="navbar-text">
+                <span class="navbar-text py-0"><small>Copyright</small><strong>&copy;</strong><small>All Right Reserved 2021-22</small></span>
+            </div>
+        </nav>
+    </div>*@
+
+    <div class="container-fluid" style="height:100vh;">
+        @*Row For Render Body*@
+        <div class="row" style="margin-left:-30px;">
+            <div class="col">
+                @RenderBody()
+            </div>
+        </div>
+
+        @*Row For Links*@
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <div class="d-none d-sm-none d-md-none d-lg-block d-xl-block">
+                    <div class="row-full bg-white">
+                        <div class="col-lg-12 col-xl-12">
+                            <div class="text-right" style="margin-top:45%;margin-right:16%;">
+                                <a href="javascript:void(0)" onclick="window.location.href='@Url.Action("Authentication", "AccountServices")'" class="ml-1">Security Tips</a> <span class="text-primary ml-1">|</span>
+                                <a href="javascript:void(0)" onclick="window.location.href='@Url.Action("Faq", "AccountServices")'" class="ml-1">Faqs</a> <span class="text-primary ml-1">|</span>
+                                <a href="javascript:void(0)" onclick="window.location.href='@Url.Action("Support", "AccountServices")'" class="ml-1">Support</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<footer>
+                <div class="col-lg-12 col-lg-12">
+                    <p class="text-center"></p>
+                </div>
+            </footer>*@
+    </div>
+
+    @Scripts.Render()
+    @RenderSection("scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+            if (window.name != "popup_window") {
+                document.write("<p>Oops… Something Went Wrong. Please contact a System Administrator.</p>");
+                document.close();
+            }
+        });
+    </script>
+</body>
+</html>

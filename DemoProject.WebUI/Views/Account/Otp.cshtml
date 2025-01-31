@@ -1,0 +1,550 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.LoginViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers;
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    EmergencyScreenViewModel viewModel = new EmergencyScreenViewModel();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="img/home.svg" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <title>LOGIN</title>
+    <script>
+
+        debugger;
+
+        $(document).ready(function () {
+            debugger;
+            $('#myModal').modal('show');
+        });
+
+
+    </script>
+    <style>
+        .modal.fade .modal-dialog.modal-dialog-zoom {
+            -webkit-transform: translate(0,0)scale(.5);
+            transform: translate(0,0)scale(.5);
+        }
+
+        .modal.show .modal-dialog.modal-dialog-zoom {
+            -webkit-transform: translate(0,0)scale(1);
+            transform: translate(0,0)scale(1);
+        }
+        body11{
+
+            background-image: url('../../Images/bg.jpg');
+            /*background-image: url(https://i.postimg.cc/8cf6v1rk/1.jpg);*/
+            background-repeat: no-repeat, repeat;
+            background-position: center; /* Center the image */
+            background-size: cover; /* Resize the background image to cover the entire container */
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+
+        }
+        body {
+            height: 100vh;
+            width: 100%;
+            background: linear-gradient(148.46deg, #fffd87, #ff6677, #ff5f9a, #00d2ff);
+            /*background: linear-gradient(309deg, rgba(131, 58, 180, 1) 0%, rgba(200, 42, 18, 0.87718837535014) 79%)*/
+        }
+
+
+        .btn-login {
+            font-size: 0.9rem;
+            letter-spacing: 0.05rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .btn-google {
+            color: white !important;
+            background-color: #ea4335;
+        }
+
+        .btn-facebook {
+            color: white !important;
+            background-color: #3b5998;
+        }
+        .circle {
+            position: absolute;
+            z-index: -100;
+            border-radius: 50%;
+            background-color: rgb(235, 235, 235);
+            animation: flying 7s infinite ease-in;
+            opacity: 0.5;
+            bottom: -100px
+        }
+            .circle:nth-child(1) {
+                width: 60px;
+                height: 60px;
+                left: 20%;
+                animation-delay: 5s
+            }
+
+            .circle:nth-child(2) {
+                width: 100px;
+                height: 100px;
+                left: 40%;
+                animation-delay: 6s
+            }
+
+            .circle:nth-child(3) {
+                width: 65px;
+                height: 65px;
+                animation-delay: 4s
+            }
+
+            .circle:nth-child(4) {
+                width: 80px;
+                height: 80px;
+                left: 80%;
+                animation-delay: 9s
+            }
+
+
+      /*@@keyframes flying {
+     0% {
+         bottom: -100px;
+         transform: translateX(0)
+     }
+
+     50% {
+         transform: translateX(100px)
+     }
+
+     100% {
+         bottom: 1080px;
+         transform: translateX(-250px)
+     }
+ }*/
+
+        .social-text {
+            padding: 0.7rem 0;
+            font-size: 1rem;
+        }
+
+        .social-media {
+            display: flex;
+            justify-content: center;
+        }
+
+        .social-icon {
+            height: 46px;
+            width: 46px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 0.45rem;
+            color: #333;
+            border-radius: 50%;
+            border: 1px solid #333;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+            .social-icon:hover {
+                color: #4481eb;
+                border-color: #4481eb;
+            }
+
+        /*.card {
+
+            box-sizing: border-box;
+            background: rgba(0,0,0,0.6);
+
+        }*/
+        .card{
+            opacity:0.7;
+        }
+        /*.login-box h5 {
+            margin-bottom: 50px;
+            padding: 13px 0;
+
+            border-bottom: 2px solid #4caf50;
+        }*/
+
+
+
+.boxes div {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border: 2px solid #fff
+}
+
+.boxes div:nth-child(1) {
+    top: 70%;
+    left: 10%;
+    animation: box-animate 10s infinite
+}
+
+.boxes div:nth-child(2) {
+    top: 20%;
+    left: 80%;
+    animation: box-animate 9s infinite
+}
+
+.boxes div:nth-child(3) {
+    top: 50%;
+    left: 50%;
+    animation: box-animate 6s infinite
+}
+
+.boxes div:nth-child(4) {
+    top: 80%;
+    left: 60%;
+    animation: box-animate 15s infinite
+}
+
+.boxes div:nth-child(5) {
+    top: 30%;
+    left: 30%;
+    animation: box-animate 9s infinite
+}
+
+.boxes div:nth-child(6) {
+    top: 90%;
+    left: 90%;
+    animation: box-animate 12s infinite
+}
+
+.boxes div:nth-child(7) {
+    top: 80%;
+    left: 30%;
+    animation: box-animate 2s infinite
+}
+
+.boxes div:nth-child(8) {
+    top: 40%;
+    left: 20%;
+    animation: box-animate 2s infinite
+}
+
+.boxes div:nth-child(9) {
+    top: 50%;
+    left: 80%;
+    animation: box-animate 2s infinite
+}
+
+@@keyframes box-animate {
+    0% {
+        transform: scale(0) translateY(0) rotate(0);
+        opacity: 1
+    }
+
+    100% {
+        transform: scale(1.3) translateY(-90px) rotate(360deg);
+        opacity: 0
+    }
+}
+
+
+ section {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     min-height: 100vh;
+     background-size: 400% 400%;
+     animation: gradient 10s ease infinite;
+}
+ @@keyframes gradient {
+     0% {
+         background-position: 0% 50%;
+    }
+     50% {
+         background-position: 100% 50%;
+    }
+     100% {
+         background-position: 0% 50%;
+    }
+}
+ .box {
+     position: relative;
+}
+ .box .square {
+     position: absolute;
+     background: rgba(255, 255, 255, 0.1);
+     backdrop-filter: blur(5px);
+     box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+     border: 1px solid rgba(255, 255, 255, 0.15);
+     border-radius: 15px;
+     animation: square 10s linear infinite;
+     animation-delay: calc(-1s * var(--i));
+}
+ @@keyframes square {
+     0%, 100% {
+         transform: translateY(-20px);
+    }
+     50% {
+         transform: translateY(20px);
+    }
+}
+ .box .square:nth-child(1) {
+     width: 100px;
+     height: 100px;
+     top: -15px;
+     right: -45px;
+}
+ .box .square:nth-child(2) {
+     width: 150px;
+     height: 150px;
+     top: 105px;
+     left: -125px;
+     z-index: 2;
+}
+ .box .square:nth-child(3) {
+     width: 60px;
+     height: 60px;
+     bottom: 85px;
+     right: -45px;
+     z-index: 2;
+}
+ .box .square:nth-child(4) {
+     width: 50px;
+     height: 50px;
+     bottom: 35px;
+     left: -95px;
+}
+ .box .square:nth-child(5) {
+     width: 50px;
+     height: 50px;
+     top: -15px;
+     left: -25px;
+}
+ .box .square:nth-child(6) {
+     width: 85px;
+     height: 85px;
+     top: 165px;
+     right: -155px;
+     z-index: 2;
+}
+
+        .container {
+            background: linear-gradient(45deg, #FC466B, #3F5EFB);
+            margin-top: 5%;
+            position: relative;
+            padding: 50px;
+            width: 400px;
+            min-height: 380px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+        }
+
+            .container::after {
+                content: '';
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                bottom: 5px;
+                left: 5px;
+                border-radius: 5px;
+                pointer-events: none;
+                /*background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 2%);*/
+            }
+
+        .form {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+            .form h2 {
+                color: #fff;
+                letter-spacing: 2px;
+                margin-bottom: 30px;
+            }
+
+            .form .inputBx {
+                position: relative;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+                .form .inputBx input {
+                    width: 100%;
+                    outline: none;
+                    border: none;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    background: rgba(255, 255, 255, 0.2);
+                    padding: 8px 10px;
+                    padding-left: 40px;
+                    border-radius: 15px;
+                    color: #fff;
+                    font-size: 16px;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                }
+
+                .form .inputBx .password-control {
+                    position: absolute;
+                    top: 11px;
+                    right: 10px;
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+                    background: url(https://snipp.ru/demo/495/view.svg) 0 0 no-repeat;
+                    transition: 0.5s;
+                }
+
+                .form .inputBx .view {
+                    background: url(https://snipp.ru/demo/495/no-view.svg) 0 0 no-repeat;
+                    transition: 0.5s;
+                }
+
+                .form .inputBx img {
+                    position: absolute;
+                    top: 6px;
+                    left: 8px;
+                    transform: scale(0.6);
+                    filter: invert(1);
+                }
+
+                .form .inputBx input[type="submit"] {
+                   width: 200px;
+                    padding: 10px 10px;
+                    transition: 1.5s;
+                    text-align: center;
+                    font-weight: 500;
+                    color: #fff;
+                    opacity: 0.7;
+                    font-size: 1.4rem;
+                    margin-top: 0;
+                    margin-bottom: 60px;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+                }
+
+                    .form .inputBx input[type="submit"]:hover {
+                        background: linear-gradient(115deg, rgba(0, 0, 0, 0.10), rgba(255, 255, 255, 0.25));
+                        color: #fff;
+                        transition: 0.5s;
+                    }
+
+                .form .inputBx input::placeholder {
+                    color: #fff;
+                }
+
+                .form .inputBx span {
+                    position: absolute;
+                    left: 30px;
+                    padding: 10px;
+                    display: inline-block;
+                    color: #fff;
+                    transition: 0.5s;
+                    pointer-events: none;
+                }
+
+                .form .inputBx input:focus ~ span, .form .inputBx input:valid ~ span {
+                    transform: translateX(-30px) translateY(-25px);
+                    font-size: 12px;
+                }
+
+            .form p {
+            text-align:center;
+            font-weight: 500;
+            color: #fff;
+            opacity: 0.7;
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 60px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+
+            }
+
+
+
+    </style>
+</head>
+<body>
+    <section>
+   
+        @if (viewModel.BodyText != "None")
+        {
+            <div class="modal fade" id="myModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom">
+                    <div class="modal-content">
+                        @*Modal header*@
+                        <div class="modal-header">
+                            <h5 class="modal-title  float-left">@viewModel.HeaderText</h5>
+                            <button type="button" class="close" data-dismiss="modal" style="outline:none;">&times;</button>
+                        </div>
+                        @*Modal body*@
+                        <div class="modal-body">
+                            <p class="text text-center mt-2">@viewModel.BodyText</p>
+                        </div>
+                        @*Modal footer*@
+                        <div class="modal-footer justify-content-between">
+                            <h5 class="modal-title  float-left">@viewModel.FooterText</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+            @*<div class="row mt-5" style="margin-top:5%;">*@
+                @*<div class="wrapper">
+
+                    <div class="boxes">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>*@
+                @*<div class="bubbles">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>*@
+    <div class="box">
+    
+    <div class="square" style="--i:0;"></div>
+    <div class="square" style="--i:1;"></div>
+    <div class="square" style="--i:2;"></div>
+    <div class="square" style="--i:3;"></div>
+    <div class="square" style="--i:4;"></div>
+    <div class="square" style="--i:5;"></div>
+    
+                <div class="container">
+                    <div class="form">
+                       
+                            <p>OTP</p>
+                       
+                            <div class="inputBx">
+
+                                <input type="text" required="required" class = "form-control form-rounded " placeholder="Enter OTP">
+                            </div>
+                            
+                            <div class="inputBx mt-5 text-center">
+                                <input type="submit" value="Continue" disabled>
+                            </div>
+                       
+                    </div>
+                    </div>
+                </div>
+        </section>
+            
+</body>
+</html>
+    <script>
+    debugger;
+    var status = '@TempData["TransactionStatus"]';
+    </script>
+    <script src="~/Scripts/Custom/Custometoastr.js"></script>

@@ -1,0 +1,370 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonMachineryAssetViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+ 
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PMAAMN");
+
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Machinery Asset - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark"> &nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-5 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+
+                                @*CheckerRemark*@
+                                <div class=" ml-5 mt-5 mr-5 form-group read-only">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "name-of-center", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+
+
+                                <div id="heading-machinery-asset" class="ml-2 card-body">
+                                    <div class="row mt-5">
+                                        <div class="col-12">
+                                            <div class="modal fade" id="machinery-asset-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title  text-center" id="machinery-asset-text">Add</h4>
+                                                            <button type="button" class="close-machinery-asset-modal" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @*NameOfMachinery*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Name Of Machinery")
+                                                                @Html.TextAreaFor(m => m.NameOfMachinery, new { @id = "name-of-machinery", @class = "form-control alpha-numeric mandatory-mark deny-multiple-space modal-input", @placeholder = "Enter Name Of Machinery", required = "required", @minlength = 3, @maxlength = 400, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.NameOfMachinery)
+                                                                <span id="name-of-machinery-error" class="error modal-input-error d-none">Please Enter Valid Name Of Machinery. </span>
+                                                            </div>
+
+                                                            @*MachineryFullDetails*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Machinery Full Details")
+                                                                @Html.TextAreaFor(m => m.MachineryFullDetails, new { @id = "machinery-full-details", @class = "form-control alpha-numeric mandatory-mark deny-multiple-space modal-input", @placeholder = "Enter Machinery Full Details", required = "required", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.MachineryFullDetails)
+                                                                <span id="machinery-full-details-error" class="error modal-input-error d-none">Please Enter Valid Machinery Full Details. </span>
+                                                            </div>
+
+
+                                                            @*ManufacturingYear*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Manufacturing Year")
+                                                                @Html.TextBoxFor(m => m.ManufacturingYear, new { @id = "manufacturing-year-machinery-asset", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Manufacturing Year", @min = DateTime.Now.Year - 50, @max = DateTime.Now.Year, @Type = "number", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.ManufacturingYear)
+                                                                <span id="manufacturing-year-machinery-asset-error" class="error modal-input-error d-none">Please Enter Valid Manufacturing Year.</span>
+                                                            </div>
+
+                                                            @*DateOfPurchase*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Date Of Purchase")
+                                                                @Html.TextBoxFor(m => m.DateOfPurchase, "{0:yyyy-MM-dd}", new { @id = "date-of-purchase-machinery-asset", @class = "form-control mandatory-mark deny-future-date allow-past-date-upto-50y modal-input", required = "required", @Type = "date" })
+                                                                @Html.ValidationMessageFor(m => m.DateOfPurchase)
+                                                                <span id="date-of-purchase-machinery-asset-error" class="error modal-input-error d-none">Please Enter Valid Purchase Date. </span>
+                                                            </div>
+
+                                                            @*NumberOfOwners*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Number Of Owners")
+                                                                @Html.TextBoxFor(m => m.NumberOfOwners, new { @id = "number-of-owners-machinery-asset", @class = "form-control mandatory-mark real-number modal-input", @placeholder = "Enter Number Of Owners", required = "required", @type = "number", @min = 1, @max = 19 })
+                                                                @Html.ValidationMessageFor(m => m.NumberOfOwners)
+                                                                <span id="number-of-owners-machinery-asset-error" class="error modal-input-error d-none">Please Enter Valid Number Of Owners. </span>
+                                                            </div>
+
+                                                            @*ReferenceNumber*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Reference Number")
+                                                                @Html.TextBoxFor(m => m.ReferenceNumber, new { @id = "reference-number-machinery-asset", @class = "form-control mandatory-mark alpha-numeric-with-dash-slash upper-case deny-multiple-space modal-input", @placeholder = "Enter Reference Number", required = "required", @maxlength = 50 })
+                                                                @Html.ValidationMessageFor(m => m.ReferenceNumber)
+                                                                <span id="reference-number-machinery-asset-error" class="error modal-input-error d-none">Please Select Valid Reference Number. </span>
+                                                            </div>
+
+                                                            @*PurchasePrice*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Purchase Price")
+                                                                @Html.TextBoxFor(m => m.PurchasePrice, new { @id = "purchase-price-machinery-asset", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Purchase Price", required = "required", @type = "number", @min = 10000, @max = 999999999 })
+                                                                @Html.ValidationMessageFor(m => m.PurchasePrice)
+                                                                <span id="purchase-price-machinery-asset-error" class="error modal-input-error d-none">Please Enter Valid Purchase Price. </span>
+                                                            </div>
+
+                                                            @*CurrentMarketValue*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Current Market Value")
+                                                                @Html.TextBoxFor(m => m.CurrentMarketValue, new { @id = "current-market-value-machinery-asset", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Current Market Value", @type = "number", required = "required", @min = 1, @max = 999999999 })
+                                                                @Html.ValidationMessageFor(m => m.CurrentMarketValue)
+                                                                <span id="current-market-value-machinery-asset-error" class="error modal-input-error d-none">Please Enter Valid Current Market Value. </span>
+                                                            </div>
+
+                                                            @*OwnershipPercentage*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Ownership Percentage")
+                                                                @Html.TextBoxFor(m => m.OwnershipPercentage, new { @id = "ownership-percentage-machinery-asset", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Ownership Percentage", @type = "number", required = "required", @min = 1, @max = 100 })
+                                                                @Html.ValidationMessageFor(m => m.OwnershipPercentage)
+                                                                <span id="ownership-percentage-machinery-asset-error" class="error modal-input-error d-none">Please Enter Valid Ownership Percentage. </span>
+                                                            </div>
+
+                                                            @*HasAnyMortgage*@
+                                                            <div class="row form-group mt-4">
+                                                                <div class="col-8">
+                                                                    @Html.CustomLabel("Has Any Mortgage")
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <div class="text-right">
+                                                                        <label class="switch switch-left-right">
+                                                                            @Html.CheckBoxFor(m => m.HasAnyMortgage, new { @id = "has-any-mortgage-machinery", @class = "form-control switch-input modal-switch-input" })
+                                                                            <span class="slider round">
+                                                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            @*IsOwnershipDeceased*@
+                                                            <div class="row form-group">
+                                                                <div class="col-8">
+                                                                    @Html.CustomLabel("Is Ownership Deceased")
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <div class="text-right">
+                                                                        <label class="switch switch-left-right">
+                                                                            @Html.CheckBoxFor(m => m.IsOwnershipDeceased, new { @id = "is-ownership-deceased-machinery", @class = "form-control switch-input modal-switch-input" })
+                                                                            <span class="slider round">
+                                                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="@((ViewBag.PersonInformationParameter.MachineryAssetDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Photo")
+                                                                    <span id="machinery-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Photo. </span>
+                                                                    <div>
+                                                                        @Html.TextBoxFor(m => m.PhotoPathMachinery, new { @id = "machinery-file-uploader", @class = "form-control mandatory-mark doc-upload modal-input", type = "file", name = "PhotoPath", @placeholder = "Enter Photo", onchange = "document.getElementById('machinery-file-uploader-image-preview').src = window.URL.createObjectURL(this.files[0])", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.PhotoPathMachinery)
+                                                                    </div>
+                                                                </div>
+
+                                                                <hr />
+                                                                <div><img id="machinery-file-uploader-image-preview" class="modal-input-img-preview" src="" width="200" height="200" /></div>
+                                                                <hr />
+
+                                                                @*FileCaption*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("File Caption")
+                                                                    @Html.TextBoxFor(m => m.FileCaption, new { @id = "file-caption-machinery", @class = "form-control deny-multiple-space title-case modal-input", @placeholder = "Enter File Caption", @maxlength = 400, required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.FileCaption)
+                                                                </div>
+
+                                                                @*Hiddent Field For MachineryAssetDocumentUpload*@
+                                                                @Html.HiddenFor(m => personInformationParameterViewModel.MachineryAssetDocumentUpload, new { @id = "machinery-asset-document-upload" })
+
+                                                                @*Hiddent Field For PersonMachineryAssetDocumentPrmKey*@
+                                                                @Html.HiddenFor(m => personInformationParameterViewModel.EnableMachineryAssetDocumentUploadInLocalStorage, new { @id = "enable-machinery-asset-document-upload" })
+                                                            </div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Note")
+                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-machinery-asset", @class = "form-control deny-multiple-space default-none modal-input", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                            </div>
+
+                                                            @*ReasonForModification*@
+                                                            <div id="machinery-div" class="form-group">
+                                                                @Html.CustomLabel("Reason For Modification")
+                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-machinery-asset", @class = "form-control deny-multiple-space default-none modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" id="btn-add-machinery-asset-modal" class="btn btn-success ">Add</button>
+                                                            <button type="button" id="btn-update-machinery-asset-modal" class="btn btn-primary ">Update</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <table id="tbl-machinery-asset" class="table compact table-striped table-bordered " width="100">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check_all" id="select-all-machinery-asset" /></th>
+                                                            <th>NameOfMachinery</th>
+                                                            <th>MachineryFullDetails</th>
+                                                            <th>ManufacturingYear</th>
+                                                            <th>DateOfPurchase</th>
+                                                            <th>NumberOfOwners</th>
+                                                            <th>ReferenceNumber</th>
+                                                            <th>PurchasePrice</th>
+                                                            <th>CurrentMarketValue</th>
+                                                            <th>OwnershipPercentage</th>
+                                                            <th>HasAnyMortgage</th>
+                                                            <th>IsOwnershipDeceased</th>
+                                                            <th>Photopath</th>
+                                                            <th>Photo</th>
+                                                            <th>FileCaption</th>
+                                                            <th>Note</th>
+                                                            <th>ReasonForModification</th>
+                                                            <th class="d-none">FileName</th>
+                                                            <th class="d-none">PersonMachineryAssetDocumentPrmKey</th>
+                                                            <th class="d-none">LocalStoragePath</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable<PersonMachineryAssetViewModel> personMachineryAssetViewModels = (IEnumerable<PersonMachineryAssetViewModel>)HttpContext.Current.Session["MachineryAsset"];
+                                                            if (personMachineryAssetViewModels != null)
+                                                            {
+                                                                foreach (PersonMachineryAssetViewModel viewModel in personMachineryAssetViewModels)
+                                                                {
+                                                                    counter += 1;
+                                                                    photoId = "photo-id" + counter.ToString();
+                                                                    fileUploaderId = "data-table-machinery-file-uploader" + counter.ToString();
+                                                                    <tr>
+                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                        <td>@viewModel.NameOfMachinery</td>
+                                                                        <td>@viewModel.MachineryFullDetails</td>
+                                                                        <td>@viewModel.ManufacturingYear</td>
+                                                                        <td>@viewModel.DateOfPurchase.ToString("yyyy-MM-dd")</td>
+                                                                        <td>@viewModel.NumberOfOwners</td>
+                                                                        <td>@viewModel.ReferenceNumber</td>
+                                                                        <td>@viewModel.PurchasePrice</td>
+                                                                        <td>@viewModel.CurrentMarketValue</td>
+                                                                        <td>@viewModel.OwnershipPercentage</td>
+                                                                        <td>@viewModel.HasAnyMortgage</td>
+                                                                        <td>@viewModel.IsOwnershipDeceased</td>
+                                                                        <td>
+                                                                            <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                        </td>
+                                                                        <td>
+                                                                            @if (viewModel.EnableMachineryAssetDocumentUploadInLocalStorage == true)
+                                                                            {
+                                                                                <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.MachineryAssetDocumentLocalStoragePath + viewModel.PhotoPathMachinery.FileName)" width="50" height="50" />
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                                var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                                <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                                string filename = Path.GetFileName(imgsrc);
+                                                                            }
+                                                                        </td>
+                                                                        <td>@viewModel.FileCaption</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                        <td class="d-none">@viewModel.NameOfFile</td>
+                                                                        <td class="d-none">@viewModel.PersonMachineryAssetDocumentPrmKey</td>
+                                                                        <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*Hiddent Field For PrmKey*@
+                                    @Html.HiddenFor(m => m.PrmKey)
+
+                                    @*Hiddent Field For PersonPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                    @*Hiddent Field For PersonId*@
+                                    @Html.HiddenFor(m => m.PersonId)
+
+                                    @*Hiddent Field For PersonMachineryAssetPrmKey*@
+                                    @Html.HiddenFor(m => Model.PersonMachineryAssetPrmKey)
+
+                                    @Html.HiddenFor(m => Model.PersonMachineryAssetDocumentPrmKey)
+
+                                </div>
+
+                                @*Save/Submit Button*@
+                                @Html.OperationFooter("Amend", "Exit", "Home", "None")
+                            </div>
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var saveDataTableURL  = "@Url.Action("SaveMachineryDataTables", "PersonMachineryAsset")";
+</script>
+<script src="~/Scripts/Custom/PersonMachineryAsset.js"></script>
+

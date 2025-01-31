@@ -1,0 +1,192 @@
+﻿@model DemoProject.Services.ViewModel.Management.Master.DesignationViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Master.General
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    DesignationDetailViewModel detailViewModel = new DesignationDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("DSGAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Designation - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Amend", "Designation", FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @class = "form-control read-only" })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*Designation Category*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Designation Category")
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <div class="mt-1 d-flex justify-content-between">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.DesignationCategory, "BOD", new { @id = "designation-category-bod", @name = "BoardOfDirector", @class = "designation-category", required = "required" })
+                                                            <label for="designation-category-bod" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Board Of Director")</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.DesignationCategory, "EMP", new { @id = "designation-category-emp", @name = "Employee", @class = "designation-category", required = "required" })
+                                                            <label for="designation-category-emp" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Employee")</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.DesignationCategory, "INV", new { @id = "designation-category-inv", @name = "Invitees", @class = "designation-category", required = "required" })
+                                                            <label for="designation-category-inv" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("Invitees")</label>
+                                                        </div>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.DesignationCategory)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*NameOfDesignation*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of Designation")
+                                            @Html.TextBoxFor(m => m.NameOfDesignation, new { @id = "name-of-designation", @class = "form-control alpha-numeric mandatory-mark title-case", @placeholder = "Enter Name Of Designation", required = "required", @maxlength = 100, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOfDesignation)
+                                        </div>
+
+                                        @*TransNameOfDesignation*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOfDesignationInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOfDesignation, new { @id = "trans-name-of-designation", @class = "form-control deny-multiple-space mandatory-mark", @placeholder = detailViewModel.NameOfDesignationPlaceHolderInRegionalLanguage, required = "required", @maxlength = 100 })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfDesignation)
+                                        </div>
+
+                                        @*Alias Name*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control alpha-numeric title-case", @placeholder = "Enter Alias Name", @maxlength = 10, onkeydown = "Maketranslation()", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, new { @id = "trans-alias-name", @class = "form-control deny-multiple-space", @placeholder = detailViewModel.AliasNamePlaceHolderInRegionalLanguage, @maxlength = 10, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name On Report")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control alpha-numeric title-case", @placeholder = "Enter Name On Report", required = "required", @maxlength = 100, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, new { @id = "trans-name-on-report", @class = "form-control deny-multiple-space", @placeholder = detailViewModel.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = 100, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*SequenceNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Sequence Number")
+                                            @Html.TextBoxFor(m => m.SequenceNumber, new { @class = "form-control mandatory-mark real-number", @type = "number", @placeholder = "Enter Sequence Number", @min = 1, @max = 9999, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.SequenceNumber)
+                                        </div>
+
+                                        @*Activation Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control activation-date deny-past-date deny-next-financial-year-date", @Type = "date", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*Expiry Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control expiry-date allow-future-date-upto-50y", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control default-none deny-multiple-space title-case", @placeholder = "Enter Note", @maxlength = 1500, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(detailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none deny-multiple-space", @placeholder = detailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1500 })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                        @*Hiddent Field For DesignationPrmKey*@
+                                        @Html.HiddenFor(m => m.DesignationPrmKey)
+
+                                        @*Hiddent Field For DesignationModificationPrmKey*@
+                                        @Html.HiddenFor(m => m.DesignationModificationPrmKey)
+
+                                        @*Hiddent Field For DesignationTranslationPrmKey*@
+                                        @Html.HiddenFor(m => m.DesignationTranslationPrmKey)
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Footer*@
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+        var url = "@Url.Action("GetUniqueDesignationName", "Designation")";
+</script>
+<script src="~/Scripts/Custom/Designation.js"></script>

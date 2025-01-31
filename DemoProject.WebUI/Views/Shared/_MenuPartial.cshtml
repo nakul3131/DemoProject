@@ -1,0 +1,7 @@
+﻿@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.SystemEntity.Navigation
+@{ 
+    Layout = null;
+}
+
+@Html.DashBoardMenu((List<MenuViewModel>)HttpContext.Current.Session["UserProfileMenu1"])

@@ -1,0 +1,85 @@
+﻿@model DemoProject.Services.ViewModel.Report.MemberRegisterReportViewModel
+@using DemoProject.Services.ViewModel.Report;
+
+@{
+    ViewBag.Title = "MemberRegisterReport";
+    MemberRegisterReportViewModel model = new MemberRegisterReportViewModel();
+    XtraReport report = (XtraReport)TempData["Report"];
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    @*Don't change script Location*@
+    <script>
+        // DevExpress Disable Parameter Windows
+        function DisableSystemReportParameterWindow(s, e) {
+            var rightpanelPart = e.GetById(DevExpress.Report.Preview.PreviewElements.RightPanel);
+            var index = e.Elements.indexOf(rightpanelPart);
+            e.Elements.splice(index, 1);
+        }
+        function ReportParameterWindow(s, e)
+        {
+            var filterbtn =
+            {
+                id: 'filterbtn',
+                imageClassName: 'custom-image-item',
+                text: 'Filters',
+                visible: true,
+                disabled: false,
+                hasSeparator: true,
+                hotKey:{ ctrlKey: true, keyCode: "F".charCodeAt(0) },
+                clickAction: function ()
+                {
+                    $('#member-register-report').modal('show');
+                }
+            };
+
+            e.Actions.push(filterbtn);
+        }
+    </script>
+</head>
+<body>
+    @using (Html.BeginForm("MemberRegisterReport", "SharesCapitalReport", FormMethod.Post))
+    {
+        <div class="modal fade" id="member-register-report" tabindex="-1" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                <div class="modal-content bg-light">
+                    <div class="modal-header">
+                        <i class="fa fa-filter mt-2" aria-hidden="true"></i>
+                        <h5 class="modal-title ml-2" id="exampleModalLabel">Filters</h5>
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body bg-light">
+                        <div class="form-group">
+                            <label>CustomerAccountId</label>
+                            @Html.DropDownListFor(m => m.CustomerAccountId, new SelectList(model.CustomerAccountDropdownList, "Value", "Text"), "---Please Select---", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label>Language</label>
+                            @Html.DropDownListFor(m => m.RegionalLanguageId, new SelectList(model.LanguageDropdownList, "Value", "Text"), "---Please Select---", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success btn-sm">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="container-fluid ml-1 mt-5">
+        @Html.DevExpress().WebDocumentViewer(settings =>
+        {
+            settings.Name = "WebDocumentViewer";
+            settings.MobileMode = false;
+            settings.ControlStyle.CssClass = "shadow";
+            settings.ClientSideEvents.CustomizeElements = "DisableSystemReportParameterWindow";
+            settings.ClientSideEvents.CustomizeMenuActions = "ReportParameterWindow";
+
+        }).Bind(report).GetHtml()
+    </div>
+</body>
+</html>

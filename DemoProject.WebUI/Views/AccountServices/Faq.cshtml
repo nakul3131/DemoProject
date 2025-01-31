@@ -1,0 +1,198 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!doctype html>
+
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/Custom.css" rel="stylesheet" />
+    <title>Frequently Asked Questions</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- First Row (<- Back Arrow and Title) -->
+        <div class="row mt-5">
+            <div class="col-1">
+                <a class="text-center" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Login", "Account")'">
+                    <i class='fas fa-arrow-left btn-lg text-primary'></i>
+                </a>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center text-primary">
+                    <strong>Frequently Asked Questions</strong>
+                </h2>
+            </div>
+        </div>
+        <!-- Second Row (<- Page Description) -->
+        <div class="row mt-4">
+            <div class="offset-1 col-10 text-left">
+                <div class="mt-1" id="accordion-main">
+                    <div class="card">
+                        <div class="card-header bg-info">
+                            <a class="card-link collapsed text-white" data-toggle="collapse" href="#collapse-section-a">
+                                <h6>
+                                    <i class="fas fa-book fa-fw" aria-hidden="true"></i>
+                                    A. <span class="ml-3">User Name And Password Setup And TroubleShooting </span>
+                                </h6>
+                            </a>
+                        </div>
+                        <div id="collapse-section-a" class="collapse" data-parent="#accordion-main">
+                            <div class="card-body">
+                                <div id="accordion-section-a">
+                                    <div class="card">
+                                        <div class="card-header bg-info">
+                                            <a class="card-link collapsed text-white" data-toggle="collapse" href="#collapse-answer-a1">
+                                                <h6>Q1. What should I do if my username and password is locked or if I need additional help?</h6>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-answer-a1" class="collapse" data-parent="#accordion-section-a">
+                                            <div class="card-body">
+                                                <h6 class="text-justify line-height-3">
+                                                    <strong>Q1. Answer -</strong> 
+                                                    You should contact your User Administrator and have them unlock your account.
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header bg-info">
+                                            <a class="card-link collapsed text-white" data-toggle="collapse" href="#collapse-answer-a2">
+                                                <h6>Q2. Can someone in the GS1 US Contact Center tell me what my password is?</h6>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-answer-a2" class="collapse" data-parent="#accordion-section-a">
+                                            <div class="card-body">
+                                                <h6 class="text-justify line-height-3">
+                                                    <strong>Q2. Answer -</strong>
+                                                    No, your password is encrypted and can only be changed by you.
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header bg-info">
+                                            <a class="card-link collapsed text-white" data-toggle="collapse" href="#collapse-answer-a3">
+                                                <h6>Q3. What if I forget my password? </h6>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-answer-a3" class="collapse" data-parent="#accordion-section-a">
+                                            <div class="card-body">
+                                                <h6 class="text-justify line-height-3">
+                                                    <strong>Q3. Answer -</strong>
+                                                    Click on “Forgot Password?” on the login screen, then enter your username (email address).  
+                                                    Within minutes you’ll get a password reset email from newusersetup@abc.org. 
+                                                    Follow the instructions in the email to complete your password reset.
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*****************************************************************Card 2*********************************************************************@
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <a class="collapsed card-link text-white" data-toggle="collapse" href="#collapse-section-b">
+                                <h6>
+                                    <i class="fas fa-home fa-fw" aria-hidden="true"></i>
+                                    B. <span class="ml-3">Your Report Across Different Bureaus </span>
+                                </h6>
+                            </a>
+                        </div>
+                        <div id="collapse-section-b" class="collapse" data-parent="#accordion-main">
+                            <div class="card-body">
+                                <div id="accordion-section-b">
+                                    <div class="card">
+                                        <div class="card-header bg-info">
+                                            <a class="card-link collapsed text-white" data-toggle="collapse" href="#collapse-answer-b1">
+                                                <h6>Q1. What Is Credit Score?</h6>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-answer-b1" class="collapse" data-parent="#accordion-section-b">
+                                            <div class="card-body">
+                                                <h6 class="text-justify line-height-3">
+                                                    <strong>Q1. Answer -</strong> Credit score is a 3-digit number, usually between 300 and 900. It represents the creditworthiness
+                                                    of an individual that lenders evaluate when he/she applies for any kind of a credit product like a loan or a credit card.
+                                                    In simpler terms, credit score signifies the trustworthiness of a borrower to pay off the loan in timely manner, without
+                                                    defaults or delay.
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header bg-info">
+                                            <a class="card-link collapsed text-white" data-toggle="collapse" href="#collapse-answer-b2">
+                                                <h6>Q2. What Is Credit Report?</h6>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-answer-b2" class="collapse" data-parent="#accordion-section-b">
+                                            <div class="card-body">
+                                                <h6 class="text-justify line-height-3">
+                                                    <strong>Q2. Answer -</strong> A credit report, also known as Credit Information Report (CIR), details how you dealt with
+                                                    your credit (loans and credit cards) in the past. The report includes your history of payments (on time or delayed),
+                                                    the current status of each credit account (active, closed, delinquent or settled) and so on. Your credit score is also
+                                                    a part of your credit report.
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header bg-info">
+                                            <a class="card-link collapsed text-white" data-toggle="collapse" href="#collapse-answer-b3">
+                                                <h6>Q3. How To Build Credit Score</h6>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-answer-b3" class="collapse" data-parent="#accordion-section-b">
+                                            <div class="card-body">
+                                                <h6 class="text-justify line-height-3">
+                                                    <strong>Q3. Answer -</strong> Economic liberalisation, begun in 1991, has caused India to become a fast growing major economy
+                                                    and a newly industrialised country. Its gross domestic product ranks sixth in the world in market exchange rates and third
+                                                    in purchasing power parity.[16] Its per capita income ranks 133rd and 116th in the two measures.[16] India faces challenges of
+                                                    poverty, corruption, malnutrition, and inadequate public healthcare. A nuclear weapons state and regional power, it has the second
+                                                    largest active military in the world and ranks high in military expenditure. India is a secular, federal republic, governed
+                                                    in a democratic parliamentary system, and administered in 29 states and seven union territories. A pluralistic, multilingual
+                                                    and multi-ethnic society, India is home to 1.3 billion people. It is also home to a high diversity of wildlife in a variety
+                                                    of protected habitats.[20]
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*****************************************************************Card 3*********************************************************************@
+                    <div class="card">
+                        <div class="card-header bg-info">
+                            <a class="collapsed card-link text-white" data-toggle="collapse" href="#collapse-section-c">
+                                <h6>
+                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                    C. <span class="ml-3">How To Build Credit Score</span>
+                                </h6>
+                            </a>
+                        </div>
+                        <div id="collapse-section-c" class="collapse" data-parent="#accordion-main">
+                            <div class="card-body text-justify">
+                                <h6 class="text-justify line-height-3">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</body>
+</html>

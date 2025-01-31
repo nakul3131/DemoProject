@@ -1,0 +1,238 @@
+﻿@model DemoProject.Services.ViewModel.Enterprise.Office.BusinessOfficeRBIRegistrationViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Enterprise.Office
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    OfficeDetailViewModel officeDetailViewModel = new OfficeDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("BUOAUT");
+}
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+
+    <title>Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-6">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+
+                                    @*Page Title Translation For Large Screen*@
+                                    <div class="col-6">
+                                        <div class="d-none d-lg-block">
+                                            <h5 class="mt-1"><b>Translation : @HttpContext.Current.Session["RegionalLanguage"]</b></h5>
+                                            <hr />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                @*Two Columns For Default Application Language (i.e. English) And Other For Regional Language Translation With Equal Length*@
+                                <div class="row read-only">
+                                    <div class="col-lg-6">
+                                        @*ApprovalDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Approval Date")
+                                            @Html.TextBoxFor(m => m.ApprovalDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark"})
+                                            @Html.ValidationMessageFor(m => m.ApprovalDate)
+                                        </div>
+
+                                        @*LicenseNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" License Number")
+                                            @Html.TextBoxFor(m => m.LicenseNumber, new { @class = "form-control mandatory-mark", @autocomplete = "off", @placeholder = "Enter  License Number" })
+                                            @Html.ValidationMessageFor(m => m.LicenseNumber)
+                                        </div>
+
+                                        @*ReferenceNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Reference Number")
+                                            @Html.TextBoxFor(m => m.ReferenceNumber, new { @id = "rbi-reference-number", @class = "form-control", @autocomplete = "off", @placeholder = "Enter  Reference Number", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.ReferenceNumber)
+                                        </div>
+
+                                        @*UniformBusinessOfficeCode1*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Uniform Business Office Code1")
+                                            @Html.TextBoxFor(m => m.UniformBusinessOfficeCode1, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter  Uniform Business Office Code1" })
+                                            @Html.ValidationMessageFor(m => m.UniformBusinessOfficeCode1)
+                                        </div>
+
+                                        @*UniformBusinessOfficeCode2*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Uniform Business Office Code2")
+                                            @Html.TextBoxFor(m => m.UniformBusinessOfficeCode2, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter  Uniform Business Office Code2 " })
+                                            @Html.ValidationMessageFor(m => m.UniformBusinessOfficeCode2)
+                                        </div>
+
+                                        @*BusinessOfficeCodeBy*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Business Office Code")
+                                            @Html.TextBoxFor(m => m.BusinessOfficeCodeBy, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter   Business Office Code ", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.BusinessOfficeCodeBy)
+                                        </div>
+
+                                        @*MICRCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" MICRCode")
+                                            @Html.TextBoxFor(m => m.MICRCode, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter  MICRCode" })
+                                            @Html.ValidationMessageFor(m => m.MICRCode)
+                                        </div>
+
+                                        @*IFSCCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" IFSCCode")
+                                            @Html.TextBoxFor(m => m.IFSCCode, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter  IFSCCode" })
+                                            @Html.ValidationMessageFor(m => m.IFSCCode)
+                                        </div>
+
+                                        @*AlphaNumericSWIFTAddress*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Alpha Numeric SWIFT Address")
+                                            @Html.TextBoxFor(m => m.AlphaNumericSWIFTAddress, new { @id = "rbi-alpha-numeric-sWIFT-address", @class = "form-control", @maxlength = 20, @autocomplete = "off", @placeholder = "Enter  Alpha Numeric SWIFT Address", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.AlphaNumericSWIFTAddress)
+                                        </div>
+
+                                        @*AlphaNumericTelexAddress*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Alpha Numeric Telex Address")
+                                            @Html.TextBoxFor(m => m.AlphaNumericTelexAddress, new { @id = "rbi-alpha-numeric-telex-address", @class = "form-control", @autocomplete = "off", @maxlength = 20, @placeholder = "Enter  Alpha Numeric Telex Address  ", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.AlphaNumericTelexAddress)
+                                        </div>
+
+                                        @*BusinessOfficeUniqueIdentityNumberForATM*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(" Business Office Unique Identity Number For ATM")
+                                            @Html.TextBoxFor(m => m.BusinessOfficeUniqueIdentityNumberForATM, new { @id = "rbi-business-office-unique-identity-number", @class = "form-control", @maxlength = "20", @autocomplete = "off", @placeholder = "Enter  Business Office Unique Identity Number For ATM ", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.BusinessOfficeUniqueIdentityNumberForATM)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control", @autocomplete = "off", @maxlength = "1500", @placeholder = "Enter Note", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*NameOfUser*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of User")
+                                            @Html.TextBoxFor(m => m.NameOfUser, new { @class = "form-control" })
+                                        </div>
+
+                                        @*EntryDateTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Entry Date Time")
+                                            @Html.TextBoxFor(m => m.EntryDateTime, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    @*Second Column - Translation In Regional Language*@
+                                    <div class="col-lg-6 d-block">
+                                        @*Display On Only Small Screen And Hide On Large Or Extra Large Screen*@
+                                        <div class="card bg-darkgray text-white d-block d-lg-none">
+                                            <h5 class="mt-1"><b>Translation : @HttpContext.Current.Session["RegionalLanguage"]</b></h5>
+                                            <hr class="bg-white" />
+                                        </div>
+
+                                        @*TransLicenseNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(officeDetailViewModel.RBILicenseNumberInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransLicenseNumber, new { @id = "trans-rbi-license-number", @class = "form-control", @autocomplete = "off", @placeholder = officeDetailViewModel.RBILicenseNumberPlaceHolderInRegionalLanguage, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.TransLicenseNumber)
+                                        </div>
+
+                                        @*TransReferenceNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(officeDetailViewModel.ReferenceNumberInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransReferenceNumber, new { @id = "trans-rbi-reference-number", @class = "form-control", @Value = "None", @autocomplete = "off", @placeholder = officeDetailViewModel.ReferenceNumberPlaceHolderInRegionalLanguage, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.TransReferenceNumber)
+                                        </div>
+
+                                        @*TransAlphaNumericSWIFTAddress*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(officeDetailViewModel.AlphaNumericSWIFTAddressInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAlphaNumericSWIFTAddress, new { @id = "trans-rbi-alpha-numeric-sWIFT-address", @class = "form-control", @Value = "None", @autocomplete = "off", @placeholder = officeDetailViewModel.AlphaNumericSWIFTAddressPlaceHolderInRegionalLanguage, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.TransAlphaNumericSWIFTAddress)
+                                        </div>
+
+                                        @*TransAlphaNumericTelexAddress*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(officeDetailViewModel.AlphaNumericTelexAddressInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAlphaNumericTelexAddress, new { @id = "trans-rbi-alpha-numeric-telex-address", @class = "form-control", @Value = "None", @autocomplete = "off", @placeholder = officeDetailViewModel.AlphaNumericTelexAddressPlaceHolderInRegionalLanguage, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.TransAlphaNumericTelexAddress)
+                                        </div>
+
+                                        @*TransBusinessOfficeUniqueIdentityNumberForATM*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(officeDetailViewModel.BusinessOfficeUniqueIdentityNumberForATMInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransBusinessOfficeUniqueIdentityNumberForATM, new { @id = "trans-rbi-business-office-unique-identity-number", @class = "form-control", @Value = "None", @autocomplete = "off", @placeholder = officeDetailViewModel.BusinessOfficeUniqueIdentityNumberForATMPlaceHolderInRegionalLanguage, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.TransBusinessOfficeUniqueIdentityNumberForATM)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(officeDetailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control", @autocomplete = "off", @maxlength = "4000", @placeholder = officeDetailViewModel.NotePlaceHolderInRegionalLanguage, onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Hiddent Field For PrmKey*@
+                            @Html.HiddenFor(m => m.PrmKey)
+
+                            @*Hiddent Field For BusinessOfficePrmKey*@
+                            @Html.HiddenFor(m => m.BusinessOfficePrmKey)
+
+                            @*Hiddent Field For BusinessOfficeRegistrationPrmKey*@
+                            @Html.HiddenFor(m => m.BusinessOfficeRegistrationPrmKey)
+
+                            @*Hiddent Field For BusinessOfficeRegistrationTranslationPrmKey*@
+                            @Html.HiddenFor(m => m.BusinessOfficeRegistrationTranslationPrmKey)
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Verify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

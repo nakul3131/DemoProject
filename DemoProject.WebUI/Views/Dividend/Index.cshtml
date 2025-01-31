@@ -1,0 +1,91 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.Account.Transaction.TransactionDividendIndexViewModel>
+@using DemoProject.Services.ViewModel.Account.Transaction
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    TransactionDividendIndexViewModel transactionDividendIndexViewModel = new TransactionDividendIndexViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("DIVIND");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Transaction Dividend - List</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+
+        <div class="card">
+            <div class="card-body no-footer">
+                @using (Html.BeginForm())
+                {
+                    @*TransactionDate*@
+                    <div class="row">
+                        <div class="form-group col">
+                            @Html.CustomLabel("Transaction Date")
+                            @Html.TextBoxFor(m => transactionDividendIndexViewModel.TransactionDate, "{0:yyyy-MM-dd}", new { @id = "transaction-date", @class = "form-control mandatory-mark", @placeholder = "Enter Opening Date", required = "required", @Type = "date" })
+                            @Html.ValidationMessageFor(m => transactionDividendIndexViewModel.TransactionDate)
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-success mt-4" id="divident-button">Calculate</button>
+                        </div>
+                    </div>
+                }
+                <table id="example" class="display table table-striped table-hover dt-responsive nowrap cell-border">
+                    <thead>
+                        <tr>
+                            <th>SR.</th>
+                            <th>Customer Full Name</th>
+                            <th>Account Number</th>
+                            <th>Shares Balance</th>
+                            <th>Dividend Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr class="hoverlightblue">
+                                        <td></td>
+                                        <td>@item.CustomerFullName</td>
+                                        <td>@item.AccountNumber</td>
+                                        <td>@item.SharesBalance</td>
+                                        <td>@item.DividendAmount</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @Html.OperationFooter("None", "Exit", "Home", "None")
+        </div>
+    </div>
+</body>
+</html>
+@*<script>
+    let Url = '@Url.Action("GetTransactionDividendIndex", "Dividend")';
+    let index = '@Url.Action("Index", "Dividend")';
+    $('#divident-button').click(function () {
+        debugger;
+        let transactionDate = $('#transaction-date').val();
+        $.post(Url, { _transactionDate: transactionDate, async: false }, function (data, textStatus, jqXHR) {
+            debugger;
+            @TempData["TransactionDividend"] = data;
+            location.href = index;
+        });
+    });
+</script>*@

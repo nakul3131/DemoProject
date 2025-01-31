@@ -1,0 +1,205 @@
+﻿@model DemoProject.Services.ViewModel.Management.Parameter.BoardOfDirectorParameterViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Management.Parameter
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    BoardOfDirectorParameterViewModel model = new BoardOfDirectorParameterViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("BDPAMD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>BoardOfDirector Parameter - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title If Screen Large Then Column - 12 Otherwise Col - 6 For Create And Remaining For Translation*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @class = "form-control mandatory-mark read-only" })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*Effective Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Effective Date")
+                                            @Html.TextBoxFor(m => m.EffectiveDate, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control mandatory-mark", required = "required", @Type = "datetime-local" })
+                                            @Html.ValidationMessageFor(m => m.EffectiveDate)
+                                        </div>
+
+                                        @*TotalNumberOfDirectors*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Total Number Of Directors")
+                                            @Html.TextBoxFor(m => m.TotalNumberOfDirectors, new { @id = "total-number-of-directors", @class = "form-control mandatory-mark", @placeholder = "Enter Total Number Of Directors", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.TotalNumberOfDirectors)
+                                        </div>
+
+                                        @*BoardOfDirectorValidity*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Board Of Director Validity In Year")
+                                            @Html.TextBoxFor(m => m.BoardOfDirectorValidity, new { @class = "form-control mandatory-mark ", @placeholder = "Enter Board Of Director Validity In Year", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.BoardOfDirectorValidity)
+                                        </div>
+
+                                        @*ReserveSeatsForGeneralCategory*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reserve Seats For GeneralCategory")
+                                            @Html.TextBoxFor(m => m.ReserveSeatsForGeneralCategory, new { @class = "form-control mandatory-mark reserve-seats", @placeholder = "Enter Reserve Seats For GeneralCategory", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.ReserveSeatsForGeneralCategory)
+                                        </div>
+
+                                        @*ReserveSeatsForSCST*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reserve Seats For SCST")
+                                            @Html.TextBoxFor(m => m.ReserveSeatsForSCST, new { @class = "form-control mandatory-mark reserve-seats", @placeholder = "Enter Reserve Seats For SCST", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.ReserveSeatsForSCST)
+                                        </div>
+
+                                        @*ReserveSeatsForWeakerSection*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reserve Seats For WeakerSection")
+                                            @Html.TextBoxFor(m => m.ReserveSeatsForWeakerSection, new { @class = "form-control mandatory-mark reserve-seats", @placeholder = "Enter Reserve Seats For WeakerSection", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.ReserveSeatsForWeakerSection)
+                                        </div>
+
+                                        @*ReserveSeatsForOBC*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reserve Seats For OBC")
+                                            @Html.TextBoxFor(m => m.ReserveSeatsForOBC, new { @class = "form-control mandatory-mark reserve-seats", @placeholder = "Enter Reserve Seats For OBC", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.ReserveSeatsForOBC)
+                                        </div>
+
+                                        @*ReserveSeatsForWomen*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reserve Seats For Women")
+                                            @Html.TextBoxFor(m => m.ReserveSeatsForWomen, new { @class = "form-control mandatory-mark reserve-seats", @placeholder = "Enter Reserve Seats For Women", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.ReserveSeatsForWomen)
+                                        </div>
+
+                                        @*ReserveSeatsForDNotifiedTribes*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reserve Seats For DNotified Tribes")
+                                            @Html.TextBoxFor(m => m.ReserveSeatsForDNotifiedTribes, new { @class = "form-control mandatory-mark reserve-seats", @placeholder = "Enter Reserve Seats For DNotifiedTribes", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.ReserveSeatsForDNotifiedTribes)
+                                        </div>
+
+                                        @*ReserveSeatsForCooptExpertDirector*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reserve Seats For Co-opt ExpertDirector")
+                                            @Html.TextBoxFor(m => m.ReserveSeatsForCooptExpertDirector, new { @class = "form-control mandatory-mark reserve-seats", @placeholder = "Enter Reserve Seats For Co-opt ExpertDirector", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.ReserveSeatsForCooptExpertDirector)
+                                        </div>
+                                        <br />
+
+                                        @*IsRequiredActiveMemberForDirector*@
+                                        <div class="row mt-3 form-group">
+                                            <div class="col-10 ml-1">
+                                                @Html.CustomLabel("Is Required Active Member For Director")
+                                            </div>
+                                            <div class="text-right">
+                                                <label class="switch switch-left-right">
+                                                    @Html.CheckBoxFor(m => m.IsRequiredActiveMemberForDirector, new { @id = "IsRequiredActiveMemberForDirector", @class = "form-control switch-input", required = "required" })
+                                                    <span class="slider round">
+                                                        <span class="on"><b>ON</b></span><span class="off"><b>OFF</b></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @*AssuranceDeedFormat*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Assurance Deed Format")
+                                            @Html.DropDownListFor(m => m.AssuranceDeedFormatId, new SelectList(model.AssuranceDeedFormatDropdownList, "Value", "Text"), new { @id = "assurance-deedformat", @class = "form-control mandatory-mark", @placeholder = "Enter Assurance DeedFormat", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.AssuranceDeedFormatId)
+                                        </div>
+
+                                        @*DepositAmount*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Deposit Amount")
+                                            @Html.TextBoxFor(m => m.DepositAmount, new { @class = "form-control mandatory-mark", @placeholder = "Enter Deposit Amount", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.DepositAmount)
+                                        </div>
+
+                                        @*DirectorAndTheirRelativesMortgageLoanLimitAgainstTotalLoanAmount*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Director And Their Relatives Mortgage Loan Limit Against Total Loan Amount")
+                                            @Html.TextBoxFor(m => m.DirectorAndTheirRelativesMortgageLoanLimitAgainstTotalLoanAmount, new { @class = "form-control mandatory-mark", @placeholder = "Enter Director And Their Relatives Mortgage Loan Limit Against Total Loan Amount", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.DirectorAndTheirRelativesMortgageLoanLimitAgainstTotalLoanAmount)
+                                        </div>
+
+                                        @*DirectorAndTheirRelativesMortgageLoanLimitAgainstTotalLoanInPercentage*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Director And Their Relatives Mortgage Loan Limit Against Total Loan In Percentage")
+                                            @Html.TextBoxFor(m => m.DirectorAndTheirRelativesMortgageLoanLimitAgainstTotalLoanInPercentage, new { @class = "form-control mandatory-mark", @placeholder = "Enter Director And Their Relatives Mortgage Loan Limit Against Total Loan In Percentage", required = "required", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.DirectorAndTheirRelativesMortgageLoanLimitAgainstTotalLoanInPercentage)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control mandatory-mark", @placeholder = "Enter Note", @autocomplete = "off", @maxlength = "1500", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For BoardOfDirectorParameterPrmKey*@
+                                @Html.HiddenFor(m => m.BoardOfDirectorParameterPrmKey)
+                            </div>
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/BoardOfDirectorParameter.js"></script>

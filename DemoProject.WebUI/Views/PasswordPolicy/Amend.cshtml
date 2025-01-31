@@ -1,0 +1,193 @@
+﻿@model DemoProject.Services.ViewModel.Security.Password.PasswordPolicyViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PSWAMN");
+}
+
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Password Policy - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @*First Row - For Header*@
+        <div class="row">
+            <div class="col-md-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*Second Row - Data Entry Page*@
+        <div class="row mt-3">
+            <div class="col-md-10 offset-1">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm("Amend", "PasswordPolicy", FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*Page Title- Authorize*@
+                                <div class="mb-4">
+                                    <h6 class="text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    <h5 class="font-weight-bold mt-1">Amend</h5>
+                                    <hr />
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                <div class="col-12">
+
+                                    @*CheckerRemark*@
+                                    <div class="form-group read-only">
+                                        @Html.CustomLabel("Checker Remark")
+                                        @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark" })
+                                        @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                    </div>
+
+                                    @*NameOfPasswordPolicy*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Name Of Password Policy")
+                                        @Html.TextBoxFor(m => m.NameOfPasswordPolicy, new { @class = "form-control mandatory-mark deny-multiple-space title-case", @maxlength = 100, @placeholder = "Enter Name Of Password Policy", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.NameOfPasswordPolicy)
+                                    </div>
+
+                                    @*Alias Name*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Alias Name")
+                                        @Html.TextBoxFor(m => m.AliasName, new { @class = "form-control mandatory-mark deny-multiple-space title-case default-none", @maxlength = 10, @placeholder = "Enter Alias Name", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.AliasName)
+                                    </div>
+
+                                    @*Name On Report*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Name On Report")
+                                        @Html.TextBoxFor(m => m.NameOnReport, new { @class = "form-control mandatory-mark deny-multiple-space title-case default-none", @maxlength = 100, @placeholder = "Enter Name On Report", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.NameOnReport)
+                                    </div>
+
+                                    @*Minimum PasswordLength*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Minimum Password Length")
+                                        @Html.TextBoxFor(m => m.MinimumPasswordLength, new { @id = "minimum-number-password-length", @class = "form-control mandatory-mark real-number min-number", @type = "number", @placeholder = "Enter Minimum Password Length", required = "required", @min = 1, @max = 8 })
+                                        @Html.ValidationMessageFor(m => m.MinimumPasswordLength)
+                                    </div>
+
+                                    @*MaximumPasswordLength*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Maximum Password Length")
+                                        @Html.TextBoxFor(m => m.MaximumPasswordLength, new { @id = "maximum-number-password-length", @class = "form-control mandatory-mark real-number max-number", @type = "number", @placeholder = "Enter Maximum Password Length", required = "required", @min = 1, @max = 30 })
+                                        @Html.ValidationMessageFor(m => m.MaximumPasswordLength)
+                                    </div>
+
+                                    @*MinimumNumberOfUpperCaseCharacters*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Minimum Number Of Upper Case Characters")
+                                        @Html.TextBoxFor(m => m.MinimumNumberOfUpperCaseCharacters, new { @id = "minimum-number-of-upper-case-characters", @class = "form-control real-number mandatory-mark", @type = "number", @placeholder = "Enter Minimum Number Of UpperCase Characters", @min = 0 })
+                                        @Html.ValidationMessageFor(m => m.MinimumNumberOfUpperCaseCharacters)
+                                    </div>
+
+                                    @*MinimumNumberOfLowerCaseCharacters*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Minimum Number Of Lower Case Characters")
+                                        @Html.TextBoxFor(m => m.MinimumNumberOfLowerCaseCharacters, new { @id = "minimum-number-of-lower-case-characters", @class = "form-control real-number mandatory-mark", @type = "number", @placeholder = "Enter Minimum Number Of LowerCase Characters", required = "required", @min = 0 })
+                                        @Html.ValidationMessageFor(m => m.MinimumNumberOfLowerCaseCharacters)
+                                    </div>
+
+                                    @*MinimumNumberOfSpecialCaseCharacters*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Minimum Number Of Special Case Characters")
+                                        @Html.TextBoxFor(m => m.MinimumNumberOfSpecialCaseCharacters, new { @id = "minimum-number-of-special-case-characters", @class = "form-control real-number mandatory-mark", @type = "number", @placeholder = "Enter Minimum Number Of SpecialCase Characters", required = "required", @min = 0 })
+                                        @Html.ValidationMessageFor(m => m.MinimumNumberOfSpecialCaseCharacters)
+                                    </div>
+
+                                    @*MinimumNumberOfNumericCharacters*@
+                                    <div class=" form-group">
+                                        @Html.CustomLabel("Minimum Number Of Numeric Characters")
+                                        @Html.TextBoxFor(m => m.MinimumNumberOfNumericCharacters, new { @id = "minimum-number-of-numeric-case-characters", @class = "form-control real-number mandatory-mark", @type = "number", @placeholder = "Enter Minimum Number Of Numeric Characters", required = "required", @min = 0 })
+                                        @Html.ValidationMessageFor(m => m.MinimumNumberOfNumericCharacters)
+                                    </div>
+
+                                    @*MinimumNumberOfRepetitiveCharacters*@
+                                    <div class=" form-group">
+                                        @Html.CustomLabel("Minimum Number Of Repetitive Characters")
+                                        @Html.TextBoxFor(m => m.MinimumNumberOfRepetitiveCharacters, new { @id = "minimum-number-of-repetitive-characters", @class = "form-control real-number mandatory-mark", @type = "number", @placeholder = "Enter Minimum Number Of Repetitive Characters", required = "required", @min = 0 })
+                                        @Html.ValidationMessageFor(m => m.MinimumNumberOfRepetitiveCharacters)
+                                    </div>
+
+                                    @*ForcePasswordChangeAfterDays*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Force Password Change After Days")
+                                        @Html.TextBoxFor(m => m.ForcePasswordChangeAfterDays, new { @id = "force-password-change-after-days", @class = "form-control real-number mandatory-mark", @type = "number", @placeholder = "Enter Force Password Change After Days", required = "required", @min = 15, @max = 180 })
+                                        @Html.ValidationMessageFor(m => m.ForcePasswordChangeAfterDays)
+                                    </div>
+
+                                    @*ReusePreviousPassword*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Reuse Previous Password")
+                                        @Html.TextBoxFor(m => m.ReusePreviousPassword, new { @id = "reuse-previous-password", @class = "form-control real-number mandatory-mark", @type = "number", @placeholder = "Enter Reuse Previous Password", required = "required", @min = 2, @max = 99 })
+                                        @Html.ValidationMessageFor(m => m.ReusePreviousPassword)
+                                    </div>
+
+                                    @*MinimumDaysForReusePreviousPassword*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Minimum Days For Reuse Previous Password")
+                                        @Html.TextBoxFor(m => m.MinimumDaysForReusePreviousPassword, new { @id = "minimum-days-for-reuse-previous-password", @class = "form-control real-number mandatory-mark", @type = "number", @placeholder = "Enter Minimum Days For Reuse Previous Password ", required = "required", @min = 1, @max = 199 })
+                                        @Html.ValidationMessageFor(m => m.MinimumDaysForReusePreviousPassword)
+                                    </div>
+
+                                    @*PasswordExpiryAlertDays*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Password Expiry Alert Days")
+                                        @Html.TextBoxFor(m => m.PasswordExpiryAlertDays, new { @id = "password-expiry-alert-days", @class = "form-control real-number mandatory-mark", @type = "number", @placeholder = "Enter Password Expiry Alert Days", required = "required", @min = 1, @max = 99 })
+                                        @Html.ValidationMessageFor(m => m.PasswordExpiryAlertDays)
+                                    </div>
+
+                                    @*Activation Date*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Activation Date")
+                                        @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date", @class = "form-control mandatory-mark activation-date deny-past-date deny-next-financial-year-date set-current-date department-input", @Type = "date", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.ActivationDate)
+                                    </div>
+
+                                    @*Expiry Date*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Expiry Date")
+                                        @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date", @class = "form-control expiry-date allow-future-date-upto-50y department-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                        @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                    </div>
+
+                                    @*Note*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Note")
+                                        @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control deny-multiple-space default-none", @placeholder = "Enter Note", @maxlength = 1200 })
+                                        @Html.ValidationMessageFor(m => m.Note)
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For PasswordPolicyPrmKey*@
+                                @Html.HiddenFor(m => m.PasswordPolicyPrmKey)
+
+                                @Html.HiddenFor(m => m.PasswordPolicyModificationPrmKey)
+
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

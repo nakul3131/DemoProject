@@ -1,0 +1,262 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonFamilyDetailViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.HtmlHelpers
+ @{
+
+
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PFDAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Family Detail - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark"> &nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+
+                                @{
+                                    <h5 class="ml-5 mt-5 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+
+                                @*CheckerRemark*@
+                                <div class="ml-5 mt-5 mr-5 form-group read-only">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="mt-5 row">
+                                    <div class="col-12">
+
+                                        <div id="heading-family-detail" class="ml-2 card-body">
+                                            <div class="mt-5 row">
+                                                <div class="col-12">
+                                                    <div class="modal fade" id="family-detail-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title text-center" id="family-detail-text">Add</h4>
+                                                                    <button type="button" class="close-family-detail-modal" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+
+
+                                                                    @*Person Information Number*@
+                                                                    <div id="person-information" class="form-group">
+                                                                        @Html.CustomLabel("Person Information Number")
+                                                                        @Html.TextBoxFor(m => m.PersonInformationNumber, new { @type = "search", @id = "person-information-numbers", @class = "form-control mandatory-mark deny-multiple-space text-capitalize modal-input ", @placeholder = "Select Customer Name", required = "required" })
+                                                                        <span id="person-information-numbers-error" class="error d-none">Please Enter Valid Person Information Number. </span>
+                                                                    </div>
+
+                                                                    <div id="family-member-name" class="family-member">
+                                                                        @*FullNameOfFamilyMember*@
+                                                                        <div class="form-group">
+                                                                            @Html.CustomLabel("Full Name Of Family Member")
+                                                                            @Html.TextBoxFor(m => m.FullNameOfFamilyMember, new { @id = "full-name-of-family-member", @class = "form-control mandatory-mark modal-input alpha title-case family-member", @placeholder = "Enter Full Name Of Family Member", @maxlength = 150, required = "required" })
+                                                                            @Html.ValidationMessageFor(m => m.FullNameOfFamilyMember)
+                                                                            <span id="full-name-of-family-member-error" class="error modal-input-error d-none">Please Enter Valid Full Name of Family Member. </span>
+                                                                        </div>
+
+                                                                        @*TransFullNameOfFamilyMember*@
+                                                                        <div class="form-group">
+                                                                            @Html.CustomLabel(personDetailViewModel.FullNameOfFamilyMemberInRegionalLanguage)
+                                                                            @Html.TextBoxFor(m => m.TransFullNameOfFamilyMember, new { @id = "trans-full-name-of-family-member", @class = "form-control mandatory-mark deny-multiple-space modal-input family-member", @placeholder = personDetailViewModel.FullNameOfFamilyMemberPlaceHolderInRegionalLanguage, @maxlength = 150, required = "required" })
+                                                                            @Html.ValidationMessageFor(m => m.TransFullNameOfFamilyMember)
+                                                                            <span id="trans-full-name-of-family-member-error" class="error modal-input-error d-none">Please Enter Valid Full Name of Family Member. </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    @*Relation*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Relation")
+                                                                        @Html.DropDownListFor(m => m.RelationId, new SelectList(personDetailViewModel.FamilyRelationDropdownList, "Value", "Text"), "--- Select Relation ---", new { @id = "relations-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.RelationId)
+                                                                        <span id="relations-id-error" class="error modal-input-error d-none">Please Select Valid Relation. </span>
+                                                                    </div>
+
+                                                                    @*BirthDate*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Birth Date")
+                                                                        @Html.TextBoxFor(m => m.BirthDate, "{0:yyyy-MM-dd}", new { @id = "birth-date-family-member", @class = "form-control mandatory-mark deny-future-date pfd allow-past-date-upto-150y modal-input", required = "required", @Type = "date" })
+                                                                        @Html.ValidationMessageFor(m => m.BirthDate)
+                                                                        <span id="birth-date-family-member-error" class="error modal-input-error d-none">Please Enter Valid Birth Date. </span>
+                                                                    </div>
+
+                                                                    @*Occupation*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Occupation")
+                                                                        @Html.DropDownListFor(m => m.OccupationId, new SelectList(personDetailViewModel.OccupationDropdownList, "Value", "Text"), "--- Select Occupation ---", new { @id = "occupation-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.OccupationId)
+                                                                        <span id="occupation-id-error" class="error modal-input-error d-none">Please Select Valid Occupation. </span>
+                                                                    </div>
+
+                                                                    @*Income*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Income")
+                                                                        @Html.TextBoxFor(m => m.Income, new { @id = "income", @class = "form-control mandatory-mark modal-input", @placeholder = "Enter Income", required = "required", @type = "number", @min = 0, @max = 9999999999 })
+                                                                        @Html.ValidationMessageFor(m => m.Income)
+                                                                        <span id="income-error" class="error modal-input-error d-none">Please Enter Valid Income. </span>
+                                                                    </div>
+
+                                                                    @*Note*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Note")
+                                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-family-detail", @class = "form-control modal-input title-case default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeydown = "Maketranslation()" })
+                                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                                    </div>
+
+                                                                    @*TransNote*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel(personDetailViewModel.NoteInRegionalLanguage)
+                                                                        @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note-family-detail", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = personDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1300 })
+                                                                        @Html.ValidationMessageFor(m => m.TransNote)
+                                                                    </div>
+
+                                                                    @*ReasonForModification*@
+                                                                    <div id="family-detail-div" class="form-group">
+                                                                        @Html.CustomLabel("Reason For Modification")
+                                                                        @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-family-detail", @class = "form-control deny-multiple-space default-none title-case modal-input", @placeholder = "Enter Reason For Modification", @maxlength = 1300 })
+                                                                        @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                                    </div>
+
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" id="btn-add-family-detail-modal" class="btn btn-success ">Add</button>
+                                                                        <button type="button" id="btn-update-family-detail-modal" class="btn btn-primary ">Update</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <table id="tbl-family-detail" class="table compact  table-striped table-bordered" width="100">
+                                                            <thead class="text-center">
+                                                                <tr>
+                                                                    <th><input type="checkbox" name="check_all" id="select-all-family-detail" /></th>
+                                                                    <th class="d-none">PersonInformationNumber</th>
+                                                                    <th>PersonInformationNumberText</th>
+                                                                    <th>FullNameOfFamilyMember</th>
+                                                                    <th>TransFullNameOfFamilyMember</th>
+                                                                    <th class="d-none">RelationId</th>
+                                                                    <th>Relation</th>
+                                                                    <th>BirthDate</th>
+                                                                    <th class="d-none">OccupationId</th>
+                                                                    <th>Occupation</th>
+                                                                    <th>Income</th>
+                                                                    <th>Note</th>
+                                                                    <th>TransNote</th>
+                                                                    <th>ReasonForModification</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="text-center">
+                                                                @{
+                                                                    IEnumerable<PersonFamilyDetailViewModel> personFamilyDetailViewModelList = (IEnumerable<PersonFamilyDetailViewModel>)HttpContext.Current.Session["FamilyDetail"];
+                                                                    if (personFamilyDetailViewModelList != null)
+                                                                    {
+                                                                        foreach (PersonFamilyDetailViewModel viewModel in personFamilyDetailViewModelList)
+                                                                        {
+                                                                            <tr>
+                                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                <td class="d-none">@viewModel.PersonInformationNumber</td>
+                                                                                <td>@viewModel.PersonInformationNumberText</td>
+                                                                                <td>@viewModel.FullNameOfFamilyMember</td>
+                                                                                <td>@viewModel.TransFullNameOfFamilyMember</td>
+                                                                                <td class="d-none">@viewModel.RelationId</td>
+                                                                                <td>@viewModel.NameOfRelation</td>
+                                                                                <td>@viewModel.BirthDate.ToString("yyyy-MM-dd")</td>
+                                                                                <td class="d-none">@viewModel.OccupationId</td>
+                                                                                <td>@viewModel.NameOfOccupation</td>
+                                                                                <td>@viewModel.Income</td>
+                                                                                <td>@viewModel.Note</td>
+                                                                                <td>@viewModel.TransNote</td>
+                                                                                <td>@viewModel.ReasonForModification</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            @*Hiddent Field For PrmKey*@
+                                            @Html.HiddenFor(m => m.PrmKey)
+
+                                            @*Hiddent Field For PersonPrmKey*@
+                                            @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                            @*Hiddent Field For CenterOccupationPrmKey*@
+                                            @Html.HiddenFor(m => m.PersonFamilyDetailPrmKey)
+
+                                            @*Hiddent Field For PersonAddressTranslationPrmKey*@
+                                            @Html.HiddenFor(m => m.PersonId)
+                                        </div>
+
+                                        @Html.OperationFooter("Amend", "Exit", "Home", "None")
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var SaveFamilyDetailDataTable = "@Url.Action("SaveFamilyDetailDataTable", "PersonFamilyDetail")";
+</script>
+<script src="~/Scripts/Custom/PersonFamilyDetail.js"></script>

@@ -1,0 +1,166 @@
+﻿@model DemoProject.Services.ViewModel.Management.Master.AgendaMeetingTypeViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Management.Master
+@using DemoProject.Services.Constants
+@{
+    AgendaMeetingTypeViewModel model = new AgendaMeetingTypeViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("AMTAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>AgendaMeetingType - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+                        @*======= First Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title =======*@
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Amend</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @*======= Third Row - Data Entry Page =======*@
+                        <div class="row">
+                            <div class="col-12">
+                                @*CheckerRemark*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @class = "form-control mandatory-mark read-only" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                <div>
+                                    <h6 class="font-weight-bold mt-1">Agenda Name - @Model.NameOfAgenda </h6>
+                                    <table id="agenda-meeting-type-table" class="table compact  table-striped table-bordered text-nowrap" cellspacing="0" width="100%">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th><input type="checkbox" name="check_all" id="selectAll" /></th>
+                                                <th style=" display:none;">MeetingTypeId</th>
+                                                <th>Name Of Meeting Type</th>
+                                                <th>ActivationDate</th>
+                                                <th>ExpiryDate</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody class="text-center">
+                                            @{
+                                                IEnumerable<AgendaMeetingTypeViewModel> vehicleModelList = (IEnumerable<AgendaMeetingTypeViewModel>)HttpContext.Current.Session["AgendaMeetingType"];
+
+                                                foreach (AgendaMeetingTypeViewModel viewModel in vehicleModelList)
+                                                {
+                                                    <tr>
+                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                        <td class="d-none">@viewModel.MeetingTypeId</td>
+                                                        <td>@viewModel.NameOfMeetingType</td>
+                                                        <td>@viewModel.ActivationDate</td>
+                                                        <td>@viewModel.ExpiryDate</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                    <div class="modal fade" id="Add-new-agenda-meeting-type" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+
+                                                    <h4 class="modal-title  text-center" id="title">Add</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Meeting Type")
+                                                        @Html.DropDownListFor(m => m.MeetingTypeId, new List<SelectListItem>(), "Select Meeting Type", new { @id = "meeting-type", @class = "form-control mandatory-mark", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.MeetingTypeId)
+                                                    </div>
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("ActivationDate")
+                                                        @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark", @Type = "date", @id = "activation-date", onchange = "Activationdate()" })
+                                                        @Html.ValidationMessageFor(m => m.ActivationDate)
+                                                    </div>
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("ExpiryDate")
+                                                        @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark", @Type = "date", @id = "expiry-date", onchange = "Expirydate()" })
+                                                        @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" id="btn-add-agenda-meeting-type" class="btn btn-success ">Add</button>
+                                                    <button type="button" id="btn-update-agenda-meeting-type" class="btn btn-primary" style="display:none;">Update</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Note")
+                                    @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control text-capitalize default-none", @autocomplete = "off", @maxlength = 1500, @placeholder = "Enter Note", onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.Note)
+                                </div>
+
+                                @*Hiddent Field For AgendaMeetingTypePrmKey*@
+                                @Html.HiddenFor(m => m.AgendaMeetingTypePrmKey)
+
+                                @*Hiddent Field For AgendaPrmKey*@
+                                @Html.HiddenFor(m => m.AgendaPrmKey)
+
+                                @Html.HiddenFor(m => m.AgendaId, new { @id = "agenda" })
+                            </div>
+                        </div>
+                    </div>
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Amend", "SaveAgendaMeetingTypeDataTables", "AgendaMeetingType", "None")
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var url = "@Url.Action("SaveAgendaMeetingTypeDataTables", "AgendaMeetingType")";
+    var urlGetModel = "@Url.Action("GetModel", "AgendaMeetingType")";
+</script>
+<script src="~/Scripts/Custom/AgendaMeetingType.js"></script>

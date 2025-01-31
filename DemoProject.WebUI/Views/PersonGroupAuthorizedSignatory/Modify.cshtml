@@ -1,0 +1,453 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonGroupMasterViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PGSMOD");
+
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Group Authorized Signatory - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+
+                        @*======= First Row - Mandatory Mark =======*@
+                        @*Page Title- Create*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                <h5 class="font-weight-bold mt-1">Modify</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        <h5 class="ml-5 mt-5 text-left font-weight-bold">
+                            @Model.OldFullName
+                        </h5>
+
+                        @*FullName*@
+                        <div class="form-group">
+                            @Html.CustomLabel("Full Name")
+                            @Html.TextBoxFor(m => m.FullName, new { @id = "full-name", @class = "form-control mandatory-mark alpha title-case", @placeholder = "Enter Full Name", @maxlength = 120, required = "required", onkeydown = "Maketranslation()" })
+                            @Html.ValidationMessageFor(m => m.FullName)
+                        </div>
+
+                        @*TransFullName*@
+                        <div class="form-group group">
+                            @Html.CustomLabel(personDetailViewModel.FullNameInRegionalLanguage)
+                            @Html.TextBoxFor(m => m.TransFullName, null, new { @id = "trans-full-name", @class = "form-control deny-multiple-space trans mandatory-mark", @placeholder = personDetailViewModel.FullNameInRegionalLanguage, @maxlength = 120, required = "required" })
+                            @Html.ValidationMessageFor(m => m.TransFullName)
+                        </div>
+
+                        <div class="card-body mt-5">
+                            @*BusinessType*@
+                            <div class="form-group">
+                                @Html.CustomLabel("Business Type")
+                                @Html.DropDownListFor(m => m.BusinessType, new SelectList(personDetailViewModel.BusinessTypeDropdownList, "Value", "Text", 0), "--- Select Business Type ---", new { @id = "business-type", @class = "form-control mandatory-mark", required = "required" })
+                                @Html.ValidationMessageFor(m => m.BusinessType)
+                            </div>
+
+                            @*BusinessNature*@
+                            <div class="form-group">
+                                @Html.CustomLabel("Business Nature")
+                                @Html.DropDownListFor(m => m.BusinessNature, new SelectList(personDetailViewModel.BusinessNatureDropdownList, "Value", "Text", 0), "--- Select Business Nature ---", new { @id = "business-nature", @class = "form-control mandatory-mark", required = "required" })
+                                @Html.ValidationMessageFor(m => m.BusinessNature)
+                            </div>
+
+                            @*DateOfEstablishment*@
+                            <div class="form-group">
+                                @Html.CustomLabel("Date Of Establishment")
+                                &nbsp;&nbsp;<span id="date-input" class="text-c-orenge d-none"><i class="fas fa-exclamation-triangle">&nbsp;&nbsp;“The Selected Date Of Establishment Is Unusually Old. Please Confirm If This Is Correct.”</i></span>
+                                @Html.TextBoxFor(m => m.DateOfEstablishment, "{0:yyyy-MM-dd}", new { @id = "date-of-establishment", @class = "form-control mandatory-mark allow-past-date-upto-50y deny-future-date", required = "required", @Type = "date" })
+                                @Html.ValidationMessageFor(m => m.DateOfEstablishment)
+                            </div>
+
+                            @*BusinessRegistrationNumber*@
+                            <div class="form-group">
+                                @Html.CustomLabel("Business Registration Number")
+                                @Html.TextBoxFor(m => m.BusinessRegistrationNumber, new { @id = "business-registration-number", @class = "form-control alpha-numeric-with-hyphen-underscore deny-multiple-space default-none", @placeholder = "Enter Business Registration Number", @maxlength = 30, onkeyup = "ToTextCapitalize()" })
+                                @Html.ValidationMessageFor(m => m.BusinessRegistrationNumber)
+                                <span id="business-registration-number-error" class="error d-none">This Business Registration Number Is Already Associated With Another Person Group Or Applicant. </span>
+                            </div>
+
+                            @*Other Registration Number*@
+                            <div class="form-group">
+                                @Html.CustomLabel("Other Registration Number")
+                                @Html.TextBoxFor(m => m.OtherRegistrationNumber, new { @id = "other-registration-number", @class = "form-control alpha-numeric-with-hyphen-underscore upper-case deny-multiple-space default-none", @placeholder = "Enter Other Registration Number", @maxlength = 30, onkeyup = "ToTextCapitalize()" })
+                                @Html.ValidationMessageFor(m => m.OtherRegistrationNumber)
+
+                            </div>
+
+                            @*AssociatedCompaniesList*@
+                            <div class="form-group">
+                                @Html.CustomLabel("Associated Companies List")
+                                @Html.TextBoxFor(m => m.AssociatedCompaniesList, new { @id = "associated-companies-list", @class = "form-control alpha-numeric-with-hyphen-underscore upper-case deny-multiple-space default-none", @placeholder = "Enter Associated Companies List", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                @Html.ValidationMessageFor(m => m.AssociatedCompaniesList)
+                            </div>
+
+                            @*HasAnyAssociatedCompanies*@
+                            <div class="row form-group mt-4">
+                                <div class="col-8">
+                                    @Html.CustomLabel("Has Any Associated Companies")
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-right">
+                                        <label class="switch switch-left-right">
+                                            @Html.CheckBoxFor(m => m.HasAnyAssociatedCompanies, new { @id = "has-any-associated-companies", @class = "form-control switch-input" })
+                                            <span class="slider round">
+                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Note*@
+                            <div class="form-group">
+                                @Html.CustomLabel("Note")
+                                @Html.TextAreaFor(m => m.Note, new { @id = "note-tenure", @class = "form-control default-none deny-multiple-space", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                @Html.ValidationMessageFor(m => m.Note)
+                            </div>
+                        </div>
+
+                        @*======= Fourth Row - Accordians =======*@
+                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+
+                            @*Accordian 10 - Person Board of Director authorized Signatory*@
+                            <div id="heading-person-group-authorized-signatory" class="card mt-5 group">
+                                <div class="card-header p-3" id="collapse-board-of-director-authorized-validations" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-board-of-director-authorized" data-target="#collapse-board-of-director-authorized">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a class="card-title" href="#">
+                                                <b>@Html.TextWithRegionalLanguage("Person Group Authorized Signatory")</b>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span id="authorized-accordion-error" class="error accordion-title-error d-none">This Is Required, Please Add Valid Data.</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a href="#collapse-board-of-director-authorized" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-board-of-director-authorized" data-target="#collapse-board-of-director-authorized">
+                                                <i class="fa fa-angle-up"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="collapse-board-of-director-authorized" class="collapse" aria-labelledby="heading-board-of-director-authorized" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="modal fade" id="authorized-signatory-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title text-center">Add</h4>
+                                                                <button type="button" class="close-authorized-signatory-modal" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                @*Person Information Number*@
+                                                                <div id="authorized-person-information-number-input" class="form-group">
+                                                                    @Html.CustomLabel("Person Information Number")
+                                                                    @Html.TextBoxFor(m => m.PersonGroupAuthorizedSignatoryViewModel.PersonInformationNumber, new { @type = "search", @id = "authorized-person-information-number", @class = "form-control mandatory-mark deny-multiple-space text-capitalize modal-input ", @placeholder = "Select Customer Name", required = "required" })
+                                                                    <span id="authorized-person-information-number-error" class="error d-none">Please Enter Valid Person Information Number. </span>
+                                                                </div>
+
+                                                                <div id="authorized-member-name" class="authorized-member">
+                                                                    @*Full Name Of Authorized Person*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Full Name Of Authorized Person")
+                                                                        @Html.TextBoxFor(m => m.PersonGroupAuthorizedSignatoryViewModel.FullNameOfAuthorizedPerson, new { @id = "full-name-of-authorized-member", @class = "form-control mandatory-mark alpha  modal-input", @placeholder = "Enter Full Name Of Authorized Person", @maxlength = 150, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.FullNameOfAuthorizedPerson)
+                                                                        <span id="full-name-of-authorized-member-error" class="error modal-input-error d-none">Please Enter Valid Full Name Of Authorized Person. </span>
+                                                                    </div>
+
+                                                                    @*TransFullNameOfAuthorizedPerson*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel(personDetailViewModel.FullNameOfAuthorizedPersonInRegionalLanguage)
+                                                                        @Html.TextBoxFor(m => m.PersonGroupAuthorizedSignatoryViewModel.TransFullNameOfAuthorizedPerson, new { @id = "trans-full-name-of-authorized-member", @class = "form-control mandatory-mark deny-multiple-space  modal-input", @placeholder = personDetailViewModel.FullNameOfAuthorizedPersonPlaceHolderInRegionalLanguage, @maxlength = 150, required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.TransFullNameOfAuthorizedPerson)
+                                                                        <span id="trans-full-name-of-authorized-member-error" class="error modal-input-error d-none">Please Enter Valid Full Name Of Authorized Person. </span>
+                                                                    </div>
+
+                                                                    @*AuthorizedPersonAddressDetail*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Authorized Person Address Detail")
+                                                                        @Html.TextAreaFor(m => m.PersonGroupAuthorizedSignatoryViewModel.AuthorizedPersonAddressDetail, new { @id = "authorized-person-address-detail", @class = "form-control mandatory-mark deny-multiple-space title-case default-none modal-input", @placeholder = "Enter Authorized Person Address Detail", @maxlength = 1300, onkeydown = "Maketranslation()", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.AuthorizedPersonAddressDetail)
+                                                                        <span id="authorized-person-address-detail-error" class="error modal-input-error d-none">Please Enter Valid Authorized Person Address Detail. </span>
+                                                                    </div>
+
+                                                                    @*TransAuthorizedPersonAddressDetail*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel(personDetailViewModel.AuthorizedPersonAddressDetailInRegionalLanguage)
+                                                                        @Html.TextAreaFor(m => m.PersonGroupAuthorizedSignatoryViewModel.TransAuthorizedPersonAddressDetail, new { @id = "trans-authorized-person-address-detail", @class = "form-control mandatory-mark deny-multiple-space title-case default-none modal-input", @placeholder = personDetailViewModel.AuthorizedPersonAddressDetailPlaceHolderInRegionalLanguage, @maxlength = 1300, required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.TransAuthorizedPersonAddressDetail)
+                                                                        <span id="trans-authorized-person-address-detail-error" class="error modal-input-error d-none">Please Enter Valid Authorized Person Address Detail. </span>
+                                                                    </div>
+
+                                                                    @*AuthorizedPersonContactDetail*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Authorized Person Contact Detail")
+                                                                        @Html.TextAreaFor(m => m.PersonGroupAuthorizedSignatoryViewModel.AuthorizedPersonContactDetail, new { @id = "authorized-person-contact-detail", @class = "form-control mandatory-mark deny-multiple-space title-case default-none modal-input", @placeholder = "Enter Authorized Person Contact Detail", @maxlength = 1300, onkeydown = "Maketranslation()", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.AuthorizedPersonContactDetail)
+                                                                        <span id="authorized-person-contact-detail-error" class="error modal-input-error d-none">Please Enter Valid Authorized Person Contact Detail. </span>
+                                                                    </div>
+
+                                                                    @*TransAuthorizedPersonContactDetail*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel(personDetailViewModel.AuthorizedPersonContactDetailInRegionalLanguage)
+                                                                        @Html.TextAreaFor(m => m.PersonGroupAuthorizedSignatoryViewModel.TransAuthorizedPersonContactDetail, new { @id = "trans-authorized-person-contact-detail", @class = "form-control mandatory-mark deny-multiple-space title-case default-none modal-input", @placeholder = personDetailViewModel.AuthorizedPersonContactDetailPlaceHolderInRegionalLanguage, @maxlength = 1300, required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.TransAuthorizedPersonContactDetail)
+                                                                        <span id="trans-authorized-person-contact-detail-error" class="error modal-input-error d-none">Please Enter Valid Authorized Person Contact Detail. </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                @*Designation Id*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Designation Id")
+                                                                    @Html.DropDownListFor(m => m.PersonGroupAuthorizedSignatoryViewModel.DesignationId, new SelectList(personDetailViewModel.DesignationDropdownList, "Value", "Text", 0), "--- Select Designation ---", new { @id = "board-of-director-designation-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.DesignationId)
+                                                                    <span id="board-of-director-designation-id-error" class="error modal-input-error d-none">Please Select Valid Designation. </span>
+                                                                </div>
+
+                                                                @*Is Authorized Signatory*@
+                                                                <div class="row form-group">
+                                                                    <div class="col-10">
+                                                                        @Html.CustomLabel("Is Authorized Signatory")
+                                                                    </div>
+                                                                    <div class="col-2 text-right">
+                                                                        <label class="switch switch-left-right">
+                                                                            @Html.CheckBoxFor(m => m.PersonGroupAuthorizedSignatoryViewModel.IsAuthorizedSignatory, new { @id = "enable-authorized-signatory", @class = "form-control modal-switch-input switch-input show-block" })
+                                                                            <span class="slider round">
+                                                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                            </span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div id="authorized-signatory-block" class="d-none">
+                                                                    <div class="@((ViewBag.PersonInformationParameter.SignDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                                        <div class="form-group">
+                                                                            @Html.CustomLabel("Sign")
+                                                                            <div>
+                                                                                @Html.TextBoxFor(m => m.PersonGroupAuthorizedSignatoryViewModel.PhotoPathSign, new { @id = "sign-file-uploader", @class = "form-control doc-upload mandatory-mark modal-input", type = "file", name = "SignPath", @placeholder = "Enter Sign", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.PhotoPathSign)
+                                                                                <span id="sign-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Sign. </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <hr />
+
+                                                                        <hr />
+                                                                        <div><img id="sign-file-uploader-image-preview" class="modal-input-img-preview" src="" width="200" height="200" /></div>
+                                                                        <hr />
+
+                                                                        @*FileCaption*@
+                                                                        <div class="form-group">
+                                                                            @Html.CustomLabel("File Caption")
+                                                                            @Html.TextBoxFor(m => m.PersonGroupAuthorizedSignatoryViewModel.SignFileCaption, new { @id = "file-caption-sign", @class = "form-control mandatory-mark deny-multiple-space title-case default-none modal-input", @placeholder = "Enter File Caption", @maxlength = 400, required = "required" })
+                                                                            @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.SignFileCaption)
+                                                                            <span id="file-caption-sign-error" class="error modal-input-error d-none">Please Enter Valid File Caption. </span>
+                                                                        </div>
+
+                                                                        @*Hiddent Field For SignDocumentUpload*@
+                                                                        @Html.HiddenFor(m => personInformationParameterViewModel.SignDocumentUpload, new { @id = "sign-document-upload" })
+
+                                                                        @*Hiddent Field For PersonFinancialAssetDocumentPrmKey*@
+                                                                        @Html.HiddenFor(m => personInformationParameterViewModel.EnableSignDocumentUploadInLocalStorage, new { @id = "enable-sign-document-upload" })
+                                                                    </div>
+
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.PersonGroupAuthorizedSignatoryViewModel.Note, new { @id = "note-board-of-director-authorized", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.Note)
+                                                                </div>
+
+                                                                @*TransNote*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel(personDetailViewModel.NoteInRegionalLanguage)
+                                                                    @Html.TextAreaFor(m => m.PersonGroupAuthorizedSignatoryViewModel.TransNote, new { @id = "trans-note-board-of-director-authorized", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = personDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = 1300 })
+                                                                    @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.TransNote)
+                                                                </div>
+
+                                                                @*ReasonForModification*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Reason For Modification")
+                                                                    @Html.TextAreaFor(m => m.PersonGroupAuthorizedSignatoryViewModel.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                    @Html.ValidationMessageFor(m => m.PersonGroupAuthorizedSignatoryViewModel.ReasonForModification)
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" id="btn-add-authorized-signatory-modal" class="btn btn-success ">Add</button>
+                                                                <button type="button" id="btn-update-authorized-signatory-modal" class="btn btn-primary ">Update</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card-body">
+                                                    <div class="table-responsive" style="min-height:200px;">
+                                                        <table id="tbl-authorized-signatory" class="table compact table-striped table-bordered" width="100">
+                                                            <thead class="text-center">
+                                                                <tr>
+                                                                    <th><input type="checkbox" name="check_all" id="select-all-authorized-signatory" /></th>
+                                                                    <th class="d-none">AuthorizedPersonInformationNumber</th>
+                                                                    <th>AuthorizedPersonInformationNumberText</th>
+                                                                    <th>FullNameOfAuthorizedPerson</th>
+                                                                    <th>TransFullNameOfAuthorizedPerson</th>
+                                                                    <th>AuthorizedPersonAddressDetail</th>
+                                                                    <th>TransAuthorizedPersonAddressDetail</th>
+                                                                    <th>AuthorizedPersonContactDetail</th>
+                                                                    <th>TransAuthorizedPersonContactDetail</th>
+                                                                    <th class="d-none">DesignationId</th>
+                                                                    <th>DesignationText</th>
+                                                                    <th>IsAuthorizedSignatory</th>
+                                                                    <th>Photopath</th>
+                                                                    <th>Photo</th>
+                                                                    <th>SignFileCaption</th>
+                                                                    <th>Note</th>
+                                                                    <th>TransNote</th>
+                                                                    <th>ReasonForModification</th>
+                                                                    <th class="d-none">signNameOfFile</th>
+                                                                    <th class="d-none">personGroupAuthorizedSignatoryPrmKey</th>
+                                                                    <th class="d-none">signLocalStoragePath</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="text-center">
+                                                                @{
+                                                                    IEnumerable<PersonGroupAuthorizedSignatoryViewModel> personGroupAuthorizedSignatoryViewModelList = (IEnumerable<PersonGroupAuthorizedSignatoryViewModel>)HttpContext.Current.Session["GroupAuthorizedSignatory"];
+                                                                    if (personGroupAuthorizedSignatoryViewModelList != null)
+                                                                    {
+
+                                                                        foreach (PersonGroupAuthorizedSignatoryViewModel viewModel in personGroupAuthorizedSignatoryViewModelList)
+                                                                        {
+                                                                            counter += 1;
+                                                                            photoId = "photo-id" + counter.ToString();
+                                                                            fileUploaderId = "data-table-sign-file-uploader" + counter.ToString();
+                                                                            <tr>
+                                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                <td class="d-none">@viewModel.PersonInformationNumber</td>
+                                                                                <td>@viewModel.PersonInformationNumberText</td>
+                                                                                <td>@viewModel.FullNameOfAuthorizedPerson</td>
+                                                                                <td>@viewModel.TransFullNameOfAuthorizedPerson</td>
+                                                                                <td>@viewModel.AuthorizedPersonAddressDetail</td>
+                                                                                <td>@viewModel.TransAuthorizedPersonAddressDetail</td>
+                                                                                <td>@viewModel.AuthorizedPersonContactDetail</td>
+                                                                                <td>@viewModel.TransAuthorizedPersonContactDetail</td>
+                                                                                <td class="d-none">@viewModel.DesignationId</td>
+                                                                                <td>@viewModel.NameOfDesignation</td>
+                                                                                <td>@viewModel.IsAuthorizedSignatory</td>
+                                                                                <td>
+                                                                                    <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if (viewModel.EnableSignDocumentUploadInLocalStorage == true)
+                                                                                    {
+                                                                                        <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.SignDocumentLocalStoragePath + viewModel.PhotoPathSign.FileName)" width="50" height="50" />
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        var base64 = Convert.ToBase64String(viewModel.Sign);
+                                                                                        var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                                        <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                                        string filename = Path.GetFileName(imgsrc);
+                                                                                    }
+                                                                                </td>
+                                                                                <td>@viewModel.SignFileCaption</td>
+                                                                                <td>@viewModel.Note</td>
+                                                                                <td>@viewModel.TransNote</td>
+                                                                                <td>@viewModel.ReasonForModification</td>
+                                                                                <td class="d-none">@viewModel.SignNameOfFile</td>
+                                                                                <td class="d-none">@viewModel.PersonGroupAuthorizedSignatoryPrmKey</td>
+                                                                                <td class="d-none">@viewModel.SignLocalStoragePath</td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        @*Hiddent Field For PrmKey*@
+                        @Html.HiddenFor(m => m.PrmKey)
+
+                        @*Hiddent Field For PersonGroupPrmKey*@
+                        @Html.HiddenFor(m => m.PersonGroupPrmKey)
+
+                        @*Hiddent Field For PersonPrmKey*@
+                        @Html.HiddenFor(m => m.PersonPrmKey)
+
+                        @*Hiddent Field For PersonTranslationPrmKeysonPrmKey*@
+                        @Html.HiddenFor(m => m.PersonTranslationPrmKey)
+
+                        @*Hiddent Field For PersonModificationPrmKey*@
+                        @Html.HiddenFor(m => m.PersonModificationPrmKey)
+
+                        @*Hiddent Field For CenterOccupationPrmKey*@
+                        @Html.HiddenFor(m => m.PersonGroupAuthorizedSignatoryViewModel.PersonGroupAuthorizedSignatoryPrmKey)
+
+                    </div>
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Modify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var saveDataTableURL = "@Url.Action("SaveAuthorizedSignatoryDataTables", "PersonGroupAuthorizedSignatory")";
+</script>
+<script src="~/Scripts/Custom/PersonGroupAuthorizedSignatory.js"></script>

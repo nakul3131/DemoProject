@@ -1,0 +1,214 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.UserProfileBusinessOfficeViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Security.Users
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    short userProfilePrmKey = 0;
+    UserProfileDetailViewModel userProfileDetailViewModel = new UserProfileDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("UPLMOD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>User Profile - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title If Screen Large Then Column - 12 Otherwise Col - 6 For Create And Remaining For Translation*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+
+
+
+                                @*Business Office Data Entry Modal / Popup Page*@
+                                <div class="modal fade" id="business-office-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title  text-center" id="business-office-modal-title">Add</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                @*NameOfBusinessOffice*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Name Of Business Office")
+                                                    @Html.DropDownListFor(m => m.MultiBusinessOfficeId, new MultiSelectList(userProfileDetailViewModel.BusinessOfficeDropdownList, "Value", "Text"), "--- Select Name Of Business Office ---", new { @id = "business-office-id", @class = "form-control mandatory-mark modal-input"})
+                                                    @Html.ValidationMessageFor(m => m.MultiBusinessOfficeId)
+                                                    <span id="business-office-id-error" class="error modal-input-error d-none"> Please Select Name Of Business Office.</span>
+                                                </div>
+
+                                                @*ActivationDate*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Activation Date")
+                                                    @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-business-office", @class = "form-control mandatory-mark activation-date deny-past-date modal-input set-current-date", @placeholder = "Enter Activation Date", required = "required", @Type = "date", onclick = "DenyPastDate()" })
+                                                    @Html.ValidationMessageFor(m => m.ActivationDate)
+                                                    <span id="activation-date-business-office-error" class="error modal-input-error d-none"> Please Select Activation Date.</span>
+                                                </div>
+
+                                                @*ExpiryDate*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Expiry Date")
+                                                    @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-business-office", @class = "form-control expiry-date modal-input", @placeholder = "Enter Expiry Date", @Type = "date", onclick = "DenyFutureDateFromReferenceDate('activation-date-business-office')" })
+                                                    @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                                    <span id="expiry-date-business-office-error" class="error modal-input-error d-none"> Please Select Expiry Date.</span>
+                                                </div>
+
+                                                @*ClosedDate*@
+                                                <div class="form-group d-none">
+                                                    @Html.CustomLabel("Closed Date")
+                                                    @Html.TextBoxFor(m => m.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-business-office", @class = "form-control deny-future-date-from-reference-date modal-input", @placeholder = "Enter Close Date", @Type = "date", onclick = "DenyFutureDateFromReferenceDate('activation-date-business-office')" })
+                                                    @Html.ValidationMessageFor(m => m.CloseDate)
+                                                </div>
+
+                                                @*Note*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Note")
+                                                    @Html.TextAreaFor(m => m.Note, new { @id = "note-business-office", @class = "form-control deny-multiple-space modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                    @Html.ValidationMessageFor(m => m.Note)
+                                                </div>
+
+                                                @*ReasonForModification*@
+                                                <div class="form-group d-none">
+                                                    @Html.CustomLabel("ReasonForModification")
+                                                    @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-business-office", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                    @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" id="btn-add-business-office-modal" class="btn btn-success ">Add</button>
+                                                <button type="button" id="btn-update-business-office-modal" class="btn btn-primary ">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Business Office Data Table*@
+                                <div class="card-body">
+                                    <table id="tbl-business-office" class="table compact table-striped table-bordered " width="100">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th><input type="checkbox" name="select-all" id="select-all-business-office" /></th>
+                                                <th class="d-none">BusinessOfficeID</th>
+                                                <th>NameOfBusinessOffice</th>
+                                                <th>ActivationDate</th>
+                                                <th>ExpiryDate</th>
+                                                <th class="d-none">CloseDate</th>
+                                                <th>Note</th>
+                                                <th class="d-none">Reason For Modification</th>
+                                                <th>UserProfilePrmKey</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            @{
+                                                IEnumerable<UserProfileBusinessOfficeViewModel> userProfileBusinessOfficeviewModelList = (IEnumerable<UserProfileBusinessOfficeViewModel>)HttpContext.Current.Session["UserProfileBusinessOffice"];
+
+                                                foreach (UserProfileBusinessOfficeViewModel viewModel in userProfileBusinessOfficeviewModelList)
+                                                {
+                                                    <tr class="hoverlightblue">
+                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                        <td class="d-none">@viewModel.BusinessOfficeId</td>
+                                                        <td>@viewModel.NameOfBusinessOffice</td>
+                                                        <td>@viewModel.ActivationDate</td>
+                                                        <td>@viewModel.ExpiryDate</td>
+                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                        <td>@viewModel.Note</td>
+                                                        <td class="d-none">@viewModel.ReasonForModification</td>
+                                                        <td>@(userProfilePrmKey = viewModel.UserProfilePrmKey)</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                                @*======= Fifth Row - Reason For Modification Input In Regional Language =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reason For Modification")
+                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                           
+                            @Html.HiddenFor(m => m.UserProfilePrmKey, new { Value = userProfilePrmKey })
+
+
+                            @Html.OperationFooter("Modify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <link href="~/Content/css/jquery.multiselect.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+</body>
+</html>
+<script>
+    $('#business-office-id').multiselect({
+        columns: 1,
+        placeholder: 'Select Correct Name',
+        search: true,
+        selectAll: true,
+        reload: true,
+    });
+
+
+
+    var url = '@Url.Action("SaveDataTables", "UserProfileBusinessOffice")';
+
+    @*var getPersonDropdownByUserType = "@Url.Action("GetPersonDropdownByUserType", "UserProfileBusinessOffice")";
+
+    var Modelmenuurl = "@Url.Action("GetModel", "UserProfileBusinessOffice")";
+
+    var uniqueNameOfRoleProfile = "@Url.Action("GetUniqueRoleProfileName", "UserProfileBusinessOffice")";*@
+</script>
+
+<script src="~/Scripts/Custom/UserProfileBusinessOffice.js"></script>

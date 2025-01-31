@@ -1,0 +1,156 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.UserProfileBusinessOfficeViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Security.Users
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    UserProfileDetailViewModel userProfileDetailViewModel = new UserProfileDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("UPLAUT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>User Profile - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form", @autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title If Screen Large Then Column - 12 Otherwise Col - 6 For Create And Remaining For Translation*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+
+                                            @*Accordian 3 - User Profile Business Office*@
+                                            <div id="heading-business-office-parameter" class="card mt-3">
+                                                <div class="card-header" id="business-office-parameter-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office-parameter" data-target="#collapse-business-office-parameter">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Business Office</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="business-office-data-table-error" class="error d-none"> User Profile Business Office Data Table Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-business-office-parameter" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office-parameter" data-target="#collapse-business-office-parameter">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div id="collapse-business-office-parameter"  aria-labelledby="heading-business-office-parameter" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Business Office Data Table*@
+                                                                <div class="card-body">
+                                                                    <table id="tbl-business-office" class="table compact table-striped table-bordered " width="100">
+                                                                        <thead class="text-center read-only">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="select-all" id="select-all-business-office" /></th>
+                                                                                <th class="d-none">BusinessOfficeID</th>
+                                                                                <th>NameOfBusinessOffice</th>
+                                                                                <th>Activation Date</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">Reason For Modification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center read-only">
+                                                                            @{
+                                                                                IEnumerable<UserProfileBusinessOfficeViewModel> UserProfileBusinessOfficeviewModelList = (IEnumerable<UserProfileBusinessOfficeViewModel>)HttpContext.Current.Session["UserProfileBusinessOffice"];
+                                                                                if (UserProfileBusinessOfficeviewModelList != null)
+                                                                                {
+                                                                                    foreach (UserProfileBusinessOfficeViewModel viewModel in UserProfileBusinessOfficeviewModelList)
+                                                                                    {
+                                                                                        <tr class="hoverlightblue">
+                                                                                            <th><input type="checkbox" name="check_all" class="checks" /></th>
+                                                                                            <td class="d-none">@viewModel.BusinessOfficeId</td>
+                                                                                            <td>@viewModel.NameOfBusinessOffice</td>
+                                                                                            <td>@viewModel.ActivationDate</td>
+                                                                                            <td>@viewModel.ExpiryDate</td>
+                                                                                            <td class="d-none">@viewModel.CloseDate</td>
+                                                                                            <td>@viewModel.Note</td>
+                                                                                            <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Hiddent Field For UserProfilePrmKey*@
+                            @Html.HiddenFor(m => m.UserProfilePrmKey)
+
+
+                            @*Hiddent Field For UserProfileBusinessOfficePrmKey*@
+                            @Html.HiddenFor(m => m.UserProfileBusinessOfficePrmKey)
+
+
+
+                            @*Save/Submit Button *@
+                            @Html.OperationFooter("Verify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/Custom/UserProfileBusinessOffice.js"></script>

@@ -1,0 +1,75 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace DemoProject.Services.ViewModel.Account.Layout
+{
+    public class SchemeChargesDetailViewModel
+    {
+        // SchemeChargesDetail
+        public short PrmKey { get; set; }
+        
+        public short SchemePrmKey { get; set; }
+
+        public short GeneralLedgerPrmKey { get; set; }
+
+        public decimal ChargesInPercentage { get; set; }
+
+        public decimal ChargesInAmount { get; set; }
+
+        public decimal MinimumChargesAmount { get; set; }
+
+        public decimal MaximumChargesAmount { get; set; }
+
+        public bool IsTaxable { get; set; }
+
+        [StringLength(1500)]
+        public string Note { get; set; }
+
+        [StringLength(3)]
+        public string EntryStatus { get; set; }
+
+        //SchemeChargesDetailMakerChecker
+
+        public DateTime EntryDateTime { get; set; }
+
+        public short SchemeChargesDetailPrmKey { get; set; }
+
+        public short UserProfilePrmKey { get; set; }
+
+        [StringLength(3)]
+        public string UserAction { get; set; }
+
+        [StringLength(1500)]
+        public string Remark { get; set; }
+
+        // Scheme
+
+        public Guid SchemeId { get; set; }
+
+        [StringLength(100)]
+        public string NameOfScheme { get; set; }
+
+        //Other
+
+        public bool EnableOtherCharges { get; set; }
+
+        public string NameOfUser { get; set; }
+
+        public DateTime MakerEntryDateTime { get; set; }
+
+        [StringLength(3)]
+        public string Operation { get; set; }
+
+        [StringLength(1500)]
+        public string CheckerRemark { get; set; }
+
+        [StringLength(1500)]
+        public string MakerRemark { get; set; }
+
+        // Dropdown
+
+        public Guid GeneralLedgerId { get; set; }
+
+        public string NameOfGL { get; set; }
+    }
+}

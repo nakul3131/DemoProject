@@ -1,0 +1,275 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.UserRoleProfileViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Security.Users
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    short userProfilePrmKey = 0;
+    UserProfileDetailViewModel userProfileDetailViewModel = new UserProfileDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("UPLMOD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>User Profile - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title If Screen Large Then Column - 12 Otherwise Col - 6 For Create And Remaining For Translation*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+
+
+
+
+                                @*User Profile Role Profile / Popup Page*@
+                                <div class="modal fade" id="role-profile-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title  text-center">Add</h4>
+                                                <button type="button" class="close-role-profile-modal" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @*Business Office*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Business Office")
+                                                    <div class="mr-3">
+                                                        @Html.DropDownListFor(m => m.BusinessOfficeId, new SelectList(userProfileDetailViewModel.BusinessOfficeDropdownList, "Value", "Text"), "--- Select Business Office ---", new { @id = "business-office-role-profile-id", @class = "form-control mandatory-mark modal-input" })
+                                                        @Html.ValidationMessageFor(m => m.BusinessOfficeId)
+                                                        <span id="business-office-role-profile-id-error" class="error modal-input-error d-none"> Please Select BusinessOffice Name.</span>
+                                                    </div>
+                                                </div>
+
+                                                @*Role Profile*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Role Profile")
+                                                    <div class="mr-3">
+                                                        @Html.ListBoxFor(m => m.MultiRoleProfileId, new SelectList(userProfileDetailViewModel.RoleProfileDropDownList, "Value", "Text"), new { @id = "user-role-profile-id", @class = "form-control mandatory-mark modal-input", @multiple = "multiple" })
+                                                        @Html.ValidationMessageFor(m => m.MultiRoleProfileId)
+                                                        <span id="user-role-profile-id-error" class="error modal-input-error d-none"> Please Select Role Profile Name.</span>
+                                                    </div>
+                                                </div>
+
+                                                @*ActivationDate*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Activation Date")
+                                                    @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark activation-date deny-next-financial-year-date  modal-input set-current-date", @id = "activation-date-role-profile", @Type = "date", @placeholder = "Enter Activation Date", onclick = "DenyPastDate()", required = "required" })
+                                                    @Html.ValidationMessageFor(m => m.ActivationDate)
+                                                    <span id="activation-date-role-profile-error" class="error modal-input-error d-none">Please Enter Activation Date.</span>
+                                                </div>
+
+                                                @*ExpiryDate*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Expiry Date")
+                                                    @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control expiry-date modal-input", @id = "expiry-date-role-profile", @Type = "date", @placeholder = "Enter Expiry Date" })
+                                                    @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                                    <span id="expiry-date-role-profile-error" class="error modal-input-error d-none">Please Enter Expiry Date.</span>
+                                                </div>
+
+                                                @*CloseDate*@
+                                                <div class="form-group d-none">
+                                                    @Html.CustomLabel("Close Date")
+                                                    @Html.TextBoxFor(m => m.CloseDate, "{0:yyyy-MM-dd}", new { @class = "form-control modal-input", @Type = "date", @id = "close-date-role-profile" })
+                                                    @Html.ValidationMessageFor(m => m.CloseDate)
+                                                </div>
+
+                                                @*Note*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Note")
+                                                    @Html.TextAreaFor(m => m.Note, new { @id = "note-role-profile", @class = "form-control deny-multiple-space modal-input", @placeholder = "Enter Note", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                    @Html.ValidationMessageFor(m => m.Note)
+                                                </div>
+
+                                                <div class="form-group d-none">
+                                                    @Html.CustomLabel("ReasonForModification")
+                                                    @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-role-profile", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = 1500, onkeyup = "ToTextCapitalize()" })
+                                                    @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" id="btn-add-role-profile-modal" class="btn btn-success ">Add</button>
+                                                <button type="button" id="btn-update-role-profile-modal" class="btn btn-primary">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <table id="tbl-role-profile" class="table compact  table-striped table-bordered text-nowrap" cellspacing="0" width="100">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th><input type="checkbox" name="check_all" id="select-all-role-profile" /></th>
+                                                <th class="d-none">BusinessOfficeID</th>
+                                                <th>Name Of Business Office</th>
+                                                <th class="d-none">RoleProfileId</th>
+                                                <th>Name Of RoleProfile</th>
+                                                <th>Activation Date</th>
+                                                <th>Expiry Date</th>
+                                                <th class="d-none">CloseDate</th>
+                                                <th>Note</th>
+                                                <th class="d-none">ReasonForModification</th>
+                                                <th>UserProfilePrmKey</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            @{
+                                                IEnumerable<UserRoleProfileViewModel> userRoleProfileviewModelList = (IEnumerable<UserRoleProfileViewModel>)HttpContext.Current.Session["UserRoleProfile"];
+
+                                                foreach (UserRoleProfileViewModel viewModel in userRoleProfileviewModelList)
+                                                {
+                                            <tr class="hoverlightblue">
+                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                <td class="d-none">@viewModel.BusinessOfficeId</td>
+                                                <td>@viewModel.NameOfBusinessOffice</td>
+                                                <td class="d-none">@viewModel.RoleProfileId</td>
+                                                <td>@viewModel.NameOfRoleProfile</td>
+                                                <td>@viewModel.ActivationDate</td>
+                                                <td>@viewModel.ExpiryDate</td>
+                                                <td class="d-none">@viewModel.CloseDate</td>
+                                                <td>@viewModel.Note</td>
+
+                                                <td class="d-none">@viewModel.ReasonForModification</td>
+                                                <td >@(userProfilePrmKey = viewModel.UserProfilePrmKey)</td> 
+
+                                            </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                                @*======= Fifth Row - Reason For Modification Input In Regional Language =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reason For Modification")
+                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @Html.HiddenFor(m => m.UserProfilePrmKey, new { Value = userProfilePrmKey })
+
+
+                            @Html.OperationFooter("Modify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <link href="~/Content/css/jquery.multiselect.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.multiselect.js"></script>
+</body>
+</html>
+<script>
+    $('#user-role-profile-id').multiselect({
+        columns: 1,
+        placeholder: 'Select Correct Name',
+        search: true,
+        selectAll: true,
+        reload: true,
+    });
+
+   $('#sub-menu-id').select2({
+        closeOnSelect: false
+   })
+
+    //Dropdown Select List For menu-add
+    $("#model-menu-id").on("change", function () {
+        debugger
+        $.ajax({
+            type: "post",
+            url: Modelmenuurl,
+            data: { MenuId: $('#model-menu-id').val() },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                debugger
+                $('#main-menu-id').empty();
+                //var MainMenuList = '<option value="All">--Select All Menu--</option>';
+                var MainMenuList;
+                for (var i = 0; i < data.length; i++) {
+                    MainMenuList += "<option value=" + data[i].Value + ">" + data[i].Text + "</option>";
+                }
+                debugger;
+                $('#main-menu-id').append(MainMenuList);
+            }
+        });
+    })
+
+    $("#main-menu-id").on("change", function () {
+        debugger
+        $.ajax({
+            type: "post",
+            url: "/RoleProfile/GetModel",
+            data: { MenuId: $('#main-menu-id').val() },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+                debugger
+                $('#sub-menu-id').empty();
+                //var SubMenuList = '<option value="0">--Select Sub Menu--</option>';
+                var SubMenuList;
+                for (var i = 0; i < data.length; i++) {
+                    SubMenuList += "<option value=" + data[i].Value + ">" + data[i].Text + "</option>";
+                }
+                $('#sub-menu-id').append(SubMenuList);
+            }
+        });
+    });
+
+
+    var url = '@Url.Action("SaveDataTables", "UserRoleProfile")';
+
+    @*var getPersonDropdownByUserType = "@Url.Action("GetPersonDropdownByUserType", "UserProfile")";
+
+    var Modelmenuurl = "@Url.Action("GetModel", "RoleProfile")";
+
+    var uniqueNameOfRoleProfile = "@Url.Action("GetUniqueRoleProfileName", "RoleProfile")";*@
+</script>
+<script src="~/Scripts/Custom/UserRoleProfile.js"></script>
+
+

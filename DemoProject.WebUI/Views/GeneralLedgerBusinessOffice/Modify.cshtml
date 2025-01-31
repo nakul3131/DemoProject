@@ -1,0 +1,222 @@
+﻿@model DemoProject.Services.ViewModel.Account.GL.GeneralLedgerBusinessOfficeViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.GL
+@using DemoProject.Services.ViewModel.Configuration
+
+
+@{
+
+    short generalLedgerPrmKey = 0;
+    GeneralLedgerDetailViewModel detailViewModel = new GeneralLedgerDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("GLBMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>GeneralLedger - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Fourth Row - Accordians =======*@
+                                <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                    @*Accordian 1 - GeneralLedgerBusinessOffice*@
+                                    <div id="heading-business-office" class="card mt-3">
+                                        <div class="card-header" id="business-office-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office" data-target="#collapse-business-office">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a class="card-title" href="#">
+                                                        <b>GeneralLedger Business Office</b>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span id="business-office-error" class="error d-none">Business Office Required Data, Please Add Valid Data.</span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <a href="#collapse-business-office" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-business-office" data-target="#collapse-business-office">
+                                                        <i class="fa fa-angle-down toggle-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-business-office" aria-labelledby="heading-business-office" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row card-body">
+                                                            <div class="modal fade" id="business-office-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title text-center" id="business-office-text">Add</h4>
+                                                                            <button type="button" class="close-business-office-modal" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            @*NameOfScheme*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Name Of Business Office")
+                                                                                @Html.DropDownListFor(m => m.BusinessOfficeId, new SelectList(detailViewModel.BusinessOfficeDropdownList, "Value", "Text"), "Select Transaction Type", new { @id = "business-office-id", @class = "form-control mandatory-mark", required = "required", @autocomplete = "off" })
+                                                                                @Html.ValidationMessageFor(m => m.BusinessOfficeId)
+                                                                                <span id="business-office-id-error" class="error d-none">Please Select Valid Branch. </span>
+                                                                            </div>
+
+                                                                            @*ActivationDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Activation Date")
+                                                                                @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-business-office", @class = "form-control mandatory-mark deny-past-date", @type = "date", @autocomplete = "off", @placeholder = "Enter Activation Date", onclick = "DenyPastDate()", required = "required" })
+                                                                                @Html.ValidationMessageFor(m => m.ActivationDate)
+                                                                                <span id="activation-date-business-office-error" class="error d-none">Please Select Valid Activation Date. </span>
+                                                                            </div>
+
+                                                                            @*ExpiryDate*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Expiry Date")
+                                                                                @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-business-office", @class = "form-control deny-past-date-from-reference-date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('activation-date-business-office')" })
+                                                                                @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                                                                <span id="expiry-date-business-office-error" class="error d-none">Please Select Valid Expiry Date. </span>
+                                                                            </div>
+
+                                                                            @*CloseDate*@
+                                                                            <div class="form-group d-none">
+                                                                                @Html.CustomLabel("Close Date")
+                                                                                @Html.TextBoxFor(m => m.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-business-office", @class = "form-control deny-past-date-from-reference-date", @Type = "date", @autocomplete = "off", onclick = "DenyPastDateFromReferenceDate('expiry-date-business-office')" })
+                                                                                @Html.ValidationMessageFor(m => m.CloseDate)
+                                                                            </div>
+                                                                            @*Note*@
+                                                                            <div class="form-group">
+                                                                                @Html.CustomLabel("Note")
+                                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-business-office", @class = "form-control", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" id="btn-add-business-office-modal" class="btn btn-success">Add</button>
+                                                                            <button type="button" id="btn-update-business-office-modal" class="btn btn-primary">Update</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card-body">
+                                                                <table id="tbl-business-office" class="table compact table-striped table-bordered" width="100">
+                                                                    <thead class="text-center">
+                                                                        <tr>
+                                                                            <th><input type="checkbox" name="check_all" id="select-all-business-office" /></th>
+                                                                            <th class="d-none">BusinessOfficeId</th>
+                                                                            <th>NameOfBusinessOffice</th>
+                                                                            <th>ActivationDate</th>
+                                                                            <th>ExpiryDate</th>
+                                                                            <th class="d-none" id="transactionCloseDate">CloseDate</th>
+                                                                            <th>Note</th>
+                                                                            <th>GeneralLedgerPrmKey</th>
+
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody class="text-center">
+                                                                        @{
+                                                                            IEnumerable<GeneralLedgerBusinessOfficeViewModel> generalLedgerBusinessOfficeViewModelList = (IEnumerable<GeneralLedgerBusinessOfficeViewModel>)HttpContext.Current.Session["GeneralLedgerBusinessOffice"];
+
+                                                                            foreach (GeneralLedgerBusinessOfficeViewModel viewModel in generalLedgerBusinessOfficeViewModelList)
+                                                                            {
+                                                                        <tr>
+                                                                            <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                            <td class="d-none">@viewModel.BusinessOfficeId</td>
+                                                                            <td>@viewModel.NameOfBusinessOffice</td>
+                                                                            <td>@viewModel.ActivationDate</td>
+                                                                            <td>@viewModel.ExpiryDate</td>
+                                                                            <td class="d-none" id="transactionCloseDate">@viewModel.CloseDate</td>
+                                                                            <td>@viewModel.Note</td>
+                                                                            <td>@(generalLedgerPrmKey = viewModel.GeneralLedgerPrmKey)</td>
+                                                                        </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    @*Hiddent Field For GeneralLedgerBusinessOfficePrmKey*@
+                                    @*@Html.HiddenFor(m => m.GeneralLedgerBusinessOfficePrmKey)*@
+                                </div>
+
+                                @*======= Fifth Row - ReasonForModification =======*@
+                                @*ReasonForModification*@
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            @Html.CustomLabel("ReasonForModification")
+                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            @*Hiddent Field For GeneralLedgerPrmKey*@
+                            @Html.HiddenFor(m => m.GeneralLedgerPrmKey, new { Value = generalLedgerPrmKey })
+
+
+                            @*Footer*@
+                            @Html.OperationFooter("Modify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    @*var url = "@Url.Action("GetUniqueGLName", "GeneralLedger")";*@
+    var urlForDataTable = "@Url.Action("SaveDataTables", "GeneralLedgerBusinessOffice")";
+</script>
+<script src="~/Scripts/Custom/GeneralLedgerBusinessOffice.js"></script>

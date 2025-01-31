@@ -1,0 +1,415 @@
+﻿@model DemoProject.Services.ViewModel.Report.SubsidiaryBookViewModel
+@using DemoProject.Services.ViewModel.Report
+@{
+    ViewBag.Title = "SubsidiaryBookReport";
+    Layout = null;
+    SubsidiaryBookViewModel subsidiaryBookViewModel   = new SubsidiaryBookViewModel();
+    XtraReport report = (XtraReport)TempData["Report"];
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    @*<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />*@
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css" rel="stylesheet" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+
+    <link href="https://rawgit.com/tempusdominus/bootstrap-4/master/build/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/Scripts/cldr.js"></script>
+    <script src="~/Scripts/cldr/event.js"></script>
+    <script src="~/Scripts/cldr/supplemental.js"></script>
+    <script src="~/Scripts/globalize.js"></script>
+    <script src="~/Scripts/globalize/message.js"></script>
+    <script src="~/Scripts/globalize/number.js"></script>
+    <script src="~/Scripts/globalize/date.js"></script>
+    <script src="~/Scripts/globalize/currency.js"></script>
+    <script src="~/Scripts/knockout-3.4.0.js"></script>
+    <script src="~/Scripts/ace.js"></script>
+    <script src="~/Scripts/ext-language_tools.js"></script>
+
+    @Html.DevExpress().GetStyleSheets(new StyleSheet() { ExtensionType = ExtensionType.WebDocumentViewer })
+    @Html.DevExpress().GetScripts(new Script() { ExtensionType = ExtensionType.WebDocumentViewer })
+
+</head>
+<body>
+
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .dx-datagrid-headers .dx-datagrid-table .dx-row:last-child td {
+            border-bottom: 1px;
+        }
+
+        .dx-datagrid-headers .dx-datagrid-table {
+            border-bottom: 1px solid rgb(221, 221, 221);
+        }
+
+        .dxrd-preview.dxrd-designer-wrapper .dxrdp-toolbar-scrollable.dxrd-toolbar-wrapper .dxrd-toolbar {
+            width: auto;
+            white-space: nowrap;
+            text-align: center;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+        }
+
+        .dxrd-toolbar {
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px !important;
+        }
+
+        .custom-image-item {
+            position: relative;
+            right: -250px;
+            background-image: url('../../Images/question-mark.png');
+            width: 400px;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 100;
+        }
+
+        .save {
+            position: absolute;
+            margin-left: 5%;
+            z-index: 100;
+            margin-top: 6%;
+        }
+
+        .shadow {
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+        }
+
+        .dxrd-toolbar-wrapper.dxrdp-toolbar-scrollable.dx-scrollable.dx-scrollview.dx-visibility-change-handler.dx-scrollable-horizontal.dx-scrollable-simulated.dx-scrollable-customizable-scrollbars {
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+        }
+
+        .modal.fade .modal-dialog.modal-dialog-zoom {
+            -webkit-transform: translate(0,0) scale(.5);
+            transform: translate(0,0) scale(.5)
+        }
+
+        .modal.show .modal-dialog.modal-dialog-zoom {
+            -webkit-transform: translate(0,0) scale(1);
+            transform: translate(0,0) scale(1)
+        }
+
+        .mandatory-mark {
+            border-left-color: red;
+        }
+    </style>
+
+
+    <script>
+
+
+         function customizeElements(s, e) {
+            var rightpanelPart = e.GetById(DevExpress.Report.Preview.PreviewElements.RightPanel);
+            var index = e.Elements.indexOf(rightpanelPart);
+            e.Elements.splice(index, 1);
+         }
+         function CustomizeMenuActions(s, e) {
+            var filterbtn = {
+                id: 'filterbtn',
+                imageClassName: 'custom-image-item',
+                text: 'Filters',
+                visible: true,
+                disabled: false,
+                hasSeparator: true,
+                hotKey: { ctrlKey: true, keyCode: "F".charCodeAt(0) },
+                clickAction: function () {
+
+                    var id = $("#balance-list-report").attr("id");
+                    var myModal = $('#' + id).modal();
+                    var effectivedate =  new Date($("#effective-date").val() ? $("#effective-date").val() : '1900-01-01');
+                    var frombalancereport = $("#from-balance-report").val() ? $("#from-balance-report").val() : 0;
+                    var tobalancereport = $("#to-balance-report").val() ? $("#to-balance-report").val() : 0;
+                    var fromaccountopeningdatereport = new Date($("#from-account-opening-date-report").val() ? $("#from-account-opening-date-report").val() : '1900.01.01');
+                    var toaccountopeningdatereport = new Date($("#to-account-opening-date-report").val() ? $("#to-account-opening-date-report").val() : '1900.01.01');
+
+                    var day = ("0" + effectivedate.getDate()).slice(-2);
+                    var month = ("0" + (effectivedate.getMonth() + 1)).slice(-2);
+                    var effectivedates = effectivedate.getFullYear() + "-" + (month) + "-" + (day);
+                    var day1 = ("0" + fromaccountopeningdatereport.getDate()).slice(-2);
+                    var month1 = ("0" + (fromaccountopeningdatereport.getMonth() + 1)).slice(-2);
+                    var fromdate = fromaccountopeningdatereport.getFullYear() + "-" + (month) + "-" + (day);
+                    var day2 = ("0" + toaccountopeningdatereport.getDate()).slice(-2);
+                    var month2 = ("0" + (toaccountopeningdatereport.getMonth() + 1)).slice(-2);
+                    var todate = toaccountopeningdatereport.getFullYear() + "-" + (month) + "-" + (day);
+                    $('#effective-date', myModal).val(effectivedates);
+                    $('#from-balance-report', myModal).val(frombalancereport);
+                    $('#to-balance-report', myModal).val(tobalancereport);
+                    $('#from-account-opening-date-report', myModal).val(fromdate);
+                    $('#to-account-opening-date-report', myModal).val(todate);
+                    $('#balance-list-report').modal('show');
+
+
+                }
+            };
+            e.Actions.push(filterbtn);
+         }
+
+
+    </script>
+    @using (Html.BeginForm())
+    {
+
+        <div class="modal fade" id="balance-list-report" tabindex="-1" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                <div class="modal-content bg-light">
+                    <div class="modal-header">
+                        <i class="fa fa-filter mt-2" aria-hidden="true"></i>
+                        <h5 class="modal-title ml-2" id="exampleModalLabel">Filters</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body bg-light">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @*<div class="form-group">
+                                    <label>BranchName</label>
+                                    @Html.DropDownListFor(m => m.BusinessOfficeId, new SelectList(subsidiaryBookViewModel.AuthorizedBusinessOfficeDropdownList, "Value", "Text", 0), "Select Branch", new { @id = "business-office-id mandatory-mark", @class = "form-control mandatory-mark", @autocomplete = "off" })
+                                </div>*@
+                            </div>
+                            <div class="col-md-6">
+                                @*<div class="form-group">
+                                    <label>Language</label>
+                                    @Html.DropDownListFor(m => m.RegionalLanguageId, new SelectList(subsidiaryBookViewModel.LanguageDropdownList, "Value", "Text"), new { @class = "form-control mandatory-mark", id = "language-report" })
+                                </div>*@
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                <i class="fas fa-sort-amount-down"></i><button type="button" class="btn btn-link" id="Advanced-Filter"><h5>Advanced Filter</h5></button>
+                            </div>*@
+                            @*<div id="Advanced-serach">*@
+                                <div class="row">
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>FromDate</label>
+                                            @Html.TextBoxFor(m => m.FromDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", id = "from-account-opening-date-report", })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>ToDate</label>
+                                            @Html.TextBoxFor(m => m.ToDate, "{0:yyyy-MM-dd}", new { @class = "form-control deny-future-date-from-reference-date ", @type = "date", id = "to-account-opening-date-report", onclick = "DenyPastDate1()" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @*<div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>GroupBy</label>
+                                            @Html.DropDownListFor(m=>m.GroupBy, new List<SelectListItem>
+             { new SelectListItem { Text = "TransactionNumber", Value = "TransactionNumber"},
+               new SelectListItem { Text = "CustomerFullName", Value = "CustomerFullName"},
+               new SelectListItem { Text = "TransactionAmount", Value = "TransactionAmount"}
+               }, "Select GroupBy", new { @class = "form-control" })
+                                        </div>
+                                    </div>*@
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>SortBy</label>
+                                            @Html.DropDownListFor(m=>m.SortBy, new List<SelectListItem>
+             { new SelectListItem { Text = "TransactionNumber", Value = "TransactionNumber"},
+               new SelectListItem { Text = "CustomerFullName", Value = "CustomerFullName"},
+               new SelectListItem { Text = "TransactionAmount", Value = "TransactionAmount"}
+               }, "Select SortBy", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>OrderBy</label>
+                                        <div class="form-group">
+                                            <label id="check-orderby" class="btn btn-light">
+                                                @Html.CheckBoxFor(m => m.IsAscending, new { id = "check-orderby1", @checked = "checked" })
+                                                <span>Asce</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            @*</div>*@
+                        </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success btn-sm" id="btn-save">Submit</button>
+                    </div>
+                </div>
+                <div id="root"></div>
+            </div>
+        </div>
+    }
+    <div class="container-fluid   ml-1 mt-5">
+        @Html.DevExpress().WebDocumentViewer(settings =>
+   {
+                                                settings.Name = "WebDocumentViewer1";
+                                                settings.MobileMode = false;
+                                                settings.ControlStyle.CssClass = "shadow";
+                                                settings.ClientSideEvents.CustomizeElements = "customizeElements";
+                                                settings.ClientSideEvents.CustomizeMenuActions = "CustomizeMenuActions";
+                                                //settings.ClientSideEvents.CustomizeMenuActions = "function(_, e) { customMenuClick(e.Actions); }";
+                                                ///settings.ClientSideEvents.CustomizeMenuActions = "OnCustomizeMenuActions";
+                                                //settings.ClientSideEvents.Init = "WebDocumentViewer_Init";
+
+                                            }).Bind(report).GetHtml()
+    </div>
+</body>
+
+</html>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+@*<script>
+        class Car {
+            constructor(name) {
+                this.brand = name;
+            }
+            p() {
+               return "Hi I Am"+this.brand;
+            }
+        }
+
+
+
+        class Model extends Car {
+            constructor(name ,mod)
+            {
+                super(name);
+                this.model = mod;
+            }
+            show(){
+               return this.p() + "iam how" + this.model;
+            }
+          function  MyButton(){
+                return
+                <button>
+                "I'm a button"
+               </button>
+
+            }
+        }
+        const nycar = new Model("pradip", "jay");
+
+        alert(nycar.show());
+
+
+
+        const myArray = ['apple', 'banana', 'orange'];
+
+        const myList = myArray.map((item) => '<p>' + { item } + '</p>')
+
+        const container = document.getElementById('root');
+        container.apppend(myList);
+
+        //const root = ReactDOM.createRoot(container);
+        //root.render(myList);
+
+    </script>*@
+
+
+<script>
+    function DenyPastDate1() {
+        var referenceDate = new Date($("#from-account-opening-date-report").val());
+        var futureday = new Date(referenceDate);
+        futureday.setDate(futureday.getDate());
+        $(".deny-future-date-from-reference-date").attr('min', futureday.toISOString().slice(0, -14));
+    }
+    $("#from-balance-report").keyup(function () {
+        $("#to-balance-report").val('0');
+    })
+    $("#to-balance-report").change(function () {
+        var min = parseInt($("#from-balance-report").val());
+
+        var max = parseInt($("#to-balance-report").val());
+
+        if (parseInt(min) > parseInt(max)) {
+
+            $("#to-balance-report").next("div.error").remove();
+
+            $('#to-balance-report').after('<div class="error" style="color:red">Enter Maximum Value</div>');
+        }
+        else {
+            $('#to-balance-report').next("div.error").remove();
+        }
+    });
+    $("#btn-save").click(function () {
+        $('#balance-list-report').modal('hide');
+    })
+    $(function () {
+
+        $('#Advanced-serach').hide();
+        $("#Advanced-Filter").click(function () {
+            debugger;
+            $("#Advanced-serach").fadeToggle();
+        })
+
+        $('.close').click(function () {
+            $("#Advanced-serach").hide();
+        })
+        $(document).click(function (e) {
+            if ($(e.target).is('#balance-list-report')) {
+                $('#Advanced-serach').hide();
+            }
+
+        });
+
+        $('#check-orderby').click(function () {
+            debugger;
+            var checked = $('input', this).is(':checked');
+            //$('span', this).text(checked ? 'Asce' : 'Desc');
+        });
+
+
+        // General Ledger Record
+        $("#business-office-id").on("change", function () {
+            debugger;
+            var businessOfficePrmKey = $("#business-office-id option:selected").val();
+            $.post("/FinancialStatementsReport/GetAuthorizedGeneralLedger", { _businessOfficeId: businessOfficePrmKey, async: false }, function (data) {
+                var items = '<option value="0">Select General Ledger</option>';
+                $.each(data, function (i, generalLedger) {
+                    items += "<option value='" + generalLedger.Value + "'>" + generalLedger.Text + "</option>";
+                });
+                $('#general-ledger-id').html(items);
+            });
+        })
+
+        // Get Scheme Record
+        $("#general-ledger-id").on("change", function () {
+            debugger;
+            var generalLedgerPrmKey = $("#general-ledger-id option:selected").val();
+            $.post("/FinancialStatementsReport/GetSchemeDropdownListByGeneralLedger", { _generalLedgerId: generalLedgerPrmKey, async: false }, function (data) {
+                var items = '<option value="0">Select General Ledger</option>';
+                $.each(data, function (i, scheme) {
+                    items += "<option value='" + scheme.Value + "'>" + scheme.Text + "</option>";
+                });
+                $('#scheme-id').html(items);
+            });
+        })
+
+
+    })
+</script>

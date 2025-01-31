@@ -1,0 +1,157 @@
+﻿@model DemoProject.Services.ViewModel.Management.Master.BoardOfDirectorPowerAndFunctionViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Management.Master
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    BoardOfDirectorPowerAndFunctionViewModel model = new BoardOfDirectorPowerAndFunctionViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("BPFCRT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>BoardOfDirectorPowerAndFunction - Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-6">
+                                        <h5 class="font-weight-bold mt-1">Create</h5>
+                                        <hr />
+                                    </div>
+
+                                    @*Page Title Translation For Large Screen*@
+                                    <div class="col-6">
+                                        <div class="d-none d-lg-block">
+                                            <h5 class="mt-1"><b>Translation : @HttpContext.Current.Session["RegionalLanguage"]</b></h5>
+                                            <hr />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*SubmitError*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                @*Two Columns For Default Application Language (i.e. English) And Other For Regional Language Translation With Equal Length*@
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        @*BoardOfDirectorPrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Board Of Director")
+                                            <div class="mr-3">
+                                                @Html.DropDownListFor(m => m.BoardOfDirectorId, new SelectList(model.BoardOfDirectors, "Value", "Text"), "--- Select Board Of Director ---", new { @class = "form-control mandatory-mark" , required = "required" })
+                                                @Html.ValidationMessageFor(m => m.BoardOfDirectorId)
+                                            </div>
+                                        </div>
+
+                                        @*PowerAndFunctionPrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Power And Function")
+                                            <div class="mr-3">
+                                                @Html.DropDownListFor(m => m.PowerAndFunctionId, new SelectList(model.PowerAndFunctions, "Value", "Text"), "--- Select Power And Function ---", new { @class = "form-control mandatory-mark" , required = "required" })
+                                                @Html.ValidationMessageFor(m => m.PowerAndFunctionId)
+                                            </div>
+                                        </div>
+
+                                        @*SequenceNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Sequence Number")
+                                            @Html.TextBoxFor(m => m.SequenceNumber, new { @class = "form-control", @type = "number", @Value = "1", @min = 1, @max = 255 , @placeholder = "Enter Sequence Number" })
+                                            @Html.ValidationMessageFor(m => m.SequenceNumber)
+                                        </div>
+
+                                        @*SequenceText*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Sequence Text")
+                                            @Html.TextBoxFor(m => m.SequenceText, new { @id = "sequence-text", @class = "form-control mandatory-mark text-capitalize", @maxlength = 50 , @placeholder = "Enter Sequence Text", required = "required", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.SequenceText)
+                                        </div>
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark deny-future-date set-current-date", @Type = "date", @id = "ActivationDate", required = "required", onchange = "Activedate()" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*ExpiryDate*@
+                                        <div class="form-group m-1">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @Type = "date", @id = "ExpiryDate", onchange = "Expirydate()" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control text-capitalize default-none" , @maxlength = 1500, @placeholder = "Enter Note", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+                                    </div>
+
+                                    @*Second Column - Translation In Regional Language*@
+                                    <div class="col-lg-6 d-block">
+                                        @*Display On Only Small Screen And Hide On Large Or Extra Large Screen*@
+                                        <div class="card bg-darkgray text-white d-block d-lg-none">
+                                            <h5 class="mt-1"><b>Translation : @HttpContext.Current.Session["RegionalLanguage"]</b></h5>
+                                            <hr class="bg-white" />
+                                        </div>
+
+                                        @*TransSequenceText*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.SequenceTextInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransSequenceText, null, new { @id = "trans-sequence-text", @class = "form-control mandatory-mark" , @maxlength = 50, @placeholder = model.SequenceTextPlaceHolderInRegionalLanguage, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.TransSequenceText)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none" , @maxlength = 1500, @placeholder = model.NotePlaceHolderInRegionalLanguage })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Create", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

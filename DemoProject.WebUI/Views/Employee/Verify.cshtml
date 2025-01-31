@@ -1,0 +1,727 @@
+﻿@model DemoProject.Services.ViewModel.Management.Servant.EmployeeViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Management.Servant
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+
+
+    EmployeeDTDetailViewModel detailViewModel = new EmployeeDTDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("EMPAUT");
+
+    var photo = Convert.ToBase64String(Model.EmployeePhotoViewModel.PhotoCopy);
+    var photoImgSrc = String.Format("data:image/gif;base64,{0}", photo);
+
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    byte counter = 0;
+    string photoId = "";
+    string fileUploaderId = "";
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Employee - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row read-only">
+                                    <div class="col-lg-12">
+                                        @*Name Of EmployeeCode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Employee Code")
+                                            @Html.TextBoxFor(m => m.EmployeeCode, new { @id = "employee-code", @class = "form-control mandatory-mark", @placeholder = "Enter Employee Code", required = "required", onkeyup = "ToTextCapitalize()", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.EmployeeCode)
+                                        </div>
+
+                                        @*External EmployeeId1*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("External Employee Id 1")
+                                            @Html.TextBoxFor(m => m.ExternalEmployeeId1, new { @id = "external-employee-id1", @class = "form-control mandatory-mark", @placeholder = "Enter External Employee Id 1", required = "required", onkeyup = "ToTextCapitalize()", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.ExternalEmployeeId1)
+                                        </div>
+
+                                        @*External EmployeeId2*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("External Employee Id 2")
+                                            @Html.TextBoxFor(m => m.ExternalEmployeeId2, new { @id = "external-employee-id2", @class = "form-control mandatory-mark", @placeholder = "Enter External Employee Id 2", required = "required", onkeyup = "ToTextCapitalize()", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.ExternalEmployeeId2)
+                                        </div>
+
+                                        @*Employee Category*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Employee Category")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="mt-1 d-flex justify-content-between">
+                                                        <div class="col-4">
+                                                            <div class="form-check form-check-inline">
+                                                                @Html.RadioButtonFor(m => m.EmployeeCategory, "STF", new { @id = "employee-category-stf", @name = "EmployeeCategory", required = "required" })
+                                                                <label for="employee-category-stf" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("For Staff")</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-check form-check-inline">
+                                                                @Html.RadioButtonFor(m => m.EmployeeCategory, "WRK", new { @id = "employee-category-wrk", @name = "EmployeeCategory", required = "required" })
+                                                                <label for="employee-category-wrk" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("For Worker")</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-check form-check-inline">
+                                                                @Html.RadioButtonFor(m => m.EmployeeCategory, "SST", new { @id = "employee-category-sst", @name = "EmployeeCategory", required = "required" })
+                                                                <label for="employee-category-sst" class="form-check-label pl-2">@Html.TextWithRegionalLanguage("For Semi Staff")</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @Html.ValidationMessageFor(m => m.EmployeeCategory)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*======= Forth Row - Accordians =======*@
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+                                            @*Accordian 1 - Employee Department*@
+                                            <div id="heading-employee-department" class="card mt-3">
+                                                <div class="card-header p-3" id="employee-department-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-department" data-target="#collapse-employee-department" href="#collapse-employee-department">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Department")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="employee-department-accordion-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-employee-department" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-department" data-target="#collapse-employee-department">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-employee-department" class="collapse" aria-labelledby="heading-employee-department" data-parent="#accordion">
+                                                    <div class="card-body read-only">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Department Name*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Department Name")
+                                                                    @Html.DropDownListFor(m => m.EmployeeDepartmentViewModel.DepartmentId, new SelectList(detailViewModel.DepartmentDropdownList, "Value", "Text"), "--- Select Department Name ---", new { @id = "department-type", @class = "form-control mandatory-mark department-input", @placeholder = "Enter Department Type", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDepartmentViewModel.DepartmentId)
+                                                                </div>
+
+                                                                @*Activation Date*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Activation Date")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDepartmentViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-department", @class = "form-control mandatory-mark activation-date deny-past-date deny-next-financial-year-date set-current-date department-input", @Type = "date", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDepartmentViewModel.ActivationDate)
+                                                                </div>
+
+                                                                @*Expiry Date*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Expiry Date")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDepartmentViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-department", @class = "form-control expiry-date allow-future-date-upto-50y department-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date')" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDepartmentViewModel.ExpiryDate)
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.EmployeeDepartmentViewModel.Note, new { @id = "note-employee-department", @class = "form-control deny-multiple-space title-case default-none", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDepartmentViewModel.Note)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 2 - Employee Designation*@
+                                            <div id="heading-employee-designation" class="card mt-3">
+                                                <div class="card-header p-3" id="employee-designation-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-designation" data-target="#collapse-employee-designation" href="#collapse-employee-designation">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Designation")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="employee-designation-accordion-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-employee-designation" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-designation" data-target="#collapse-employee-designation">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-employee-designation" class="collapse" aria-labelledby="heading-employee-designation" data-parent="#accordion">
+                                                    <div class="card-body read-only">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Designation Name*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Designation Name")
+                                                                    @Html.DropDownListFor(m => m.EmployeeDesignationViewModel.DesignationId, new SelectList(detailViewModel.DesignationDropdownList, "Value", "Text"), "--- Select Designation Name ---", new { @id = "designation-type", @class = "form-control mandatory-mark designation-input", @placeholder = "Enter Designation Type", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDesignationViewModel.DesignationId)
+                                                                </div>
+
+                                                                @*Activation Date*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Activation Date")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDesignationViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-designation", @class = "form-control mandatory-mark activation-date deny-past-date deny-next-financial-year-date set-current-date designation-input", @Type = "date", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDesignationViewModel.ActivationDate)
+                                                                </div>
+
+                                                                @*Expiry Date*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Expiry Date")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDesignationViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-designation", @class = "form-control expiry-date allow-future-date-upto-50y designation-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date-designation')" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDesignationViewModel.ExpiryDate)
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.EmployeeDesignationViewModel.Note, new { @id = "note-employee-designation", @class = "form-control deny-multiple-space title-case default-none", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDesignationViewModel.Note)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 3 - Employee Performance Rating*@
+                                            <div id="heading-employee-performance-rating" class="card mt-3">
+                                                <div class="card-header p-3" id="employee-performance-rating-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-performance-rating" data-target="#collapse-employee-performance-rating" href="#collapse-employee-performance-rating">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Performance Rating")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="employee-performance-rating-accordion-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-employee-performance-rating" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-performance-rating" data-target="#collapse-employee-performance-rating">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-employee-performance-rating" class="collapse" aria-labelledby="heading-employee-performance-rating" data-parent="#accordion">
+                                                    <div class="card-body read-only">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Employee Rating*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Employee Rating")
+                                                                    @Html.TextBoxFor(m => m.EmployeePerformanceRatingViewModel.EmployeeRating, new { @id = "employee-rating", @class = "form-control mandatory-mark real-number performance-rating-input", @type = "number", @min = 1, @max = 5, required = "required", @placeholder = "Enter Employee Rating" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeePerformanceRatingViewModel.EmployeeRating)
+                                                                </div>
+
+                                                                @*Activation Date*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Activation Date")
+                                                                    @Html.TextBoxFor(m => m.EmployeePerformanceRatingViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-performance-rating", @class = "form-control mandatory-mark deny-past-date deny-next-financial-year-date set-current-date performance-rating-input", @Type = "date", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeePerformanceRatingViewModel.ActivationDate)
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.EmployeePerformanceRatingViewModel.Note, new { @id = "note-employee-performance-rating", @class = "form-control deny-multiple-space title-case default-none", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeePerformanceRatingViewModel.Note)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordion 4 - Employee Working Schedule*@
+                                            <div id="heading-employee-working-schedule" class="card mt-3">
+                                                <div class="card-header p-3" id="employee-working-schedule-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-working-schedule" data-target="#collapse-employee-working-schedule" href="#collapse-employee-working-schedule">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Working Schedule")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="employee-working-schedule-accordion-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-employee-working-schedule" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-working-schedule" data-target="#collapse-employee-working-schedule">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-employee-working-schedule" class="collapse" aria-labelledby="heading-employee-working-schedule" data-parent="#accordion">
+                                                    <div class="card-body read-only">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Working Schedule*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Working Schedule")
+                                                                    @Html.DropDownListFor(m => m.EmployeeWorkingScheduleViewModel.WorkingScheduleId, new SelectList(detailViewModel.WorkingScheduleDropdownList, "Value", "Text"), "--- Select Working Schedule ---", new { @id = "working-schedule-type", @class = "form-control mandatory-mark working-schedule-input", @placeholder = "Enter Working Schedule Type", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeWorkingScheduleViewModel.WorkingScheduleId)
+                                                                </div>
+
+                                                                @*Activation Date*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Activation Date")
+                                                                    @Html.TextBoxFor(m => m.EmployeeWorkingScheduleViewModel.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-working-schedule", @class = "form-control mandatory-mark activation-date deny-past-date deny-next-financial-year-date set-current-date working-schedule-input", @Type = "date", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeWorkingScheduleViewModel.ActivationDate)
+                                                                </div>
+
+                                                                @*Expiry Date*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Expiry Date")
+                                                                    @Html.TextBoxFor(m => m.EmployeeWorkingScheduleViewModel.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "expiry-date-working-schedule", @class = "form-control expiry-date allow-future-date-upto-50y working-schedule-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('activation-date-working-schedule')" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeWorkingScheduleViewModel.ExpiryDate)
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.EmployeeWorkingScheduleViewModel.Note, new { @id = "note-employee-working-schedule", @class = "form-control deny-multiple-space title-case default-none", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeWorkingScheduleViewModel.Note)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordion 5 - Employee Detail*@
+                                            <div id="heading-employee-detail" class="card mt-3">
+                                                <div class="card-header p-3" id="employee-detail-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-detail" data-target="#collapse-employee-detail" href="#collapse-employee-detail">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Detail")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="employee-detail-accordion-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-employee-detail" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-detail" data-target="#collapse-employee-detail">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-employee-detail" class="collapse" aria-labelledby="heading-employee-detail" data-parent="#accordion">
+                                                    <div class="card-body read-only">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*Person Name*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Person Name")
+                                                                    @Html.DropDownListFor(m => m.EmployeeDetailViewModel.PersonId, new SelectList(detailViewModel.PersonDropdownList, "Value", "Text"), "--- Select Person Name ---", new { @id = "person-name", @class = "form-control mandatory-mark employee-detail-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.PersonId)
+                                                                </div>
+
+                                                                @*Employee Type*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Employee Type")
+                                                                    @Html.DropDownListFor(m => m.EmployeeDetailViewModel.EmployeeTypeId, new SelectList(detailViewModel.EmployeeTypeDropdownList, "Value", "Text"), "--- Select Employee Type ---", new { @id = "employee-type", @class = "form-control mandatory-mark employee-detail-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.EmployeeTypeId)
+                                                                </div>
+
+                                                                @*Posting Place*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Posting Place")
+                                                                    @Html.DropDownListFor(m => m.EmployeeDetailViewModel.PostingPlaceId, new SelectList(detailViewModel.BusinessOfficeDropdownList, "Value", "Text"), "--- Select Posting Place ---", new { @id = "posting-place", @class = "form-control mandatory-mark employee-detail-input", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.PostingPlaceId)
+                                                                </div>
+
+                                                                @*Date Of Joining*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Joining")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDetailViewModel.DateOfJoining, "{0:yyyy-MM-dd}", new { @id = "date-of-joining", @class = "form-control mandatory-mark set-current-date employee-detail-input", @Type = "date", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.DateOfJoining)
+                                                                </div>
+
+                                                                @*Date Of Leaving*@
+                                                                <div class="form-group d-none">
+                                                                    @Html.CustomLabel("Date Of Leaving")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDetailViewModel.DateOfLeaving, "{0:yyyy-MM-dd}", new { @id = "date-of-leaving", @class = "form-control deny-past-date-from-reference-date employee-detail-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('date-of-joining')" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.DateOfLeaving)
+                                                                </div>
+
+                                                                @*Date Of Training Started*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Training Started")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDetailViewModel.DateOfTrainingStarted, "{0:yyyy-MM-dd}", new { @id = "date-of-training-started", @class = "form-control mandatory-mark deny-past-date-from-reference-date employee-detail-input", @Type = "date", required = "required", onclick = "DenyPastDateFromReferenceDate('date-of-joining')" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.DateOfTrainingStarted)
+                                                                </div>
+
+                                                                @*Date Of Training Ended*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Training Ended")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDetailViewModel.DateOfTrainingEnded, "{0:yyyy-MM-dd}", new { @id = "date-of-training-ended", @class = "form-control mandatory-mark deny-past-date-from-reference-date employee-detail-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('date-of-joining')" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.DateOfTrainingEnded)
+                                                                </div>
+
+                                                                @*Date Of Probation*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Probation")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDetailViewModel.DateOfProbation, "{0:yyyy-MM-dd}", new { @id = "date-of-probation", @class = "form-control mandatory-mark deny-past-date-from-reference-date employee-detail-input", @Type = "date", required = "required", onclick = "DenyPastDateFromReferenceDate('date-of-joining')" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.DateOfProbation)
+                                                                </div>
+
+                                                                @*Date Of Confirmation*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Date Of Confirmation")
+                                                                    @Html.TextBoxFor(m => m.EmployeeDetailViewModel.DateOfConfirmation, "{0:yyyy-MM-dd}", new { @id = "date-of-confirmation", @class = "form-control mandatory-mark deny-past-date-from-reference-date employee-detail-input", @Type = "date", onclick = "DenyPastDateFromReferenceDate('date-of-joining')" })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.DateOfConfirmation)
+                                                                </div>
+
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.EmployeeDetailViewModel.Note, new { @id = "note-employee-detail", @class = "form-control default-none deny-multiple-space title-case employee-detail-input", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeeDetailViewModel.Note)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 6 - Employee Document*@
+                                            <div id="heading-employee-document" class="card mt-3">
+                                                <div class="card-header" id="collapse-employee-document-header" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-document" data-target="#collapse-employee-document">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Document")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="document-error" class="error d-none"> This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-scheme-document" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-document" data-target="#collapse-employee-document">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-employee-document" class="collapse" aria-labelledby="heading-employee-document" data-parent="#accordion">
+                                                    <div class="card-body read-only">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="card-body">
+                                                                    <table id="tbl-document" class="table compact table-striped table-bordered" width="100">
+                                                                        <thead class="text-center read-only">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="check_all" id="select-all-document" /></th>
+                                                                                <th class="d-none">DocumenteId</th>
+                                                                                <th>DocumentText</th>
+                                                                                <th>Photopath</th>
+                                                                                <th>Photo</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">FileName</th>
+                                                                                <th class="d-none">PersonFinancialAssetDocument</th>
+                                                                                <th class="d-none">LocalStoragePath</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center read-only">
+                                                                            @{
+                                                                                IEnumerable<EmployeeDocumentViewModel> employeeDocumentViewModels = (IEnumerable<EmployeeDocumentViewModel>)HttpContext.Current.Session["Document"];
+
+                                                                                foreach (EmployeeDocumentViewModel viewModel in employeeDocumentViewModels)
+                                                                                {
+                                                                                    counter += 1;
+                                                                                    photoId = "photo-id" + counter.ToString();
+                                                                                    fileUploaderId = "data-table-document-photo-file-uploader" + counter.ToString();
+
+
+                                                                                    <tr>
+                                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                        <td class="d-none">@viewModel.DocumentId</td>
+                                                                                        <td>@viewModel.NameOfDocument</td>
+                                                                                        <td>
+                                                                                            <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @if (personInformationParameterViewModel.EnableKYCDocumentUploadInLocalStorage == true)
+                                                                                            {
+                                                                                                <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.FinancialAssetDocumentLocalStoragePath + viewModel.DocPath.FileName)" width="50" height="50" />
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                var base64 = Convert.ToBase64String(viewModel.DocumentCopy);
+                                                                                                var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                                                <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                                                string filename = Path.GetFileName(imgsrc);
+                                                                                            }
+                                                                                        </td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td class="d-none">@viewModel.NameOfFile</td>
+                                                                                        <td class="d-none">@viewModel.EmployeeDocumentPrmKey</td>
+                                                                                        <td class="d-none">@viewModel.StoragePath</td>
+
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 7 - Employee Photo*@
+                                            <div id="heading-employee-photo" class="card mt-3">
+                                                <div class="card-header p-3" id="employee-photo-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-photo" data-target="#collapse-employee-photo" href="#collapse-employee-photo">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Employee Photo")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="employee-photo-accordion-error" class="error d-none">This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-employee-photo" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-photo" data-target="#collapse-employee-photo">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-employee-photo" class="collapse" aria-labelledby="heading-employee-photo" data-parent="#accordion">
+                                                    <div class="card-body read-only">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="@((ViewBag.PersonInformationParameter.PhotoDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Photo")
+                                                                        <span id="photo-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Photo. </span>
+                                                                        @Html.TextBoxFor(m => m.EmployeePhotoViewModel.PhotoPath, new { @id = "photo-file-uploader", @class = "form-control mandatory-mark doc-upload", type = "file", name = "PhotoPath", @placeholder = "Enter Photo"})
+                                                                        @Html.ValidationMessageFor(m => m.EmployeePhotoViewModel.PhotoPath)
+                                                                    </div>
+                                                                    <hr />
+                                                                    <div><img id="photo-file-uploader-image-preview" src="@photoImgSrc" width="200" height="200" /></div>
+
+                                                                    @*PhotoFileCaption*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("File Caption")
+                                                                        @Html.TextBoxFor(m => m.EmployeePhotoViewModel.FileCaption, new { @id = "photo-file-caption", @class = "form-control default-none mandatory-mark title-case deny-multiple-space", @Value = "None", @placeholder = "Enter File Caption", @maxlength = 500})
+                                                                        @Html.ValidationMessageFor(m => m.EmployeePhotoViewModel.FileCaption)
+                                                                    </div>
+
+                                                                    @*Hiddent Field For PhotoDocumentUpload*@
+                                                                    @Html.HiddenFor(m => personInformationParameterViewModel.PhotoDocumentUpload, new { @id = "photo-document-upload" })
+
+                                                                    @*Hiddent Field For PersonFinancialAssetDocumentPrmKey*@
+                                                                    @Html.HiddenFor(m => personInformationParameterViewModel.EnablePhotoDocumentUploadInLocalStorage, new { @id = "enable-photo-document-upload" })
+
+                                                                </div>
+                                                                @*Note*@
+                                                                <div class="form-group">
+                                                                    @Html.CustomLabel("Note")
+                                                                    @Html.TextAreaFor(m => m.EmployeePhotoViewModel.Note, new { @id = "note-employee-photo", @class = "form-control default-none title-case deny-multiple-space", @placeholder = "Enter Note", @maxlength = 1500 })
+                                                                    @Html.ValidationMessageFor(m => m.EmployeePhotoViewModel.Note)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @*Accordian 8 - Employee Salary Structure*@
+                                            <div id="heading-employee-salary-structure" class="card mt-3">
+                                                <div class="card-header" id="employee-salary-structure-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-salary-structure" data-target="#collapse-employee-salary-structure">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <a class="card-title" href="#">
+                                                                <b>@Html.TextWithRegionalLanguage("Salary Structure")</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <span id="salary-structure-data-table-error" class="error d-none"> This Is Required, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-employee-salary-structure" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-employee-salary-structure" data-target="#collapse-employee-salary-structure">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-employee-salary-structure" class="collapse" aria-labelledby="heading-employee-salary-structure" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="card-body">
+                                                                    <table id="tbl-employee-salary-structure" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100%">
+                                                                        <thead class="text-center read-only">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="check_all" id="select-all-employee-salary-structure" /></th>
+                                                                                <th class="d-none">SalaryBreakupId</th>
+                                                                                <th>SalaryBreakupName</th>
+                                                                                <th>BreakupValue</th>
+                                                                                <th>IsPercentage</th>
+                                                                                <th>ActivationDate</th>
+                                                                                <th>ExpiryDate</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">ReasonForModification</th>
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody class="text-center read-only">
+                                                                            @{
+                                                                                IEnumerable<EmployeeSalaryStructureViewModel> employeeSalaryStructureViewModels = (IEnumerable<EmployeeSalaryStructureViewModel>)HttpContext.Current.Session["SalaryStructure"];
+
+                                                                                foreach (EmployeeSalaryStructureViewModel viewModel in employeeSalaryStructureViewModels)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                        <td class="d-none">@viewModel.SalaryBreakupId</td>
+                                                                                        <td>@viewModel.NameOfSalaryBreakup</td>
+                                                                                        <td>@viewModel.BreakupValue</td>
+                                                                                        <td>@viewModel.IsPercentage</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For PrmKey*@
+                                @Html.HiddenFor(m => m.PrmKey)
+
+                                @*Hiddent Field For EntryDateTime*@
+                                @Html.HiddenFor(m => m.EntryDateTime)
+
+                                @*Hiddent Field For EmployeePrmKey*@
+                                @Html.HiddenFor(m => m.EmployeePrmKey)
+
+                                @*Hiddent Field For EmployeeId*@
+                                @Html.HiddenFor(m => m.EmployeeId)
+
+                                @*Hiddent Field For EmployeeModificationPrmKey*@
+                                @Html.HiddenFor(m => m.EmployeeModificationPrmKey)
+
+                                @*Hiddent Field For EmployeeDepartmentPrmKey*@
+                                @Html.HiddenFor(m => m.EmployeeDepartmentViewModel.EmployeeDepartmentPrmKey)
+
+                                @*Hiddent Field For EmployeeDesignationPrmKey*@
+                                @Html.HiddenFor(m => m.EmployeeDesignationViewModel.EmployeeDesignationPrmKey)
+
+                                @*Hiddent Field For EmployeeDetailPrmKey*@
+                                @Html.HiddenFor(m => m.EmployeeDetailViewModel.EmployeeDetailPrmKey)
+
+                                @*Hiddent Field For EmployeeDocumentPrmKey*@
+                                @Html.HiddenFor(m => m.EmployeeDocumentViewModel.EmployeeDocumentPrmKey)
+
+                                @*Hiddent Field For EmployeePerformanceRatingPrmKey*@
+                                @Html.HiddenFor(m => m.EmployeePerformanceRatingViewModel.EmployeePerformanceRatingPrmKey)
+
+                                @*Hiddent Field For EmployeePhotoPrmKey*@
+                                @Html.HiddenFor(m => m.EmployeePhotoViewModel.EmployeePhotoPrmKey)
+
+                                @*Hiddent Field For EmployeeWorkingSchedulePrmKey*@
+                                @Html.HiddenFor(m => m.EmployeeWorkingScheduleViewModel.EmployeeWorkingSchedulePrmKey)
+
+                                @*Hiddent Field For EmployeeSalaryStructurePrmKey*@
+                                @Html.HiddenFor(m => m.EmployeeSalaryStructureViewModel.EmployeeSalaryStructurePrmKey)
+
+                                @*Hiddent Field For UserProfilePrmKey*@
+                                @Html.HiddenFor(m => m.UserProfilePrmKey)
+
+                                @*Hiddent Field For UserAction*@
+                                @Html.HiddenFor(m => m.UserAction)
+
+                                @*Hiddent Field For Photo*@
+                                @Html.HiddenFor(m => m.EmployeePhotoViewModel.PhotoCopy)
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Verify", "SaveDataTables", "Employee", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var saveDataTables = '@Url.Action("SaveDataTables", "Employee")';
+    var saveDataTableURL = '@Url.Action("EmployeeImageSaveDataTables", "Employee")';
+</script>
+<script src="~/Scripts/Custom/Employees.js"></script>
+

@@ -1,0 +1,61 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LoginSupportLayout.cshtml";
+}
+
+<!doctype html>
+
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Digital Certificate</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- First Row (<- Back Arrow and Title) -->
+        <div class="row mt-5">
+            <div class="col-1">
+                <a class="text-center" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Login", "Account")'">
+                    <i class='fas fa-arrow-left btn-lg text-primary'></i>
+                </a>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center text-primary">
+                    <strong>Digital Certificate</strong>
+                </h2>
+            </div>
+        </div>
+        <!-- Second Row (Page Description) -->
+        <div class="row mt-4">
+            <div class="offset-1 col-10 text-center">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/DigitalCertificateIcon.jpg" alt="Digital Certificate Image" />
+                    <figcaption>
+                        <h6 class="text-justify line-height-3 mt-3">
+                            The Webpage Of The Organization Internet Banking Server Is Identified By Means Of Digital Certificate
+                            Privided By Verisign To Assure Its Customer That They Are On Correct Site.
+                        </h6>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+        <!-- Third Row (Page Description) -->
+        <div class="row mt-2">
+            <div class="offset-1 col-10 text-center">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/DigitalCertificateImage.jpg" alt="Digital Certificate Image" />
+                    <figcaption>
+                        <h6 class="text-justify line-height-3 mt-3">
+                            This Protects The Customers From Revealing Their Confidential Account Information On Fraudulent Websites.
+                        </h6>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

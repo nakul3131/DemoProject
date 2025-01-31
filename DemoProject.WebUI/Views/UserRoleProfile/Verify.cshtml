@@ -1,0 +1,149 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.UserRoleProfileViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.Security.Users
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    UserProfileDetailViewModel userProfileDetailViewModel = new UserProfileDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("URPAUT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>User Profile - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form", @autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title If Screen Large Then Column - 12 Otherwise Col - 6 For Create And Remaining For Translation*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+
+                                            @*Accordian 9 - User Profile Role Profile*@
+                                            <div id="heading-user-profile-role-profile" class="card mt-3">
+                                                <div class="card-header " id="user-profile-role-profile-validation" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-user-profile-role-profile" data-target="#collapse-user-profile-role-profile">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <a class="card-title" href="#">
+                                                                <b>Role Profile</b>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span id="role-profile-data-table-error" class="error d-none"> User Profile Role Profile Data Table Required Data, Please Add Valid Data.</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <a href="#collapse-user-profile-role-profile" class="float-right" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-user-profile-role-profile" data-target="#collapse-user-profile-role-profile">
+                                                                <i class="fa fa-angle-down toggle-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="collapse-user-profile-role-profile"  aria-labelledby="heading-user-profile-role-profile" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                @*User Profile Role Profile / Popup Page*@
+                                                                <div class="card-body">
+                                                                    <table id="tbl-role-profile" class="table compact  table-striped table-bordered text-nowrap" cellspacing="0" width="100">
+                                                                        <thead class="text-center read-only">
+                                                                            <tr>
+                                                                                <th><input type="checkbox" name="check_all" id="select-all-role-profile" /></th>
+                                                                                <th class="d-none">BusinessOfficeID</th>
+                                                                                <th>Name Of Business Office</th>
+                                                                                <th class="d-none">RoleProfileId</th>
+                                                                                <th>Name Of RoleProfile</th>
+                                                                                <th>Activation Date</th>
+                                                                                <th>Expiry Date</th>
+                                                                                <th class="d-none">CloseDate</th>
+                                                                                <th>Note</th>
+                                                                                <th class="d-none">ReasonForModification</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="text-center read-only">
+                                                                            @{
+                                                                                IEnumerable<UserRoleProfileViewModel> UserRoleProfileviewModelList = (IEnumerable<UserRoleProfileViewModel>)HttpContext.Current.Session["UserRoleProfile"];
+
+                                                                                foreach (UserRoleProfileViewModel viewModel in UserRoleProfileviewModelList)
+                                                                                {
+                                                                                    <tr class="hoverlightblue">
+                                                                                        <th><input type="checkbox" name="check_all" class="checks" /></th>
+                                                                                        <th class="d-none">@viewModel.BusinessOfficeId</th>
+                                                                                        <th>@viewModel.NameOfBusinessOffice</th>
+                                                                                        <td class="d-none">@viewModel.RoleProfileId</td>
+                                                                                        <td>@viewModel.NameOfRoleProfile</td>
+                                                                                        <td>@viewModel.ActivationDate</td>
+                                                                                        <td>@viewModel.ExpiryDate</td>
+                                                                                        <td class="d-none">@viewModel.CloseDate</td>
+                                                                                        <td>@viewModel.Note</td>
+                                                                                        <td class="d-none">@viewModel.ReasonForModification</td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Hiddent Field For UserProfilePrmKey*@
+                            @Html.HiddenFor(m => m.UserProfilePrmKey)
+
+                            @*Hiddent Field For UserRoleProfilePrmKey*@
+                            @Html.HiddenFor(m => m.UserRoleProfilePrmKey)
+
+                            @*Save/Submit Button *@
+                            @Html.OperationFooter("Verify", "Exit", "Home","None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/UserRoleProfile.js"></script>

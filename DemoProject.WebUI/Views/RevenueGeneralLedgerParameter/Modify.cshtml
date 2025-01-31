@@ -1,0 +1,507 @@
+﻿@model DemoProject.Services.ViewModel.Account.GL.RevenueGeneralLedgerParameterViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.GL
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    RevenueGeneralLedgerParameterViewModel model = new RevenueGeneralLedgerParameterViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("RLPMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>GeneralLedger - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+                        @*======= First Row - Mandatory Mark =======*@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                            </div>
+                        </div>
+
+                        @*======= Second Row - Page Title, Translation =======*@
+                        <div class="row mt-2">
+                            @*Page Title*@
+                            <div class="col-12">
+                                <h5 class="font-weight-bold mt-1">Modify</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @*======= Third Row - Data Entry Page =======*@
+                        <div class="row">
+                            <div class="col-12">
+                                @*GLCode*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("GL Code")
+                                    @Html.TextBoxFor(m => m.GLCode, new { @class = "form-control mandatory-mark text-capitalize", @placeholder = "Enter GLCode", required = "required", @maxlength = "20", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                    @Html.ValidationMessageFor(m => m.GLCode)
+                                </div>
+
+                                @*ExistingGLNumber*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Existing GL Number")
+                                    @Html.TextBoxFor(m => m.ExistingGLNumber, new { @class = "form-control mandatory-mark text-capitalize", @placeholder = "Enter Existing GL Number", required = "required", @maxlength = "20", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                    @Html.ValidationMessageFor(m => m.ExistingGLNumber)
+                                </div>
+
+                                @*GLNumber*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("GL Number")
+                                    @Html.TextBoxFor(m => m.GLNumber, new { @class = "form-control text-capitalize", @placeholder = "Enter GL Number", required = "required", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                    @Html.ValidationMessageFor(m => m.GLNumber)
+                                </div>
+
+                                @*NameOfGL*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Name Of GL")
+                                    @Html.TextBoxFor(m => m.NameOfGL, new { @id = "name-of-gl", @class = "form-control mandatory-mark text-capitalize", @placeholder = "Enter Name Of GL", required = "required", @maxlength = "100", @autocomplete = "off", onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.NameOfGL)
+                                </div>
+
+                                @*TransNameOfGL*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.NameOfGLInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransNameOfGL, null, new { @id = "trans-name-of-gl", @class = "form-control mandatory-mark", @placeholder = model.NameOfGLPlaceHolderInRegionalLanguage, required = "required", @maxlength = "100", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.TransNameOfGL)
+                                </div>
+
+                                @*AliasName*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Alias Name")
+                                    @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control text-capitalize", @placeholder = "Enter Alias Name", @maxlength = "10", @autocomplete = "off", onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.AliasName)
+                                </div>
+
+                                @*TransAliasName*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.AliasNameInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransAliasName, null, new { @id = "trans-alias-name", @class = "form-control", @placeholder = model.AliasNamePlaceHolderInRegionalLanguage, @maxlength = "10", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.TransAliasName)
+                                </div>
+
+                                @*NameOnReport*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(" Name On Report ")
+                                    @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control text-capitalize", @placeholder = "Enter Name On Report", @maxlength = "100", @autocomplete = "off", onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.NameOnReport)
+                                </div>
+
+                                @*TransNameOnReport*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.NameOnReportInRegionalLanguage)
+                                    @Html.TextBoxFor(m => m.TransNameOnReport, null, new { @id = "trans-name-on-report", @class = "form-control", @placeholder = model.NameOnReportPlaceHolderInRegionalLanguage, @maxlength = "100", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                </div>
+
+                                @*BusinessOfficeAccess*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Business Office Access")
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="col-5 d-flex justify-content-between">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.BusinessOfficeAccess, "A", new { @name = "BusinessOfficeAccess" })
+                                                    <label class="form-check-label pl-2">Allowed</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.BusinessOfficeAccess, "D", new { @name = "BusinessOfficeAccess" })
+                                                    <label class="form-check-label pl-2">Disallowed</label>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.BusinessOfficeAccess)
+                                            <br />
+                                            <div class="bleft">
+                                                @Html.ListBoxFor(m => m.BusinessOfficeAccessId, new MultiSelectList(model.BusinessOfficeDropdownList, "Value", "Text"), new { @class = "form-control js-example-basic-multiple", name = "BusinessOfficeId", multiple = "multiple" })
+                                                @Html.ValidationMessageFor(m => m.BusinessOfficeAccessId)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*CurrencyAccess*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Currency Access")
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="col-5 mt-1 d-flex justify-content-between">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.CurrencyAccess, "A", new { @name = "CurrencyAccess" })
+                                                    <label class="form-check-label pl-2">Allowed</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.CurrencyAccess, "D", new { @name = "CurrencyAccess" })
+                                                    <label class="form-check-label pl-2">Disallowed</label>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.CurrencyAccess)
+                                            <br />
+                                            <div class="bleft">
+                                                @Html.ListBoxFor(m => m.CurrencyAccessId, new MultiSelectList(model.CurrencieDropdownList, "Value", "Text"), new { @class = "form-control js-example-basic-multiple", name = "CurrencyId", multiple = "multiple" })
+                                                @Html.ValidationMessageFor(m => m.CurrencyAccessId)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*CustomerCategoryAccess*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Customer Category Access")
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="col-5 mt-1 d-flex justify-content-between">
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.CustomerCategoryAccess, "A", new { @name = "CustomerCategoryAccess" })
+                                                    <label class="form-check-label pl-2">Allowed</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    @Html.RadioButtonFor(m => m.CustomerCategoryAccess, "D", new { @name = "CustomerCategoryAccess" })
+                                                    <label class="form-check-label pl-2">Disallowed</label>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.CustomerCategoryAccess)
+                                            <br />
+                                            <div class="bleft">
+                                                @Html.ListBoxFor(m => m.CustomerCategoryAccessId, new MultiSelectList(model.CustomerTypeDropdownList, "Value", "Text"), new { @class = "form-control js-example-basic-multiple", name = "CustomerCategoryId", multiple = "multiple" })
+                                                @Html.ValidationMessageFor(m => m.CustomerCategoryAccessId)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+
+                                <div class="row form-group">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Has Customer Accounts")
+                                    </div>
+                                    <div class="text-right">
+                                        <label class="switch switch-left-right">
+                                            @Html.CheckBoxFor(m => m.HasCustomerAccounts, new { @class = "form-control switch-input", @id = "HasCustomerAccounts", required = "required" })
+                                            <span class="slider round">
+                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                @*HasEligibilityCriteria*@
+                                <div class="row form-group">
+                                    <div class="col-10">
+                                        @Html.CustomLabel("Has Eligibility Criteria")
+                                    </div>
+                                    <div class="text-right">
+                                        <label class="switch switch-left-right">
+                                            @Html.CheckBoxFor(m => m.HasEligibilityCriteria, new { @class = "form-control switch-input", @id = "HasEligibilityCriteria", required = "required" })
+                                            <span class="slider round">
+                                                <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                @*ParentGL*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Parent GL")
+                                    @Html.DropDownListFor(m => m.ParentGLId, new SelectList(model.GLParentDropdownList, "Value", "Text"), new { @class = "form-control", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.ParentGLId)
+                                </div>
+
+                                @*ParentGLDescription*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Parent GL Description")
+                                    @Html.TextAreaFor(m => m.ParentGLDescription, new { @id = "parent-gl-description", @class = "form-control text-capitalize", @placeholder = "Enter Parent GL Description", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                    @Html.ValidationMessageFor(m => m.ParentGLDescription)
+                                </div>
+
+                                @*TransParentGLDescription*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.ParentGLDescriptionInRegionalLanguage)
+                                    @Html.TextAreaFor(m => m.TransParentGLDescription, new { @id = "trans-parent-gl-description", @class = "form-control", @placeholder = model.ParentGLDescriptionPlaceHolderInRegionalLanguage, @maxlength = "1500", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.TransParentGLDescription)
+                                </div>
+
+                                @*ActivationDate*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Activation Date")
+                                    @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark", @Type = "date", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.ActivationDate)
+                                </div>
+
+                                @*ExpiryDate*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Expiry Date")
+                                    @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "ExpiryDate", @class = "form-control", @Type = "date", @autocomplete = "off", onchange = "Expirydate()" })
+                                    @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                </div>
+
+                                @*Note*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Note")
+                                    @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control text-capitalize", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.Note)
+                                </div>
+
+                                @*TransNote*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.NoteInRegionalLanguage)
+                                    @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control", @placeholder = model.NotePlaceHolderInRegionalLanguage, @autocomplete = "off", @maxlength = "1500" })
+                                    @Html.ValidationMessageFor(m => m.TransNote)
+                                </div>
+
+                                @*Hiddent Field For GeneralLedgerPrmKey*@
+                                @Html.HiddenFor(m => m.GeneralLedgerPrmKey)
+                            </div>
+                        </div>
+
+                        @*======= Fourth Row - Accordians =======*@
+                        <div id="accordion" class="accordion md-accordion accordion-blocks">
+                            @*Accordian 1 - Revenue General Ledger Parameter*@
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-header p-3" aria-expanded="false" data-toggle="collapse" href="#collapse-revenue-general-ledger-parameter">
+                                            <a class="card-title">
+                                                <b>Revenue General Ledger Parameter</b>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-revenue-general-ledger-parameter" class="collapse" aria-labelledby="heading-revenue-general-ledger-parameter" data-parent="#accordion">
+                                            <div class="row card-body">
+                                                <div class="offset-1 col-10">
+                                                    @*SACHSNCode*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("HSN/SAC Code")
+                                                        @Html.TextBoxFor(m => m.SACHSNCode, new { @class = "form-control", @placeholder = "Enter HSN/SAC Code", required = "required", @autocomplete = "off" })
+                                                        @Html.ValidationMessageFor(m => m.SACHSNCode)
+                                                    </div>
+
+                                                    @*IsIncome*@
+                                                    <div class="row form-group">
+                                                        <div class="col-10">
+                                                            @Html.CustomLabel("Is Income")
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.IsIncome, new { @id = "IsIncome", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    @*IsOperational*@
+                                                    <div class="row form-group">
+                                                        <div class="col-10">
+                                                            @Html.CustomLabel("Is Operational")
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.IsOperational, new { @id = "IsOperational", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    @*IsGoodsRevenue*@
+                                                    <div class="row form-group">
+                                                        <div class="col-10">
+                                                            @Html.CustomLabel("Is Goods Revenue")
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.IsGoodsRevenue, new { @id = "IsGoodsRevenue", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    @*IsTaxable*@
+                                                    <div class="row form-group">
+                                                        <div class="col-10">
+                                                            @Html.CustomLabel("Is Taxable")
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.IsTaxable, new { @id = "IsTaxable", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    @*IsITCAvailable*@
+                                                    <div class="row form-group">
+                                                        <div class="col-10">
+                                                            @Html.CustomLabel("Is ITC Available")
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.IsITCAvailable, new { @id = "IsITCAvailable", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    @*IsUnderRCM*@
+                                                    <div class="row form-group">
+                                                        <div class="col-10">
+                                                            @Html.CustomLabel("Is Under RCM")
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <label class="switch switch-left-right">
+                                                                @Html.CheckBoxFor(m => m.IsUnderRCM, new { @id = "IsUnderRCM", @class = "form-control switch-input", required = "required" })
+                                                                <span class="slider round">
+                                                                    <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*Accordian 2 - Revenue General Ledger Tax Parameter*@
+                                    <div class="card mt-3">
+                                        <div class="card-header p-3" aria-expanded="false" data-toggle="collapse" href="#collapse-tax-parameter">
+                                            <a class="card-title">
+                                                <b>Tax Parameter</b>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-tax-parameter" class="collapse" aria-labelledby="heading-tax-parameter" data-parent="#accordion">
+                                            <div class="row card-body">
+                                                <div class="offset-1 col-10">
+                                                    @*TaxAmountType*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Tax Amount Type")
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <div class="mt-1 d-flex justify-content-between">
+                                                                    <div class="form-check form-check-inline">
+                                                                        @Html.RadioButtonFor(m => m.TaxAmountType, "F", new { @name = "TaxAmountType" })
+                                                                        <label class="form-check-label pl-2">Flat</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        @Html.RadioButtonFor(m => m.TaxAmountType, "P", new { @name = "TaxAmountType" })
+                                                                        <label class="form-check-label pl-2">Percentage</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        @Html.RadioButtonFor(m => m.TaxAmountType, "S", new { @name = "TaxAmountType" })
+                                                                        <label class="form-check-label pl-2">Slab</label>
+                                                                    </div>
+                                                                </div>
+                                                                @Html.ValidationMessageFor(m => m.TaxAmountType)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+
+                                                    @*TaxGeneralLedgerPrmKey*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Tax General Ledger")
+                                                        @Html.DropDownListFor(m => m.TaxGeneralLedgerId, new SelectList(model.TaxGeneralLedgerDropdownList, "Value", "Text"), new { @class = "form-control mandatory-mark", required = "required", @autocomplete = "off" })
+                                                        @Html.ValidationMessageFor(m => m.TaxGeneralLedgerId)
+                                                    </div>
+
+                                                    @*TaxAmount*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Tax Amount")
+                                                        @Html.TextBoxFor(m => m.TaxAmount, new { @class = "form-control", @placeholder = "Enter Tax Amount", required = "required", @type = "number", @autocomplete = "off" })
+                                                        @Html.ValidationMessageFor(m => m.TaxAmount)
+                                                    </div>
+
+                                                    @*RoundTaxAmount*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Round Tax Amount")
+                                                        @Html.TextBoxFor(m => m.RoundTaxAmount, new { @class = "form-control", @placeholder = "Enter Round Tax Amount", required = "required", @type = "number", @autocomplete = "off" })
+                                                        @Html.ValidationMessageFor(m => m.RoundTaxAmount)
+                                                    </div>
+
+                                                    @*FloorTaxAmount*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Floor Tax Amount")
+                                                        @Html.TextBoxFor(m => m.FloorTaxAmount, new { @class = "form-control", @placeholder = "Enter Floor Tax Amount", required = "required", @type = "number", @autocomplete = "off" })
+                                                        @Html.ValidationMessageFor(m => m.FloorTaxAmount)
+                                                    </div>
+
+                                                    @*CeilingTaxAmount*@
+                                                    <div class="form-group">
+                                                        @Html.CustomLabel("Ceiling Tax Amount")
+                                                        @Html.TextBoxFor(m => m.CeilingTaxAmount, new { @class = "form-control", @placeholder = "Enter Ceiling Tax Amount", required = "required", @type = "number", @autocomplete = "off" })
+                                                        @Html.ValidationMessageFor(m => m.CeilingTaxAmount)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        @*======= Fifth Row - ReasonForModification =======*@
+                        @*ReasonForModification*@
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    @Html.CustomLabel("ReasonForModification")
+                                    @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control text-capitalize", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()" })
+                                    @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                </div>
+
+                                @*TransReasonForModification*@
+                                <div class="form-group">
+                                    @Html.CustomLabel(model.ReasonForModificationInRegionalLanguage)
+                                    @Html.TextAreaFor(m => m.TransReasonForModification, new { @id = "trans-reason-for-modification", @class = "form-control text-capitalize", @placeholder = model.ReasonForModificationPlaceHolderInRegionalLanguage, @maxlength = "1500", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.TransReasonForModification)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                            @*Footer*@
+                            @Html.OperationFooter("Modify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $(".js-example-basic-multiple").select2();
+    (".js-example-basic-multiple").select2({ width: '100%' });
+</script>

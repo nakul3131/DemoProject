@@ -1,0 +1,295 @@
+﻿@model DemoProject.Services.ViewModel.Enterprise.Schedule.WorkingScheduleViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Enterprise.Schedule
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    WorkingScheduleViewModel model = new WorkingScheduleViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("WRKMOD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>WorkingSchedule - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm("Verify", "WorkingSchedule", FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title, Translation =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12 read-only">
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Maker Remark")
+                                            @Html.TextBoxFor(m => m.MakerRemark, new { @class = "form-control mandatory-mark read-only" })
+                                            @Html.ValidationMessageFor(m => m.MakerRemark)
+                                        </div>
+
+                                        @*NameOfOfficeSchedule*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name of Schedule")
+                                            @Html.TextBoxFor(m => m.NameOfSchedule, new { @id = "name-of-schedule", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.NameOfSchedule)
+                                        </div>
+
+                                        @*TransNameOfSchedule*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOfScheduleInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOfSchedule, new { @Id = "trans-name-of-schedule", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOfSchedule)
+                                        </div>
+
+                                        @*AliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Alias Name")
+                                            @Html.TextBoxFor(m => m.AliasName, new { @id = "alias-name", @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.AliasName)
+                                        </div>
+
+                                        @*TransAliasName*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.AliasNameInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransAliasName, new { @Id = "trans-alias-name", @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.TransAliasName)
+                                        </div>
+
+                                        @*NameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name On Report")
+                                            @Html.TextBoxFor(m => m.NameOnReport, new { @id = "name-on-report", @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.NameOnReport)
+                                        </div>
+
+                                        @*TransNameOnReport*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NameOnReportInRegionalLanguage)
+                                            @Html.TextBoxFor(m => m.TransNameOnReport, new { @Id = "trans-name-on-report", @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.TransNameOnReport)
+                                        </div>
+
+                                        @*StartTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Start Time")
+                                            @Html.TextBoxFor(m => m.StartTime, new { @id = "start-time", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.StartTime)
+                                        </div>
+
+                                        @*OfficeWorkingDuration*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Office Working Duration")
+                                            @Html.TextBoxFor(m => m.WorkingDuration, new { @id = "working-duration", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.WorkingDuration)
+                                        </div>
+
+                                        @*MorningTeaTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Morning TeaTime")
+                                            @Html.TextBoxFor(m => m.MorningTeaTime, new { @id = "morning-tea-time", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.MorningTeaTime)
+                                        </div>
+
+                                        @*MorningTeaTimeDuration*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Morning Tea Time Duration")
+                                            @Html.TextBoxFor(m => m.MorningTeaTimeDuration, new { @id = "morning-tea-time-duration", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.MorningTeaTimeDuration)
+                                        </div>
+
+                                        @*LunchTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Lunch Time")
+                                            @Html.TextBoxFor(m => m.LunchTime, new { @id = "lunch-time", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.LunchTime)
+                                        </div>
+
+                                        @*LunchTimeDuration*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Lunch Time Duration")
+                                            @Html.TextBoxFor(m => m.LunchTimeDuration, new { @id = "lunch-time-duration", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.LunchTimeDuration)
+                                        </div>
+
+                                        @*EveningTeaTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Evening Tea Time")
+                                            @Html.TextBoxFor(m => m.EveningTeaTime, new { @id = "evening-tea-time", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.EveningTeaTime)
+                                        </div>
+
+                                        @*EveningTeaTimeDuration*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Evening Tea Time Duration")
+                                            @Html.TextBoxFor(m => m.EveningTeaTimeDuration, new { @id = "evening-tea-time-duration", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.EveningTeaTimeDuration)
+                                        </div>
+
+                                        @*DinnerTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Dinner Time")
+                                            @Html.TextBoxFor(m => m.DinnerTime, new { @id = "dinner-time", @class = "form-control mandatory-mark", @placeholder = "Enter Dinner Time", required = "required", @Type = "time" })
+                                            @Html.ValidationMessageFor(m => m.DinnerTime)
+                                        </div>
+
+                                        @*DinnerTimeDuration*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Dinner Time Duration")
+                                            @Html.TextBoxFor(m => m.DinnerTimeDuration, new { @id = "dinner-time-duration", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.DinnerTimeDuration)
+                                        </div>
+
+                                        @*WeeklyHoliday1*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Weekly Holiday1")
+                                            @Html.DropDownListFor(m => m.WeeklyHoliday1Id, new SelectList(model.DaysOfWeekDropdownList, "Value", "Text"), new { @id = "weekly-holiday-1", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.WeeklyHoliday1Id)
+                                        </div>
+
+                                        @*WeeklyHoliday1Occurance*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Weekly Holiday1 Occurance")
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="mt-1 d-flex justify-content-between">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.WeeklyHoliday1Occurance, "ALL", new { @id = "weekly-holiday-1Occurance-all", @name = "WeeklyHoliday1Occurance" })
+                                                            <label for="weekly-holiday-1Occurance-all" class="form-check-label pl-2">All</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.WeeklyHoliday1Occurance, "EVN", new { @id = "weekly-holiday-1Occurance-evn", @name = "WeeklyHoliday1Occurance" })
+                                                            <label for="weekly-holiday-1Occurance-evn" class="form-check-label pl-2">Even</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.WeeklyHoliday1Occurance, "ODD", new { @id = "weekly-holiday-1Occurance-odd", @name = "WeeklyHoliday1Occurance" })
+                                                            <label for="weekly-holiday-1Occurance-odd" class="form-check-label pl-2">Odd</label>
+                                                        </div>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.WeeklyHoliday1Occurance)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        @*WeeklyHoliday2*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Weekly Holiday2")
+                                            @Html.DropDownListFor(m => m.WeeklyHoliday2Id, new SelectList(model.DaysOfWeekDropdownList, "Value", "Text"), new { @id = "weekly-holiday-2", @class = "form-control mandatory-mark", @placeholder = "Enter Weekly Holiday2", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.WeeklyHoliday2Id)
+                                        </div>
+
+                                        @*WeeklyHoliday2Occurance*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Weekly Holiday2 Occurance")
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="mt-1 d-flex justify-content-between">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.WeeklyHoliday2Occurance, "ALL", new { @id = "weekly-holiday-2Occurance-all", @name = "WeeklyHoliday2Occurance" })
+                                                            <label for="weekly-holiday-2Occurance-all" class="form-check-label pl-2">All</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.WeeklyHoliday2Occurance, "EVN", new { @id = "weekly-holiday-2Occurance-evn", @name = "WeeklyHoliday2Occurance" })
+                                                            <label for="weekly-holiday-2Occurance-evn" class="form-check-label pl-2">Even</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.WeeklyHoliday2Occurance, "ODD", new { @id = "weekly-holiday-2Occurance-odd", @name = "WeeklyHoliday2Occurance" })
+                                                            <label for="weekly-holiday-2Occurance-odd" class="form-check-label pl-2">Odd</label>
+                                                        </div>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.WeeklyHoliday2Occurance)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        @*ActivationDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Activation Date")
+                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "ActivationDate", @class = "form-control mandatory-mark" })
+                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                        </div>
+
+                                        @*ExpiryDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Expiry Date")
+                                            @Html.TextBoxFor(m => m.ExpiryDate, "{0:yyyy-MM-dd}", new { @id = "ExpiryDate", @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate)
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(model.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @Id = "trans-note", @class = "form-control m1" })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+
+                                        @*Hiddent Field For WorkingSchedulePrmKey*@
+                                        @Html.HiddenFor(m => m.WorkingSchedulePrmKey)
+
+                                        @*Hiddent Field For WorkingScheduleModificationPrmKey*@
+                                        @Html.HiddenFor(m => m.WorkingScheduleModificationPrmKey)
+
+                                        @*Hiddent Field For WorkingScheduleTranslationPrmKey*@
+                                        @Html.HiddenFor(m => m.WorkingScheduleTranslationPrmKey)
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Verify", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

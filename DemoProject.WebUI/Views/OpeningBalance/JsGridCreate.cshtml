@@ -1,0 +1,39 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.Account.Transaction.OpeningBalanceViewModel>
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Transaction;
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("OPNCRT");
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>JsGridCreate</title>
+</head>
+<body>
+    @*<div id="jsGrid"></div>*@
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+        @using (Html.BeginForm())
+        {
+            <div id="jsGrid"></div>
+
+            @Html.OperationFooter("Create", "Exit", "Home", "None")
+        }
+    </div>
+</body>
+</html>
+<script>
+    var url = '@Url.Action("JsGridCreate", "OpeningBalance")';
+</script>
+<script src="~/Scripts/Custom/JsGrid.js"></script>

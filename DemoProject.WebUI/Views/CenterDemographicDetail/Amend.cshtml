@@ -1,0 +1,150 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.Master.CenterDemographicDetailViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation.Master
+
+@{
+    CenterDemographicDetailViewModel model = new CenterDemographicDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("CDDAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Center Demographic Detail- Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card mb-3">
+                    @using (Html.BeginForm("Amend", "CenterDemographicDetail", FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark"> &nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "name-of-center", @class = "form-control mandatory-mark read-only" })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*LocalGovernment*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Local Government")
+                                            @Html.DropDownListFor(m => m.LocalGovernmentId, new SelectList(model.LocalGovernmentDropdownList, "Value", "Text"), "--- Select Local Government ---", new { @id = "local-government", @class = "form-control mandatory-mark center-demographic-detail-input", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.LocalGovernmentId)
+                                        </div>
+
+                                        @*Direction*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Direction")
+                                            @Html.DropDownListFor(m => m.DirectionId, new SelectList(model.DirectionDropdownList, "Value", "Text"), "--- Select Direction ---", new { @id = "diretion", @class = "form-control mandatory-mark center-demographic-detail-input", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.DirectionId)
+                                        </div>
+
+                                        @*Pincode*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Pincode")
+                                            @Html.TextBoxFor(m => m.Pincode, new { @id = "pincode", @class = "form-control mandatory-mark center-demographic-detail-input", @type = "number", @placeholder = "Enter Pincode", @maxlength = 6, required = "required" })
+                                            @Html.ValidationMessageFor(m => m.Pincode)
+                                        </div>
+
+                                        @*AreaTypePrmKey*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Area Type")
+                                            @Html.DropDownListFor(m => m.AreaTypeId, new SelectList(model.AreaTypeDropdownList, "Value", "Text"), "--- Select Type of Area ---", new { @id = "area-type", @class = "form-control mandatory-mark center-demographic-detail-input", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.AreaTypePrmKey)
+                                        </div>
+
+                                        @*TotalPopulation*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Population")
+                                            @Html.TextBoxFor(m => m.TotalPopulation, new { @id = "population", @class = "form-control mandatory-mark center-demographic-detail-input", @placeholder = "Enter Population", @type = "number", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.TotalPopulation)
+                                        </div>
+
+                                        @*PerCapitaIncome*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Per Capita Income")
+                                            @Html.TextBoxFor(m => m.PerCapitaIncome, new { @id = "per-capita-income", @class = "form-control mandatory-mark center-demographic-detail-input", @placeholder = "Enter Per Capita Income", @type = "number", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.PerCapitaIncome)
+                                        </div>
+
+                                        @*EducationalLevel*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Educational Level")
+                                            @Html.DropDownListFor(m => m.EducationLevelId, new SelectList(model.EducationLevelDropdownList, "Value", "Text"), "--- Select Education Level ---", new { @id = "educational-level", @class = "form-control mandatory-mark center-demographic-detail-input", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.EducationLevelId)
+                                        </div>
+
+                                        @*FamilySystem*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Family System")
+                                            @Html.DropDownListFor(m => m.FamilySystemId, new SelectList(model.FamilySystemDropdownList, "Value", "Text"), "--- Select Family Type ---", new { @id = "family-system", @class = "form-control mandatory-mark center-demographic-detail-input", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.FamilySystemId)
+                                        </div>
+
+                                        @*NumberOfResidentsOwningHomes*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Number Of Residents Owning Homes")
+                                            @Html.TextBoxFor(m => m.NumberOfResidentsOwningHomes, new { @id = "number-of-residents-owning-homes", @class = "form-control mandatory-mark center-demographic-detail-input", @placeholder = "Enter Number Of Residents Owning Homes", @type = "number", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.NumberOfResidentsOwningHomes)
+                                        </div>
+
+                                        @*Hiddent Field For CenterPrmKey*@
+                                        @Html.HiddenFor(m => m.CenterPrmKey)
+
+                                        @*Hiddent Field For CenterISOCodePrmKey*@
+                                        @Html.HiddenFor(m => m.CenterDemographicDetailPrmKey)
+                                    </div>
+                                </div>
+                            </div>
+
+                            // Footer - Save/Submit Button
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/Custom/CenterDemographicDetail.js"></script>

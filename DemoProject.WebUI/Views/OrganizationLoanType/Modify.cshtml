@@ -1,0 +1,211 @@
+﻿@model DemoProject.Services.ViewModel.Enterprise.Establishment.OrganizationLoanTypeViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Enterprise.Establishment
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+
+    OrganizationDetailViewModel organizationDetailViewModel = new OrganizationDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("OLTMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>OrganizationLoanType - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        <div class="modal fade" id="add-loan-type" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+
+                                                        <h4 class="modal-title  text-center" id="loan-type-text">Add</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        @*AccountClass*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("AccountClass")
+                                                            <div>
+                                                                @Html.DropDownListFor(m => m.AccountClassId, new SelectList(organizationDetailViewModel.LoanTypeDropdownList, "Value", "Text", 0), "Select Account Class", new { @id = "account-class-id", @class = "form-control mandatory-mark" })
+                                                                @Html.ValidationMessageFor(m => m.AccountClassId)
+                                                            </div>
+                                                        </div>
+
+                                                        @*MaximumLoanTenure*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("MaximumLoanTenure")
+                                                            <div>
+                                                                @Html.TextBoxFor(m => m.MaximumLoanTenure, new { @id = "maximum-loan-tenure", @class = "form-control mandatory-mark default-zero", @placeholder = "Enter MaximumLoanTenure", @type = "number", @autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(m => m.MaximumLoanTenure)
+                                                            </div>
+                                                        </div>
+
+                                                        @*MinimumDownPaymentPercentage*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("MinimumDownPaymentPercentage")
+                                                            <div>
+                                                                @Html.TextBoxFor(m => m.MinimumDownPaymentPercentage, new { @id = "minimum-down-payment-percentage", @class = "form-control mandatory-mark default-zero", @placeholder = "Enter Minimum Down Payment Percentage", @type = "number", @autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(m => m.MinimumDownPaymentPercentage)
+                                                            </div>
+                                                        </div>
+
+                                                        @*SequenceNumber*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("SequenceNumber")
+                                                            <div>
+                                                                @Html.TextBoxFor(m => m.SequenceNumber, new { @id = "sequence-number-loan-type", @class = "form-control mandatory-mark", @placeholder = "Enter Sequence Number", @type = "number", @min = 1, @max = 255, @autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(m => m.SequenceNumber)
+                                                            </div>
+                                                        </div>
+
+                                                        @*SequenceNumberText*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("SequenceNumberText")
+                                                            <div>
+                                                                @Html.TextBoxFor(m => m.SequenceNumberText, new { @id = "sequence-number-text-loan-type", @class = "form-control mandatory-mark", @placeholder = "Enter SequenceNumber Text", @maxlength = "50", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.SequenceNumberText)
+                                                            </div>
+                                                        </div>
+
+                                                        @*TransSequenceNumberText*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel(organizationDetailViewModel.SequenceNumberTextInRegionalLanguage)
+                                                            @Html.TextBoxFor(m => m.TransSequenceNumberText, new { @id = "trans-sequence-number-text-loan-type", @class = "form-control", @placeholder = organizationDetailViewModel.SequenceNumberTextPlaceHolderInRegionalLanguage, @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.TransSequenceNumberText)
+                                                        </div>
+
+                                                        @*ActivationDate*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("ActivationDate")
+                                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-loan-type", @class = "form-control mandatory-mark ActivationDate", @placeholder = "Enter Activation Date", @type = "date"})
+                                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" id="btn-add-loan-type" class="btn btn-success ">Add</button>
+                                                        <button type="button" id="btn-update-loan-type" class="btn btn-primary ">Update</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <table id="organization-loan-type-table" class="table compact table-striped table-bordered" width="100">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th><input type="checkbox" name="check_all" id="select-all-loan-Type" /></th>
+                                                        <th class="d-none">AccountClassId</th>
+                                                        <th>AccountClass</th>
+                                                        <th>MaximumLoanTenure</th>
+                                                        <th>MinimumDownPaymentPercentage</th>
+                                                        <th>SequenceNumber</th>
+                                                        <th>SequenceNumberText</th>
+                                                        <th>TransSequenceNumberText</th>
+                                                        <th>ActivationDate</th>
+
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="text-center">
+                                                    @{
+                                                        IEnumerable<OrganizationLoanTypeViewModel> loanTypeViewModelList = (IEnumerable<OrganizationLoanTypeViewModel>)HttpContext.Current.Session["OrganizationLoanType"];
+
+                                                        foreach (OrganizationLoanTypeViewModel viewModel in loanTypeViewModelList)
+                                                        {
+                                                            <tr class="hoverlightblue">
+                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                <td class="d-none">@viewModel.AccountClassId</td>
+                                                                <td>@viewModel.NameOfAccountClass</td>
+                                                                <td>@viewModel.MaximumLoanTenure</td>
+                                                                <td>@viewModel.MinimumDownPaymentPercentage</td>
+                                                                <td>@viewModel.SequenceNumber</td>
+                                                                <td>@viewModel.SequenceNumberText</td>
+                                                                <td>@viewModel.TransSequenceNumberText</td>
+                                                                <td>@viewModel.ActivationDate</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control text-capitalize", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*TransNote*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel(organizationDetailViewModel.NoteInRegionalLanguage)
+                                            @Html.TextAreaFor(m => m.TransNote, new { @id = "trans-note", @class = "form-control default-none", @placeholder = organizationDetailViewModel.NotePlaceHolderInRegionalLanguage, @maxlength = "4000", @autocomplete = "off", onkeydown = "Maketranslation()" })
+                                            @Html.ValidationMessageFor(m => m.TransNote)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @Html.OperationFooter("Modify", "SaveDataTables", "OrganizationLoanType", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var url = "@Url.Action("SaveDataTables", "OrganizationLoanType")";
+    </script>
+    <script src="~/Scripts/Custom/OrganizationLoanType.js"></script>
+</body>
+</html>

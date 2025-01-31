@@ -1,0 +1,587 @@
+﻿@model DemoProject.Services.ViewModel.Parameter.Legal.SharesCapitalByLawsParameterViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("SBPVET");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ByLawsSharesCapitalParameter - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body read-only">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">ViewEntry</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        @*Effective Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Effective Date")
+                                            @Html.TextBoxFor(m => m.EffectiveDate, "{0:yyyy-MM-dd}", new { @id = "effective-date", @class = "form-control mandatory-mark", @Type = "date", onchange = "EffectiveDate()" })
+                                            @Html.ValidationMessageFor(m => m.EffectiveDate)
+                                        </div>
+
+                                        @*SharesFaceValue*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Shares Face Value")
+                                            @Html.TextBoxFor(m => m.SharesFaceValue, new { @class = "form-control mandatory-mark", @placeholder = "Enter Shares Face Value", @Type = "number", required = "required", @autocomplete = "off", @min = 100, @max = 100, })
+                                            @Html.ValidationMessageFor(m => m.SharesFaceValue)
+                                        </div>
+
+                                        @*AdmissionFeesForMembership*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Admission Fees For Membership")
+                                            @Html.TextBoxFor(m => m.AdmissionFeesForMembership, new { @id = "admission-fees", @class = "form-control mandatory-mark", @placeholder = "Enter Admission Fees For Membership", @Type = "number", required = "required", @autocomplete = "off", @min = 10, @max = 1000, })
+                                            @Html.ValidationMessageFor(m => m.AdmissionFeesForMembership)
+                                        </div>
+
+                                        @*AdmissionFeesForNominalMember*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Admission Fees For Nominal Member")
+                                            @Html.TextBoxFor(m => m.AdmissionFeesForNominalMember, new { @id = "nominal-member-admission-fees", @class = "form-control mandatory-mark", @placeholder = "Enter Non Refundable Entrance Fees For Nominal Member", @Type = "number", required = "required", @autocomplete = "off", @min = 10, @max = 1000 })
+                                            @Html.ValidationMessageFor(m => m.AdmissionFeesForNominalMember)
+                                        </div>
+
+                                        @*NominalMembershipValidity*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Nominal Membership Validity")
+                                            @Html.TextBoxFor(m => m.NominalMembershipValidity, new { @class = "form-control mandatory-mark", @placeholder = "Enter Nominal Membership Validity", @Type = "number", required = "required", @autocomplete = "off", @min = 1, @max = 36500 })
+                                            @Html.ValidationMessageFor(m => m.NominalMembershipValidity)
+                                        </div>
+
+                                        @*EnableApprovalForEmployeeNomination*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Approval For Employee Nomination")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableApprovalForEmployeeNomination, new { @id = "enable-approval-for-employee-nomination", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div id="enable-employee-nomination-approval-err-div"></div>
+                                        </div>
+
+                                        @*MemberNomineeVariationCharges*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Member Nominee Changes Fee")
+                                            @Html.TextBoxFor(m => m.MemberNomineeVariationCharges, new { @id = "member-nominee-changes-fee", @class = "form-control mandatory-mark", @placeholder = "Enter Fees For Change Nominee Of Member", @Type = "number", required = "required", @autocomplete = "off", @min = 0, @max = 1000 })
+                                            @Html.ValidationMessageFor(m => m.MemberNomineeVariationCharges)
+                                        </div>
+
+                                        @*MemberNomineeCancellationCharges*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Fees For Change Nomination Of Membership")
+                                            @Html.TextBoxFor(m => m.MemberNomineeCancellationCharges, new { @class = "form-control mandatory-mark", @placeholder = "Enter Fees For Cancellation Nominee Of Member", @Type = "number", required = "required", @autocomplete = "off", @min = 0, @max = 1000 })
+                                            @Html.ValidationMessageFor(m => m.MemberNomineeCancellationCharges)
+                                        </div>
+
+                                        @*EnableIndemnityBondForLegalRepresentativeOfMember*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Indemnity Bond For Legal Representative Of Member")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableIndemnityBondForLegalRepresentativeOfMember, new { @id = "enable-legal-representative-indemnity-bond", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div id="enable-legal-representative-indemnity-bond-err-div"></div>
+                                        </div>
+
+                                        @*LegalRepresentativeOfMemberIndemnityBondStampAmount*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Legal Representative Of Member Indemnity Bond Stamp Amount")
+                                            @Html.TextBoxFor(m => m.LegalRepresentativeOfMemberIndemnityBondStampAmount, new { @class = "form-control mandatory-mark", @placeholder = "Enter Legal Representative Of Member Indemnity Bond Stamp Amount", @Type = "number", required = "required", @autocomplete = "off", @min = 0, @max = 5000 })
+                                            @Html.ValidationMessageFor(m => m.LegalRepresentativeOfMemberIndemnityBondStampAmount)
+                                        </div>
+
+                                        @*MinimumNumberOfSharesForMembershipApplication*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Minimum Number Of Shares For Membership Application")
+                                            @Html.TextBoxFor(m => m.MinimumNumberOfSharesForMembershipApplication, new { @id = "membership-application-minimum-shares", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Number Of Shares With Membership Application.", @Type = "number", required = "required", @autocomplete = "off", @min = 1, @max = 1000 })
+                                            @Html.ValidationMessageFor(m => m.MinimumNumberOfSharesForMembershipApplication)
+                                        </div>
+
+                                        @*EnableOtherFundSubscription*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Other Fund Subscription")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableOtherFundSubscription, new { @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnableIdentityCardForMembers*@
+                                        <div class="row form-group">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Identity Card For Members")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableIdentityCardForMembers, new { @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*MembershipApplicationDisposalPeriod*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Membership Application Disposal Period")
+                                            @Html.TextBoxFor(m => m.MembershipApplicationDisposalPeriod, new { @id = "application-disposal-period", @class = "form-control mandatory-mark", @placeholder = "Enter Membership Application Disposal Period", @Type = "number", required = "required", @autocomplete = "off", @min = 1, @max = 180 })
+                                            @Html.ValidationMessageFor(m => m.MembershipApplicationDisposalPeriod)
+                                        </div>
+
+                                        @*MaximumSharesHolidingLimitPercentage*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Maximum Shares Holiding Limit Percentage")
+                                            @Html.TextBoxFor(m => m.MaximumSharesHolidingLimitPercentage, new { @id = "shares-holding-limit-percentage", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Shares Holiding Limit Percentage", @Type = "number", required = "required", @autocomplete = "off", @min = 0.2, @max = 0.2 })
+                                            @Html.ValidationMessageFor(m => m.MaximumSharesHolidingLimitPercentage)
+                                        </div>
+
+                                        @*MaximumSharesHolidingLimitAmount*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Maximum Shares Holiding Limit Amount")
+                                            @Html.TextBoxFor(m => m.MaximumSharesHolidingLimitAmount, new { @id = "shares-holding-limit-amount", @class = "form-control mandatory-mark", @placeholder = "Enter Maximum Shares Holiding Limit Amount", @Type = "number", required = "required", @autocomplete = "off", @min = 100, @max = 200000 })
+                                            @Html.ValidationMessageFor(m => m.MaximumSharesHolidingLimitAmount)
+                                        </div>
+
+                                        @*EnableAGMAttendanceForActiveMembership*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable AGM Attendance For Active Membership")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableAGMAttendanceForActiveMembership, new { @id = "enable-active-members-agm-attendance", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div id="enable-active-members-agm-attendance-err-div"></div>
+                                        </div>
+
+                                        @*MinimumAttendanceOfAGMForActiveMember*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Minimum Attendance Of AGM For Active Member")
+                                            @Html.TextBoxFor(m => m.MinimumAttendanceOfAGMForActiveMember, new { @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Attendance Of AGM For Active Member", @Type = "number", required = "required", @autocomplete = "off", @min = 0, @max = 5 })
+                                            @Html.ValidationMessageFor(m => m.MinimumAttendanceOfAGMForActiveMember)
+                                        </div>
+
+                                        @*EnableMinimumSharesHoldingForActiveMembership*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Minimum Shares Holding For Active Membership")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableMinimumSharesHoldingForActiveMembership, new { @id = "enable-minimum-shares-holding", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div id="enable-minimum-shares-holding-err-div"></div>
+                                        </div>
+
+                                        @*MinimumNumberOfSharesHoldingForActiveMember*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Minimum Number Of Shares Holding For Active Member")
+                                            @Html.TextBoxFor(m => m.MinimumNumberOfSharesHoldingForActiveMember, new { @id = "active-member-shares-holding", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Number Of Shares Holding For Active Member", @Type = "number", required = "required", @autocomplete = "off", @min = 1, @max = 1000 })
+                                            @Html.ValidationMessageFor(m => m.MinimumNumberOfSharesHoldingForActiveMember)
+                                        </div>
+
+                                        @*EnableDepositHoldingForActiveMembership*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Deposit Holding For Active Membership")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableDepositHoldingForActiveMembership, new { @id = "enable-minimum-deposit-holding", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div id="enable-minimum-deposit-holding-err-div"></div>
+                                        </div>
+
+                                        @*AggregateDepositsForActiveMember*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Aggregate Deposits For Active Member")
+                                            @Html.TextBoxFor(m => m.AggregateDepositsForActiveMember, new { @id = "active-member-aggregate-deposits", @class = "form-control mandatory-mark", @placeholder = "Enter Aggregate Deposits For Active Member", @Type = "number", required = "required", @autocomplete = "off", @min = 1000, @max = 10000 })
+                                            @Html.ValidationMessageFor(m => m.AggregateDepositsForActiveMember)
+                                        </div>
+
+                                        @*AggregateDepositsTimePeriodForActiveMember*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Aggregate Deposits Time Period For Active Member")
+                                            @Html.TextBoxFor(m => m.AggregateDepositsTimePeriodForActiveMember, new { @id = "aggregate-deposit-tenure", @class = "form-control mandatory-mark", @placeholder = "Enter Aggregate Deposits Time Period For Active Member", @Type = "number", required = "required", @autocomplete = "off", @min = 365, @max = 1825 })
+                                            @Html.ValidationMessageFor(m => m.AggregateDepositsTimePeriodForActiveMember)
+                                        </div>
+
+                                        @*EnableBorrowingLoanForActiveMembership*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Borrowing Loan For Active Membership")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableBorrowingLoanForActiveMembership, new { @id = "enable-minimum-loan-holding", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div id="enable-minimum-loan-holding-err-div"></div>
+                                        </div>
+
+                                        @*MinimumBorrowingAmountForActiveMembership*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Minimum Borrowing Amount For Active Membership")
+                                            @Html.TextBoxFor(m => m.MinimumBorrowingAmountForActiveMembership, new { @id = "active-member-minimum-borrowing", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Borrowing Amount For Active Membership", @Type = "number", required = "required", @autocomplete = "off", @min = 5000, @max = 100000 })
+                                            @Html.ValidationMessageFor(m => m.MinimumBorrowingAmountForActiveMembership)
+                                        </div>
+
+                                        @*BorrowingTimePeriodForActiveMembership*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Borrowing Time Period For Active Membership")
+                                            @Html.TextBoxFor(m => m.BorrowingTimePeriodForActiveMembership, new { @id = "active-member-borrowing-tenure", @class = "form-control mandatory-mark", @placeholder = "Enter Borrowing Time Period For Active Membership", @Type = "number", required = "required", @autocomplete = "off", @min = 365, @max = 1825 })
+                                            @Html.ValidationMessageFor(m => m.BorrowingTimePeriodForActiveMembership)
+                                        </div>
+
+                                        @*EnableEnjoyingOtherServicesForActiveMembership*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Enjoying Other Services For Active Membership")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableEnjoyingOtherServicesForActiveMembership, new { @id = "enable-minimum-enjoying-services", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div id="enable-minimum-enjoying-services-err-div"></div>
+                                        </div>
+
+                                        @*MinimumUtilizationOfOtherServicesForActiveMember*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Minimum Utilization Of Other Services For Active Member")
+                                            @Html.TextBoxFor(m => m.MinimumUtilizationOfOtherServicesForActiveMember, new { @id = "active-member-minimum-service-utilization", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Utilization Of Other Services For Active Member", @Type = "number", required = "required", @autocomplete = "off", @min = 1, @max = 9999999 })
+                                            @Html.ValidationMessageFor(m => m.MinimumUtilizationOfOtherServicesForActiveMember)
+                                        </div>
+
+                                        @*OtherServicesUtilizationPeriodForActiveMember*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Other Services Utilization Period For Active Member")
+                                            @Html.TextBoxFor(m => m.OtherServicesUtilizationPeriodForActiveMember, new { @id = "active-member-service-utilization-tenure", @class = "form-control mandatory-mark", @placeholder = "Enter Other Services Utilization Period For Active Member", @Type = "number", required = "required", @autocomplete = "off", @min = 1, @max = 9999999 })
+                                            @Html.ValidationMessageFor(m => m.OtherServicesUtilizationPeriodForActiveMember)
+                                        </div>
+
+                                        @*FeesForSharesTransfer*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Fees For Shares Transfer")
+                                            @Html.TextBoxFor(m => m.FeesForSharesTransfer, new { @id = "fees-for-shares-transfer", @class = "form-control mandatory-mark", @placeholder = "Enter Fees For Shares Transfer", @Type = "number", required = "required", @autocomplete = "off", @min = 0, @max = 1000 })
+                                            @Html.ValidationMessageFor(m => m.FeesForSharesTransfer)
+                                        </div>
+
+                                        @*SharesTransferFeesBasedOn*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("SharesTransferFeesBasedOn")
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="mt-1 d-flex justify-content-between">
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.SharesTransferFeesBasedOn, "SHR", new { @name = "SharesTransferFeesBasedOn" })
+                                                            <label class="form-check-label pl-2">For Shares</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.SharesTransferFeesBasedOn, "CRT", new { @name = "SharesTransferFeesBasedOn" })
+                                                            <label class="form-check-label pl-2">For Certificate</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @Html.RadioButtonFor(m => m.SharesTransferFeesBasedOn, "TRN", new { @name = "SharesTransferFeesBasedOn" })
+                                                            <label class="form-check-label pl-2">For Transaction</label>
+                                                        </div>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.SharesTransferFeesBasedOn)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*EnablePartialSharesTransfer*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Partial Shares Transfer")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnablePartialSharesTransfer, new { @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*MinimumMembershipAgeForPartialSharesTransfer*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Minimum Membership Age In Days For Partial Shares Transfer")
+                                            @Html.TextBoxFor(m => m.MinimumMembershipAgeForPartialSharesTransfer, new { @id = "partial-shares-transfer-membership-age", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Membership Age For Partial Shares Transfer", @Type = "number", required = "required", @autocomplete = "off", @min = 365, @max = 1825 })
+                                            @Html.ValidationMessageFor(m => m.MinimumMembershipAgeForPartialSharesTransfer)
+                                        </div>
+
+                                        @*EnablePartialSharesWithdrawal*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Partial Shares Withdrawal")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnablePartialSharesWithdrawal, new { @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*MinimumMembershipAgeIn DaysForPartialSharesWithdrawal*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Minimum Membership Age In Days For Partial Shares Withdrawal")
+                                            @Html.TextBoxFor(m => m.MinimumMembershipAgeForPartialSharesWithdrawal, new { @id = "partial-shares-withdrawl-membership-age", @class = "form-control mandatory-mark", @placeholder = "Enter Minimum Membership Age For Partial Shares Withdrawal", @Type = "number", required = "required", @autocomplete = "off", @min = 365, @max = 1825 })
+                                            @Html.ValidationMessageFor(m => m.MinimumMembershipAgeForPartialSharesWithdrawal)
+                                        </div>
+
+                                        @*NoticePeriodForSharesWithdrawal*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Notice Period For Withdrawal Shares")
+                                            @Html.TextBoxFor(m => m.NoticePeriodForSharesWithdrawal, new { @id = "shares-withdrawal-notice-period", @class = "form-control mandatory-mark", @placeholder = "Enter Notice Period For Withdrawal Shares", @Type = "number", required = "required", @autocomplete = "off", @min = 30, @max = 90 })
+                                            @Html.ValidationMessageFor(m => m.NoticePeriodForSharesWithdrawal)
+                                        </div>
+
+                                        @*AggregateSharesWithdrawalLimit*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Aggregate Shares Withdrawal Limit Percetag Of Total Shares In Financial Year")
+                                            @Html.TextBoxFor(m => m.AggregateSharesWithdrawalLimit, new { @id = "aggregate-shares-withdrawal-limit-in-fy", @class = "form-control mandatory-mark", @placeholder = "Enter Aggregate Shares Withdrawal Limit", @Type = "number", required = "required", @autocomplete = "off", @min = 1, @max = 10 })
+                                            @Html.ValidationMessageFor(m => m.AggregateSharesWithdrawalLimit)
+                                        </div>
+
+                                        @*MembershipAgeForResignMembership*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Membership Age In Days For Resign Membership")
+                                            @Html.TextBoxFor(m => m.MembershipAgeForResignMembership, new { @id = "membership-age-for-resign-membership", @class = "form-control mandatory-mark", @placeholder = "Enter Membership Age In Days For Resign Membership", @Type = "number", required = "required", @autocomplete = "off", @min = 365, @max = 1825 })
+                                            @Html.ValidationMessageFor(m => m.MembershipAgeForResignMembership)
+                                        </div>
+
+                                        @*MembershipWaitingPeriodBeforeAGM*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Membership Waiting Period Before Annual General Meeting")
+                                            @Html.TextBoxFor(m => m.MembershipWaitingPeriodBeforeAGM, new { @id = "membership-waiting-period-before-agm", @class = "form-control mandatory-mark", @placeholder = "Enter Waiting Period For Membership Before Annual General Meeting", @Type = "number", required = "required", @autocomplete = "off", @min = 30, @max = 90 })
+                                            @Html.ValidationMessageFor(m => m.MembershipWaitingPeriodBeforeAGM)
+                                        </div>
+
+                                        @*MembershipWaitingPeriodAfterResignation*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Membership Waiting Period After Resignation")
+                                            @Html.TextBoxFor(m => m.MembershipWaitingPeriodAfterResignation, new { @id = "membership-waiting-period-after-resignation", @class = "form-control mandatory-mark", @placeholder = "Enter Period For Membership After Joint Membership Resignation", @Type = "number", required = "required", @autocomplete = "off", @min = 365, @max = 1825 })
+                                            @Html.ValidationMessageFor(m => m.MembershipWaitingPeriodAfterResignation)
+                                        </div>
+
+                                        @*MembershipWaitingPeriodAfterExpulsion*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Membership Waiting Period After     Expulsion")
+                                            @Html.TextBoxFor(m => m.MembershipWaitingPeriodAfterExpulsion, new { @id = "membership-waiting-period-after-expulsion", @class = "form-control mandatory-mark", @placeholder = "Enter Period For Membership After Joint Membership Expulsion", @Type = "number", required = "required", @autocomplete = "off", @min = 365, @max = 1825 })
+                                            @Html.ValidationMessageFor(m => m.MembershipWaitingPeriodAfterExpulsion)
+                                        </div>
+
+                                        @*MembershipWaitingPeriodAfterDisqualification*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Membership Waiting Period After Disqualification")
+                                            @Html.TextBoxFor(m => m.MembershipWaitingPeriodAfterDisqualification, new { @id = "membership-waiting-period-after-disqualification", @class = "form-control mandatory-mark", @placeholder = "Enter Period For Membership After Joint Membership Disqualification", @Type = "number", required = "required", @autocomplete = "off", @min = 365, @max = 1825 })
+                                            @Html.ValidationMessageFor(m => m.MembershipWaitingPeriodAfterDisqualification)
+                                        </div>
+
+                                        @*EstateOfDeceasedMemberLiablePeriod*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Estate Of Deceased Member Liable Period")
+                                            @Html.TextBoxFor(m => m.EstateOfDeceasedMemberLiablePeriod, new { @id = "estate-of-deceased-member-liable-period", @class = "form-control mandatory-mark", @placeholder = "Enter Estate Of Deceased Member Liable For Period", @Type = "number", required = "required", @autocomplete = "off", @min = 730, @max = 36500 })
+                                            @Html.ValidationMessageFor(m => m.EstateOfDeceasedMemberLiablePeriod)
+                                        </div>
+
+                                        @*EnableIndemnityBondForDuplicateShareCertificate*@
+                                        <div class="row form-group mt-5">
+                                            <div class="col-10">
+                                                @Html.CustomLabel("Enable Indemnity Bond For Duplicate Share Certificate")
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="text-right">
+                                                    <label class="switch switch-left-right">
+                                                        @Html.CheckBoxFor(m => m.EnableIndemnityBondForDuplicateShareCertificate, new { @id = "enable-indemnity-bond-for-duplicate-share-certificate", @class = "form-control switch-input", required = "required" })
+                                                        <span class="slider round">
+                                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div id="enable-indemnity-bond-for-duplicate-share-certificate-err-div"></div>
+                                        </div>
+
+                                        @*DuplicateShareCertificateIndemnityBondStampAmount*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Duplicate Share Certificate Indemnity Bond Stamp Amount")
+                                            @Html.TextBoxFor(m => m.DuplicateShareCertificateIndemnityBondStampAmount, new { @class = "form-control mandatory-mark", @placeholder = "Enter Duplicate Share Certificate Indemnity Bond Stamp Amount", @Type = "number", required = "required", @autocomplete = "off", @min = 10, @max = 1000 })
+                                            @Html.ValidationMessageFor(m => m.DuplicateShareCertificateIndemnityBondStampAmount)
+                                        </div>
+
+                                        @*DuplicateShareCertificateCharges*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Duplicate Share Certificate Charges Amount")
+                                            @Html.TextBoxFor(m => m.DuplicateShareCertificateCharges, new { @class = "form-control mandatory-mark", @placeholder = "Enter Duplicate Share Certificate Amount", @Type = "number", required = "required", @autocomplete = "off", @min = 10, @max = 1000 })
+                                            @Html.ValidationMessageFor(m => m.DuplicateShareCertificateCharges)
+                                        </div>
+
+                                        @*SharesCapitalToNonMortgageLoanRatio*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Shares Capital To Non Mortgage Loan Ratio")
+                                            @Html.TextBoxFor(m => m.SharesCapitalToNonMortgageLoanRatio, new { @id = "shares-non-mortgage-loan-ratio", @class = "form-control mandatory-mark", @placeholder = "Enter Shares Capital To Non Mortgage Loan Ratio", @Type = "number", required = "required", @autocomplete = "off", @min = 5, @max = 10 })
+                                            @Html.ValidationMessageFor(m => m.SharesCapitalToNonMortgageLoanRatio)
+                                        </div>
+
+                                        @*SharesCapitalToMortgageLoanRatio*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Shares Capital To Mortgage Loan Ratio")
+                                            @Html.TextBoxFor(m => m.SharesCapitalToMortgageLoanRatio, new { @id = "shares-mortgage-loan-ratio", @class = "form-control mandatory-mark", @placeholder = "Enter Shares Capital To Mortgage Loan Ratio", @Type = "number", required = "required", @autocomplete = "off", @min = 2.5, @max = 25 })
+                                            @Html.ValidationMessageFor(m => m.SharesCapitalToMortgageLoanRatio)
+                                        </div>
+
+                                        @*Note*@        
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note", @class = "form-control", @placeholder = "Enter Note", @autocomplete = "off", @maxlength = "1500", onkeyup = "ToTextCapitalize()" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+
+                                        @*NameOfMaker*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Name Of User")
+                                            @Html.TextBoxFor(m => m.NameOfUser, new { @class = "form-control" })
+                                        </div>
+
+                                        @*EntryDateTime*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Entry Date Time")
+                                            @Html.TextBoxFor(m => m.EntryDateTime, new { @class = "form-control" })
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            <div class="card-footer bg-white">
+                                @*Remark*@
+                                <div class="form-group read-only">
+                                    @Html.CustomLabel("Remark")
+                                    @Html.TextBoxFor(m => m.Remark, new { @class = "form-control" })
+                                </div>
+
+                                <div class="d-flex justify-content-center mb-2">
+                                    <button type="button" class="btn btn-success ml-3" onclick="window.location.href='@Url.Action("Index","SharesCapitalByLawsParameter")'"><h5><u>BackToList</u></h5></button>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

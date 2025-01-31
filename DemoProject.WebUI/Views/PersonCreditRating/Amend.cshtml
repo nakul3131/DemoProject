@@ -1,0 +1,196 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonCreditRatingViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.Constants
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonCreditRatingViewModel model = new PersonCreditRatingViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PCRAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Credit Rating - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @* ======= First Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*CheckerRemark*@
+                                <div class="form-group mt-5 ml-5 mr-5">
+                                    @Html.CustomLabel("Checker Remark")
+                                    @Html.TextBoxFor(m => m.CheckerRemark, new { @id = "checker-remark", @class = "form-control mandatory-mark read-only" })
+                                    @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row ml-2">
+                                    <div class="col-12">
+
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="modal fade" id="credit-rating-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h4 class="modal-title text-center" id="credit-rating-text">Add</h4>
+                                                                    <button type="button" class="close-credit-rating-modal" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    @*Effective Date*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Effective Date")
+                                                                        @Html.TextBoxFor(m => m.EffectiveDate, "{0:yyyy-MM-dd}", new { @id = "effective-date", @class = "form-control mandatory-mark deny-future-date allow-past-date-upto-5y modal-input", required = "required", @Type = "date" })
+                                                                        @Html.ValidationMessageFor(m => m.EffectiveDate)
+                                                                        <span id="effective-date-error" class="error modal-input-error d-none">Please Select Effective Date. </span>
+                                                                    </div>
+
+                                                                    @*CreditBureauAgency*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Credit Bureau Agency")
+                                                                        @Html.DropDownListFor(m => m.CreditBureauAgencyId, new SelectList(personDetailViewModel.CreditBureauAgencyDropdownList, "Value", "Text", 0), "--- Select Credit Bureau Agency ---", new { @id = "credit-bureau-agency-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                        @Html.ValidationMessageFor(m => m.CreditBureauAgencyId)
+                                                                        <span id="credit-bureau-agency-id-error" class="error modal-input-error d-none">Please Enter Valid Credit Bureau Agency. </span>
+                                                                    </div>
+
+                                                                    @*Score*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Score")
+                                                                        @Html.TextBoxFor(m => m.Score, new { @id = "score", @class = "form-control mandatory-mark real-number modal-input", required = "required", @placeholder = "Enter Score", @min = 0, @max = 900, @Type = "number" })
+                                                                        @Html.ValidationMessageFor(m => m.Score)
+                                                                        <span id="score-error" class="error modal-input-error d-none">Please Enter Valid Score. </span>
+                                                                    </div>
+
+                                                                    @*Note*@
+                                                                    <div class="form-group">
+                                                                        @Html.CustomLabel("Note")
+                                                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-credit-rating", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                        @Html.ValidationMessageFor(m => m.Note)
+                                                                    </div>
+
+                                                                    @*ReasonForModification*@
+                                                                    <div id="credit-div" class="form-group">
+                                                                        @Html.CustomLabel("Reason For Modification")
+                                                                        @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-credit-rating", @class = "form-control modal-input default-none deny-multiple-space", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                        @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" id="btn-add-credit-rating-modal" class="btn btn-success ">Add</button>
+                                                                    <button type="button" id="btn-update-credit-rating-modal" class="btn btn-primary ">Update</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <div class="table-responsive" style="min-height:200px;">
+                                                            <table id="tbl-credit-rating" class="table compact  table-striped table-bordered" width="100">
+                                                                <thead class="text-center">
+                                                                    <tr>
+                                                                        <th><input type="checkbox" name="check_all" id="select-all-credit-rating" /></th>
+                                                                        <th>EffectiveDate</th>
+                                                                        <th class="d-none">AgencyId</th>
+                                                                        <th>CreditBureauAgency</th>
+                                                                        <th>Score</th>
+                                                                        <th>Note</th>
+                                                                        <th>ReasonForModification</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="text-center">
+                                                                    @{
+                                                                        IEnumerable<PersonCreditRatingViewModel> personCreditRatingViewModelList = (IEnumerable<PersonCreditRatingViewModel>)HttpContext.Current.Session["CreditRating"];
+                                                                        if (personCreditRatingViewModelList != null)
+                                                                        {
+                                                                            foreach (PersonCreditRatingViewModel viewModel in personCreditRatingViewModelList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                                    <td>@viewModel.EffectiveDate.ToString("yyyy-MM-dd")</td>
+                                                                                    <td class="d-none">@viewModel.CreditBureauAgencyId</td>
+                                                                                    <td>@viewModel.NameOfCreditBureauAgency</td>
+                                                                                    <td>@viewModel.Score</td>
+                                                                                    <td>@viewModel.Note</td>
+                                                                                    <td>@viewModel.ReasonForModification</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    @*Hiddent Field For PrmKey*@
+                                    @Html.HiddenFor(m => m.PrmKey)
+
+                                    @*Hiddent Field For PersonPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                    @*Hiddent Field For PersonAddressPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonCreditRatingPrmKey)
+
+                                    @*Hiddent Field For PersonId*@
+                                    @Html.HiddenFor(m => m.PersonId)
+                                </div>
+                            </div>
+
+                            @Html.OperationFooter("Amend", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var saveDataTableURL = "@Url.Action("SaveCreditRatingDataTable", "PersonCreditRating")";
+</script>
+<script src="~/Scripts/Custom/PersonCreditRating.js"></script>

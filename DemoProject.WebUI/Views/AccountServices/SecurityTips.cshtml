@@ -1,0 +1,140 @@
+﻿@{
+    Layout = "~/Views/Shared/_LoginSupportLayout.cshtml";
+}
+<!doctype html>
+
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Secure Computer Tips</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- First Row (<- Back Arrow and Title) -->
+        <div class="row mt-5">
+            <div class="col-1">
+                <a class="text-center" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Login", "Account")'">
+                    <i class='fas fa-arrow-left btn-lg text-primary'></i>
+                </a>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center text-primary">
+                    <strong>Computer Security Tips</strong>
+                </h2>
+            </div>
+        </div>
+        <!-- Second Row -->
+        <div class="row mt-3">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/SoftwareLicense.png" alt="Computer Security Tips Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="line-height-2 mt-4">
+                    Use Licensed Software. Software Purchased From UnTrustWorthy Sources Could Have Virus Or Trojans That Could Corrupt
+                    Your Files And Reveal Your Confidential Data.
+                </h6>
+            </div>
+        </div>
+        <!-- Third Row -->
+        <div class="row mt-2">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/Update.jpg" alt="Computer Security Tips Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="line-height-2 mt-4">
+                    Update Your Computer With Latest Security Patches For Your Operating System, Browser, Email Client.
+                </h6>
+            </div>
+        </div>
+        <!-- Fourth Row -->
+        <div class="row mt-3">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/Strong Password.png" alt="Computer Security Tips Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="line-height-2 mt-4">
+                    Protect Your Computer Account With Strong Passwords.
+                </h6>
+            </div>
+        </div>
+        <!-- Fifth Row -->
+        <div class="row mt-3">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/Antivirus.png" alt="Computer Security Tips Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="mt-4">
+                    Use Anti-Virus, Anti-Spyware And Personal Firewalls.
+                </h6>
+            </div>
+        </div>
+        <!-- Sixth Row -->
+        <div class="row mt-3">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/PrivacyPolicy.gif" alt="Computer Security Tips Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="text-justify line-height-2 mt-3">
+                    Read Privacy Policy Of The Website Before Entering Personal Information Such As Name And Email ID.
+                    Be Aware Of How Your Information Would Be Used By The Website Owner.
+                </h6>
+            </div>
+        </div>
+        <!-- Seventh Row -->
+        <div class="row mt-3">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/Adware.png" alt="Computer Security Tips Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="text-justify line-height-2 mt-2">
+                    You Can Eliminate Potential Risk Caused Through Pop-up Windows By Removing Any Spyware Or Adware
+                    Installed On Your Computer, Using Spyware Or Adware Removal Softwares.
+                </h6>
+            </div>
+        </div>
+        <!-- Eighth Row -->
+        <div class="row mt-3">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/PrintSharing.png" alt="Computer Security Tips Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="text-justify line-height-2 mt-4">
+                    Disable The 'File And Printing Sharing' Feature On Your OS. Check Your Account And Transaction History Regularly
+                </h6>
+            </div>
+        </div>
+        <!-- Nineth Row -->
+        <div class="row mt-3">
+            <div class="offset-1 col-2">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/HttpsImage.png" alt="Computer Security Tips Image" />
+                </figure>
+            </div>
+            <div class="col-8">
+                <h6 class="text-justify line-height-2">
+                    Be Sure The Web Page You Are Viewing Offers Encryption Of Your Data. Often You Will See A Lock Symbol In The Lower
+                    Right-Hand Corner Of Your Browser Window And The Web Address Of The Page You Are Viewing Will Begin With "https://..."
+                    The "s" Indicates "Secured" And Means The Web Page Uses Encryption.
+                </h6>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+

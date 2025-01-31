@@ -1,0 +1,94 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.Security.Users.UserStatusViewModel>
+@using DemoProject.Services.ViewModel.Security.Users
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    UserStatusViewModel userStatusViewModel = new UserStatusViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("UTSIND");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>User Status - List</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+
+        <div class="card">
+            <div class="card-body no-footer">
+                @using (Html.BeginForm())
+                {
+                    <div class="row">
+                        @*UserTypeStatus*@
+                        <div class="form-group col">
+                            @Html.CustomLabel("User Status")
+                            @Html.DropDownListFor(m => userStatusViewModel.UserProfileStatus, new SelectList(userStatusViewModel.Status, "Value", "Text"), "Select User Status", new { @class = "form-control mandatory-mark", required = "required", @autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => userStatusViewModel.UserProfileStatus)
+                        </div>
+                        <div class="form-group col">
+                            @Html.CustomLabel("Effective Date")
+                            @Html.TextBoxFor(m => userStatusViewModel.EffectiveDate, "{0:yyyy-MM-dd}", new { @id = "effective-date", @class = "form-control mandatory-mark", @placeholder = "Enter Effective Date", required = "required", @Type = "date" })
+                            @Html.ValidationMessageFor(m => userStatusViewModel.EffectiveDate)
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-success mt-4" id="status-button">Show User Status</button>
+                        </div>
+                    </div>
+                }
+                <table id="example" class="display table table-striped table-hover dt-responsive nowrap cell-border">
+                    <thead>
+                        <tr>
+                            <th>SR.</th>
+                            <th>UserProfileFullName</th>
+                            <th>SignInTime</th>
+                            <th>SignOutTime</th>
+                            <th>UserProfileStatus</th>
+                            <th>InvalidSuccessiveAttempt</th>
+                            <th>InvalidCumulativeAttempt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr class="hoverlightblue">
+                                        <td></td>
+                                        <td>@item.UserProfileFullName</td>
+                                        <td>@item.SignInTime</td>
+                                        <td>@item.SignOutTime</td>
+                                        <td>
+                                            <button class="btn btn-link" onclick="location.href='@Url.Action("ClearUser","UserStatus",new {@item.UserProfilePrmKey })'">@item.UserProfileStatus</button>
+                                        </td>
+                                        <td>@item.InvalidSuccessiveAttemptCount</td>
+                                        <td>@item.InvalidCumulativeAttemptCount</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @Html.OperationFooter("None", "Exit", "Home", "None")
+        </div>
+    </div>
+</body>
+</html>
+@*<script>
+        $('#status').click(function () {
+            alert('saajsds');
+        });
+    </script>*@

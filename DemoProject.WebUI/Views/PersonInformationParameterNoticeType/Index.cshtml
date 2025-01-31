@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.PersonInformation.PersonChronicDiseaseViewModel>
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    // Make Proper Menu Parameter
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PSCIND");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person - Index </title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+
+        <div class="card">
+            <div class="card-body no-footer">
+                <table id="example" class="display table table-striped table-hover dt-responsive nowrap cell-border">
+                    <thead>
+                        <tr>
+                            <th>SR.</th>
+                            <th>First Name</th>
+                            <th>Entry Date</th>
+                            <th>User Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model)
+                            {
+                                <tr class="hoverlightblue">
+                                    <td></td>
+                                    <td>@item.FirstName</td>
+                                    <td>@item.EntryDateTime</td>
+                                    <td>@item.NameOfUser</td>
+                                    <td>
+                                        @if (@item.Operation == "CRT")
+                                        {
+                                            <button class="btn btn-link" onclick="location.href='@Url.Action("Create","PersonChronicDisease",new {@item.PersonId })'">Create </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-link" onclick="location.href='@Url.Action("Modify","PersonChronicDisease",new {@item.PersonId })'">Modify </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

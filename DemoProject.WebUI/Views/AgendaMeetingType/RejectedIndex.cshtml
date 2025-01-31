@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.Management.Master.AgendaMeetingTypeViewModel>
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+
+
+@{
+    // Make Proper Menu Parameter
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("AMTRIN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>AgendaMeetingType - Index </title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body no-footer">
+                        <table id="example" class="display table table-striped table-hover dt-responsive nowrap cell-border">
+                            <thead>
+                                <tr>
+                                    <th>SR.</th>
+                                    <th>Name Of Agenda</th>
+                                    <th>Entry Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (var item in Model)
+                                    {
+                                        <tr class="hoverlightblue">
+                                            <td></td>
+                                            <td>@item.NameOfAgenda</td>
+                                            <td>@item.MakerEntryDateTime</td>
+                                            <td>
+                                                <button class="btn btn-link" onclick="location.href='@Url.Action("Amend","AgendaMeetingType",new {@item.AgendaId })'">Amend </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @Html.OperationFooter("None", "Exit", "Home", "None")
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

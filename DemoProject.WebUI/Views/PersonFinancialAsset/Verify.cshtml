@@ -1,0 +1,211 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonFinancialAssetViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+ 
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PFAAUT");
+
+     byte counter = 0;
+    string photoId = "";
+     string fileUploaderId = "";
+
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Financial Asset - Verify</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark"> &nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Verify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-4 mt-5 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @*MakerRemark*@
+                                <div class="mt-5 ml-4 mr-3 form-group read-only">
+                                    @Html.CustomLabel("Maker Remark")
+                                    @Html.TextBoxFor(m => m.MakerRemark, new { @id = "maker-remark", @class = "form-control mandatory-mark " })
+                                    @Html.ValidationMessageFor(m => m.MakerRemark)
+                                </div>
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="mt-5 ml-2 card-body">
+                                    <table id="tbl-financial-asset" class="table compact table-striped table-bordered" width="100">
+                                        <thead class="text-center read-only">
+                                            <tr>
+                                                <th><input type="checkbox" name="check_all" id="select-all-financial-asset" /></th>
+                                                <th class="d-none">FinancialOrganizationType</th>
+                                                <th>FinancialOrganizationType</th>
+                                                <th>FinancialOrganization</th>
+                                                <th>TransNameOfFinancialOrganization</th>
+                                                <th>NameOfBranch</th>
+                                                <th>TransNameOfBranch</th>
+                                                <th>AddressDetails</th>
+                                                <th>TransAddressDetails</th>
+                                                <th>ContactDetails</th>
+                                                <th>TransContactDetails</th>
+                                                <th>OpeningDate</th>
+                                                <th>MaturityDate</th>
+                                                <th class="d-none">FinancialAssetType</th>
+                                                <th>NameOfFinancialAssetType</th>
+                                                <th>FinancialAssetDescription</th>
+                                                <th>TransFinancialAssetDescription</th>
+                                                <th>ReferenceNumber</th>
+                                                <th>TransReferenceNumber</th>
+                                                <th>InvestedAmount</th>
+                                                <th>MonthlyInterestIncomeAmount</th>
+                                                <th>CurrentMarketValue</th>
+                                                <th>HasAnyMortgage</th>
+                                                <th>Photopath</th>
+                                                <th>Photo</th>
+                                                <th>FileCaption</th>
+                                                <th>Note</th>
+                                                <th>TransNote</th>
+                                                <th>ReasonForModification</th>
+                                                <th class="d-none">FileName</th>
+                                                <th class="d-none">PersonFinancialAssetDocument</th>
+                                                <th class="d-none">LocalStoragePath</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center read-only">
+                                            @{
+                                                IEnumerable<PersonFinancialAssetViewModel> personFinancialAssetViewModelList = (IEnumerable<PersonFinancialAssetViewModel>)HttpContext.Current.Session["FinancialAsset"];
+                                                if (personFinancialAssetViewModelList != null)
+                                                {
+                                                    foreach (PersonFinancialAssetViewModel viewModel in personFinancialAssetViewModelList)
+                                                    {
+                                                        counter += 1;
+                                                        photoId = "photo-id" + counter.ToString();
+                                                        fileUploaderId = "data-table-finance-file-uploader" + counter.ToString();
+                                                        <tr>
+                                                            <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                            <td class="d-none">@viewModel.FinancialOrganizationTypeId</td>
+                                                            <td>@viewModel.NameOfFinancialOrganizationType</td>
+                                                            <td>@viewModel.NameOfFinancialOrganization</td>
+                                                            <td>@viewModel.TransNameOfFinancialOrganization</td>
+                                                            <td>@viewModel.NameOfBranch</td>
+                                                            <td>@viewModel.TransNameOfBranch</td>
+                                                            <td>@viewModel.AddressDetails</td>
+                                                            <td>@viewModel.TransAddressDetails</td>
+                                                            <td>@viewModel.ContactDetails</td>
+                                                            <td>@viewModel.TransContactDetails</td>
+                                                            <td>@viewModel.OpeningDate.ToString("yyyy-MM-dd")</td>
+                                                            <td>@viewModel.MaturityDate.ToString("yyyy-MM-dd")</td>
+                                                            <td class="d-none">@viewModel.FinancialAssetTypeId</td>
+                                                            <td>@viewModel.NameOfFinancialAssetType</td>
+                                                            <td>@viewModel.FinancialAssetDescription</td>
+                                                            <td>@viewModel.TransFinancialAssetDescription</td>
+                                                            <td>@viewModel.ReferenceNumber</td>
+                                                            <td>@viewModel.TransReferenceNumber</td>
+                                                            <td>@viewModel.InvestedAmount</td>
+                                                            <td>@viewModel.MonthlyInterestIncomeAmount</td>
+                                                            <td>@viewModel.CurrentMarketValue</td>
+                                                            <td>@viewModel.HasAnyMortgage</td>
+                                                            <td>
+                                                                <input type="file" id=@fileUploaderId class="db-record" name="PhotoPath" disabled="disabled" />
+                                                            </td>
+                                                            <td>
+                                                                @if (viewModel.EnableFinancialAssetDocumentUploadInLocalStorage == true)
+                                                                {
+                                                                    <img id="@photoId" class="db-record" src="@Url.Content(personInformationParameterViewModel.FinancialAssetDocumentLocalStoragePath + viewModel.PhotoPathFinance.FileName)" width="50" height="50" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    var base64 = Convert.ToBase64String(viewModel.PhotoCopy);
+                                                                    var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                    <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                    string filename = Path.GetFileName(imgsrc);
+                                                                }
+                                                            </td>
+                                                            <td>@viewModel.FileCaption</td>
+                                                            <td>@viewModel.Note</td>
+                                                            <td>@viewModel.TransNote</td>
+                                                            <td>@viewModel.ReasonForModification</td>
+                                                            <td class="d-none">@viewModel.NameOfFile</td>
+                                                            <td class="d-none">@viewModel.PersonFinancialAssetDocumentPrmKey</td>
+                                                            <td class="d-none">@viewModel.LocalStoragePath</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                    @*Hiddent Field For PrmKey*@
+                                    @Html.HiddenFor(m => m.PrmKey)
+
+                                    @*Hiddent Field For PersonPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                    @*Hiddent Field For PersonId*@
+                                    @Html.HiddenFor(m => m.PersonId)
+
+                                    @*Hiddent Field For PersonMachineryAssetPrmKey*@
+                                    @Html.HiddenFor(m => Model.PersonFinancialAssetPrmKey)
+                                </div>
+                                @*Save/Submit Button*@
+                                @Html.OperationFooter("Verify", "Exit", "Home", "None")
+                            </div>
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var saveDataTableURL = "@Url.Action("SaveFinanceDataTables", "PersonFinancialAsset")";
+</script>
+<script src="~/Scripts/Custom/PersonFinancialAsset.js"></script>

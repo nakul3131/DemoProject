@@ -1,0 +1,178 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonPhotoSignViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.ViewModel.PersonInformation.Parameter
+@using DemoProject.Services.HtmlHelpers
+@{
+    PersonPhotoSignViewModel model = new PersonPhotoSignViewModel();
+    PersonInformationParameterViewModel personInformationParameterViewModel = new PersonInformationParameterViewModel();
+    personInformationParameterViewModel = ViewBag.PersonInformationParameter;
+
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PPSAMN");
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+
+    var photo = Convert.ToBase64String(Model.PhotoCopy);
+    var photoImgSrc = String.Format("data:image/gif;base64,{0}", photo);
+
+    var sign = Convert.ToBase64String(Model.PersonSign);
+    var signImgSrc = String.Format("data:image/gif;base64,{0}", sign);
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>Person Photo Sign - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-5 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="mt-5 row">
+                                    <div class="col-12">
+
+                                        @*CheckerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @class = "form-control mandatory-mark read-only" })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        <div class="@((Model.PhotoDocumentUpload == "D") ? "d-none" : "d-block")">
+                                            <div class="form-group">
+                                                @Html.CustomLabel("Photo")
+                                                <span id="photo-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Photo. </span>
+                                                @Html.TextBoxFor(m => m.PhotoPath, new { @id = "photo-file-uploader", @class = "form-control doc-upload", type = "file", name = "PhotoPath", @placeholder = "Enter Photo" })
+                                                @Html.ValidationMessageFor(m => m.PhotoPath)
+                                            </div>
+                                            <hr />
+                                            <div><img id="photo-file-uploader-image-preview" src="@photoImgSrc" width="200" height="200" /></div>
+
+                                            @*Note*@
+                                            <div class="form-group">
+                                                @Html.CustomLabel("Photo File Caption")
+                                                @Html.TextBoxFor(m => m.PhotoFileCaption, new { @id = "photo-file-caption", @class = "form-control doc-upload title-case", @maxlength = "400" })
+                                                @Html.ValidationMessageFor(m => m.PhotoFileCaption)
+                                            </div>
+
+                                            @*Hiddent Field For PhotoDocumentUpload*@
+                                            @Html.HiddenFor(m => m.PhotoDocumentUpload, new { @id = "photo-document-upload" })
+
+                                            @*Hiddent Field For PersonFinancialAssetDocumentPrmKey*@
+                                            @Html.HiddenFor(m => m.EnablePhotoDocumentUploadInLocalStorage, new { @id = "enable-photo-document-upload" })
+
+                                        </div>
+
+                                        <div class="@((Model.SignDocumentUpload == "D") ? "d-none" : "d-block")">
+                                            <div class="form-group">
+                                                @Html.CustomLabel("Sign")
+                                                <span id="sign-file-uploader-error" class="error modal-input-error d-none">Please Select Valid Sign. </span>
+                                                @Html.TextBoxFor(m => m.SignPath, new { @id = "sign-file-uploader", @class = "form-control doc-upload", type = "file", name = "PhotoPath", @placeholder = "Enter Sign" })
+                                                @Html.ValidationMessageFor(m => m.SignPath)
+                                            </div>
+                                            <hr />
+                                            <div><img id="sign-file-uploader-image-preview" src="@signImgSrc" width="200" height="200" /></div>
+
+                                            @*Note*@
+                                            <div class="form-group">
+                                                @Html.CustomLabel("Sign File Caption")
+                                                @Html.TextBoxFor(m => m.SignFileCaption, new { @id = "sign-file-caption", @class = "form-control title-case", @maxlength = "400" })
+                                                @Html.ValidationMessageFor(m => m.SignFileCaption)
+                                            </div>
+
+                                            @*Hiddent Field For SignDocumentUpload*@
+                                            @Html.HiddenFor(m => m.SignDocumentUpload, new { @id = "sign-document-upload" })
+
+                                            @*Hiddent Field For PersonFinancialAssetDocumentPrmKey*@
+                                            @Html.HiddenFor(m => m.EnableSignDocumentUploadInLocalStorage, new { @id = "enable-sign-document-upload" })
+
+                                        </div>
+
+                                        @*Note*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @id = "note-photosign", @class = "form-control title-case default-none", @maxlength = "1300", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+                                        @*ReasonForModification*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("ReasonForModification")
+                                            @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control default-none title-case", @placeholder = "Enter Reason For Modification", @maxlength = "1300" })
+                                            @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                        </div>
+
+                                        @*Hiddent Field For PersonPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                        @Html.HiddenFor(m => m.PersonId)
+
+                                        @*Hiddent Field For PersonPhotoSignPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonPhotoSignPrmKey)
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            // Footer - Save/Submit Button
+                            @Html.OperationFooter("Amend", "Exit", "Home", Model.Remark)
+                            <br />
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var personInformationParameterViewModel = @Html.Raw(Json.Encode(personInformationParameterViewModel));
+    var personPhotoSignViewModel = @Html.Raw(Json.Encode(model));
+    var GetDocumentValidationForPhotoFields = '@Url.Action("GetDocumentValidationForPhotoFields", "PersonPhotoSign")';
+    var GetDocumentValidationForSignFields = '@Url.Action("GetDocumentValidationForSignFields", "PersonPhotoSign")';
+</script>
+<script src="~/Scripts/Custom/PersonPhotoSign.js"></script>

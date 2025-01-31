@@ -1,0 +1,51 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LoginSupportLayout.cshtml";
+}
+
+<!doctype html>
+
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Security Solutions</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- First Row (<- Back Arrow and Title) -->
+        <div class="row mt-5">
+            <div class="col-1">
+                <a class="text-center" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Login", "Account")'">
+                    <i class='fas fa-arrow-left btn-lg text-primary'></i>
+                </a>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center text-primary">
+                    <strong>Security Solutions</strong>
+                </h2>
+            </div>
+        </div>
+        <!-- Third Row (Page Description) -->
+        <div class="row mt-5">
+            <div class="offset-1 col-10 text-center">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/SecuritySolution.png" alt="Security Solution Image" />
+                </figure>
+            </div>
+        </div>
+        <!-- Fourth Row  -->
+        <div class="row">
+            <div class="offset-1 col-10">
+                <h6 class="text-justify line-height-2">
+                    Our Systems Are Secured Using Security Solutions Such As Firewalls, Intrusion Detection Systems, 
+                    Intrusion Prevention Systems And Anti-Malware Systems.
+                </h6>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

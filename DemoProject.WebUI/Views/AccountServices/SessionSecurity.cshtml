@@ -1,0 +1,50 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LoginSupportLayout.cshtml";
+}
+
+<!doctype html>
+
+<html>
+<head lang="en-US">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Session Security</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- First Row (<- Back Arrow and Title) -->
+        <div class="row mt-5">
+            <div class="col-1">
+                <a class="text-center" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Login", "Account")'">
+                    <i class='fas fa-arrow-left btn-lg text-primary'></i>
+                </a>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center text-primary">
+                    <strong>Sessions Security</strong>
+                </h2>
+            </div>
+        </div>
+        <!-- Second Row (Page Description) -->
+        <div class="row mt-4">
+            <div class="offset-1 col-10 text-center">
+                <figure>
+                    <img class="img-fluid mt-3" src="~/Icons/Login/Session.png" alt="Session Security Image" />
+                    <figcaption>
+                        <h6 class="text-justify line-height-3 mt-3">
+                            Our Customers Organization On A Secure Webpage That Encrypts The Session Between The Customer's Computer
+                            And The Webpage Using 128-bit Encryption So That The Communication Cannot Be Intercepted By Anyone
+                            Over The Internet. Our Systems Automatically Time Out The Customer's Login Sessions After A Period
+                            Of Time To Protect Against Misuse.
+                        </h6>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

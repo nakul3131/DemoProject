@@ -1,0 +1,141 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonIdentificationViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.HtmlHelpers
+@{
+    PersonIdentificationViewModel model = new PersonIdentificationViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PIDMOD");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>PersonIdentification - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                    <div class="card-body">
+
+                        @* ======= First Row - Mandatory Mark ======= *@
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <h6 class="text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                <h5 class="font-weight-bold mt-1">Modify</h5>
+                                <hr />
+                            </div>
+                        </div>
+
+                        @*Submit Error*@
+                        @Html.ValidationMessage("SubmitError")
+
+                        @* ======= Third Row - Data Entry Page ======= *@
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="modal fade" id="add-identification" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+
+                                                <h4 class="modal-title text-center" id="identification-text">Add</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @*IdentificationId*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Identification")
+                                                    @Html.DropDownListFor(m => m.IdentificationId, new SelectList(model.IdentificationDropdownList, "Value", "Text"), "Select Identification", new { @id = "identification-id", @class = "form-control mandatory-mark", @autocomplete = "off" })
+                                                    @Html.ValidationMessageFor(m => m.IdentificationId)
+                                                </div>
+
+                                                @*AccountNumber*@
+                                                <div class="form-group">
+                                                    @Html.CustomLabel("Identification Number")
+                                                    @Html.TextBoxFor(m => m.IdentificationNumber, new { @id = "identification-number", @class = "form-control mandatory-mark", @placeholder = "Enter Identification Number", required = "required", @maxlength = "50", @autocomplete = "off" })
+                                                    @Html.ValidationMessageFor(m => m.IdentificationNumber)
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" id="btn-add-identification" class="btn btn-success ">Add</button>
+                                                <button type="button" id="btn-update-identification" class="btn btn-primary ">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="table-responsive" style="min-height:200px;">
+                                        <table id="tblIdentify" class="table compact  table-striped table-bordered" width="100">
+                                            <thead class="text-center">
+                                                <tr>
+                                                    <th><input type="checkbox" name="check_all" id="selectAll" /></th>
+                                                    <th class="d-none">IdentificationId</th>
+                                                    <th>Name Of Identification</th>
+                                                    <th>IdentificationNumber</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+
+                                    @*Note*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("Note")
+                                        @Html.TextAreaFor(m => m.Note, new { @id = "note-identify", @class = "form-control text-capitalize default-none", @placeholder = "Enter Note", @maxlength = "1500", @autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.Note)
+                                    </div>
+
+                                    @*ReasonForModification*@
+                                    <div class="form-group">
+                                        @Html.CustomLabel("ReasonForModification")
+                                        @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification", @class = "form-control text-capitalize", @placeholder = "Enter Reason For Modification", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()" })
+                                        @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                    </div>
+
+                                    @*Hiddent Field For PersonPrmKey*@
+                                    @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                            @*Footer*@
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-center mb-2">
+                                    <button type="submit" name="Command" value="Save" id="btnsave" request-url="@Url.Action("SaveIdentificationDataTable", "Identification")" class="btn btn-success mr-2"><h5><b>Modify</b></h5></button>
+                                    <button type="button" class="btn btn-link ml-3" onclick="window.location.href='@Url.Action("Cancel", "Home" )'"><h5><u>Cancel</u></h5></button>
+                                </div>
+                            </div>
+                            <br />
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var SaveIdentificationDataTable = "@Url.Action("SaveIdentificationDataTable", "PersonIdentification")";
+</script>
+<script src="~/Scripts/Custom/PersonIdentification.js"></script>

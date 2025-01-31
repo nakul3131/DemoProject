@@ -1,0 +1,65 @@
+﻿@using DemoProject.Services.HtmlHelpers;
+
+@{
+    Layout = null;
+}
+
+
+<!doctype html>
+
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/ClearLoginSession.css" rel="stylesheet" />
+    <title>Clear Recent Login Session</title>
+</head>
+<body>
+    <section>
+        @*<div class="container-fluid">*@
+        <div class="content">
+            <h2> This account is already logged in !!! </h2>
+            <p>
+                A single account cannot be accessed by multiple users at the same time.
+                This means that you will see this message if you try to log in to an account that's already being used or logged in somewhere else.
+                You must log out of other browsers before being able to log in.
+                Logging in now will log out other devices connected to this account
+                Do you want to Clear Recent Session?
+            </p>
+        </div>
+        <img src="~/Images/SharedView/Cleanup.jpg" />
+        <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#fff" fill-opacity="1" d="M0,96L34.3,85.3C68.6,75,137,53,206,85.3C274.3,117,343,203,411,197.3C480,192,549,96,617,85.3C685.7,75,754,149,823,154.7C891.4,160,960,96,1029,85.3C1097.1,75,1166,117,1234,138.7C1302.9,160,1371,160,1406,160L1440,160L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path></svg>
+        @CustomHtmlHelper.TroubleshootLink("ClearLoginSession")
+        @*<div class="row mt-5">
+            <div class="col">
+
+            </div>
+
+            @*<div class="offset-2 col-8">
+                <h2 class="text-center text-primary mt-2"><strong>Oops !!! Already logged in </strong></h2>
+            </div>
+            <div class="offset-2 col-8 text-center">
+                <h6 class="mt-4 text-muted">
+                    A single account cannot be accessed by multiple users at the same time.
+                    This means that you will see this message if you try to log in to an account that's already being used or logged in somewhere else.
+                    You must log out of other browsers before being able to log in.
+                    Logging in now will log out other devices connected to this account
+                    Do you want to Clear Recent Session?
+                </h6>
+                @CustomHtmlHelper.TroubleshootLink("ClearLoginSession")
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <figure>
+                    <img class="img-fluid" src="~/Images/SharedView/cleanup.svg" alt="User Lock Image" height="500" width="500" />
+                </figure>
+            </div>
+        </div>
+            </div>*@
+    </section>
+</body>
+</html>

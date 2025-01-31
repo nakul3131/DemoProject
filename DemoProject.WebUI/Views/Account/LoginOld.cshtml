@@ -1,0 +1,146 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.LoginViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers;
+@{
+    //Layout = null;
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+
+    EmergencyScreenViewModel viewModel = new EmergencyScreenViewModel();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="img/home.svg" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <title>LOGIN & SIGN UP FORM </title>
+    <script>
+
+        debugger;
+
+        $(document).ready(function () {
+            debugger;
+            $('#myModal').modal('show');
+        });
+
+
+    </script>
+    <style>
+        .modal.fade .modal-dialog.modal-dialog-zoom {
+            -webkit-transform: translate(0,0)scale(.5);
+            transform: translate(0,0)scale(.5);
+        }
+
+        .modal.show .modal-dialog.modal-dialog-zoom {
+            -webkit-transform: translate(0,0)scale(1);
+            transform: translate(0,0)scale(1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        @if (viewModel.BodyText != "None")
+        {
+            <div class="modal fade" id="myModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom">
+                    <div class="modal-content">
+                        @*Modal header*@
+                        <div class="modal-header">
+                            <h5 class="modal-title  float-left">@viewModel.HeaderText</h5>
+                            <button type="button" class="close" data-dismiss="modal" style="outline:none;">&times;</button>
+                        </div>
+                        @*Modal body*@
+                        <div class="modal-body">
+                            <p class="text text-center mt-2">@viewModel.BodyText</p>
+                        </div>
+                        @*Modal footer*@
+                        <div class="modal-footer justify-content-between">
+                            <h5 class="modal-title  float-left">@viewModel.FooterText</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="forms-container" style="margin-top:-3%;">
+            <div class="signin-signup">
+                <div class="sign-in-form">
+                    <h5 class="pt-2 mr-5  text-center"><b>SCS-PathPranali</b></h5>
+                    <div class="card bg-transparent mt-3 " style="width:40%; right:1%; z-index:-1;">
+                        <div class="card-body">
+                            <h5 class="text-left font-weight-bold">Log In</h5>
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+                                {
+                                    @Html.ValidationMessage("InvalidAttempt")
+                                    //User Name
+                                    <div class="form-group pt-3">
+                                        <i class="fas fa-user"></i>
+                                        <label class="font-weight-bold">User Name</label>
+                                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Enter User Name", @autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.UserName)
+                                    </div>
+
+                                    //Password
+                                    <div class="form-group pt-2">
+                                        @*Clearfix used for set alignment*@
+                                        <div class="clearfix">
+                                            <div class="float-left"><i class="fas fa-key"></i></div>
+                                            <label class="float-left font-weight-bold ml-1">Password</label>
+                                            <div class="d-none d-md-block">
+                                                <div class="float-right">
+                                                    @Html.CustomActionLink("Forgot Password?", "AccountRecoveryViaMobileOTP", "Account", (bool?)TempData["IsUserVAlid"])
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Enter Password" })
+                                        @Html.ValidationMessageFor(m => m.Password)
+                                    </div>
+                                    // Login Button
+                                    <div class="form-group pt-4">
+                                        <button id="submit" type="submit" class="btn btn-sm btn-block btn-primary "><h5 class="mt-2"><b>Login</b></h5></button>
+                                    </div>
+                                    @*<input type="submit" value="Login" class="btn solid" />*@
+
+                                    <div class="social-media mt-lg-2 mt-xl-3">
+                                        <a href="#" class="social-icon">
+                                            <i class="fas fa-fingerprint"></i>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panels-container">
+            <div class="panel left-panel">
+                @*<div class="content" style="overflow:hidden">
+
+                </div>*@
+                <img src="~/Images/Login/Newlogin.svg" class="img-fluid" width: 100% \9; height: auto; alt="Responsive image" />
+            </div>
+            @*<div class="panel right-panel">
+                <div class="content">
+                    <h3>I have an account already</h3>
+                    <p>
+                    </p>
+                </div>
+            </div>*@
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    debugger;
+var status = '@TempData["TransactionStatus"]';
+</script>
+<script src="~/Scripts/Custom/Custometoastr.js"></script>

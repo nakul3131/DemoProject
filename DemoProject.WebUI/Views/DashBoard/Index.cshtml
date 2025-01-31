@@ -1,0 +1,473 @@
+﻿@using DemoProject.Services.ViewModel.Configuration
+@{
+    ViewBag.Title = "Home Page";
+
+    //PartialModel model = new PartialModel();
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.print.css" rel="stylesheet" media="print" />
+</head>
+<body>
+    <div class="container-fluid ml-2 mr-2">
+        <div class="row mt-4 mb-3">
+            <div class="col-md-3  col-xs-4">
+                <div class="card text-center shadow">
+                    <div class="card-body card-counter primary">
+                        <div class="col-xs-3 pull-left">
+                            <span class="icon"><i class="fa fa-code-fork"></i></span>
+                        </div>
+                        <span class="count-numbers pull-right" data-value="67">67</span>
+                        <span class="count-name pull-right mt-1">Panding <span class="prec"></span></span>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <span class="pull-left count-text " style="margin-top:-1%;">View Details</span>
+                        <span class="pull-right" style="margin-top:-1%;"><a href="#"><i class="fa fa-arrow-circle-right"></i></a></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow">
+                    <div class="card-body card-counter danger">
+                        <div class="col-xs-3 pull-left">
+                            <span class="icon"><i class="fa fa-comments"></i></span>
+                        </div>
+                        <span class="count-numbers pull-right" data-value="55" id="count">55</span>
+                        <span class="count-name pull-right mt-1">Flowz <span class="prec"></span></span>
+                    </div>
+
+                    <div class="card-footer text-muted">
+                        <span class="pull-left count-text " style="margin-top:-1%;">View Details</span>
+                        <span class="pull-right" style="margin-top:-1%;"><a href="#"><i class="fa fa-arrow-circle-right text-danger"></i></a></span>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow">
+                    <div class="card-body card-counter  success">
+                        <div class="col-xs-3 pull-left">
+                            <span class="icon"><i class="fa fa-database"></i></span>
+                        </div>
+                        <span class="count-numbers pull-right">96</span>
+                        <span class="count-name pull-right">Flowz</span>
+
+                    </div>
+                    <div class="card-footer text-muted">
+                        <span class="pull-left count-text " style="margin-top:-1%;">View Details</span>
+                        <span class="pull-right" style="margin-top:-1%;"><a href="#"><i class="fa fa-arrow-circle-right text-success"></i></a></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow">
+                    <div class="card-body card-counter  info">
+                        <div class="col-xs-3 pull-left">
+                            <span class="icon"><i class="fa fa-users"></i></span>
+                        </div>
+                        <span class="count-numbers pull-right">7</span>
+                        <span class="count-name pull-right">User</span>
+
+                    </div>
+                    <div class="card-footer text-muted">
+                        <span class="pull-left count-text " style="margin-top:-1%;">View Details</span>
+                        <span class="pull-right" style="margin-top:-1%;"><a href="#"><i class="fa fa-arrow-circle-right text-info"></i></a></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                <div class="card bg-white shadow">
+                    <div class="card-header bg-white">
+                        <i class="fas fa-calendar"></i>
+                        Calendar
+
+                        <button class="fa fa-minus btn btn-sm badge-info float-right mr-2 " aria-hidden="true" data-toggle="collapse" href="#multiCollapseExample1" le="button" aria-expanded="false" aria-controls="multiCollapseExample1"></button>
+
+                        <button class="fa fa-bars btn  btn-sm badge-info   float-right mr-2 " data-toggle="dropdown" id="dropdownMenu"></button>
+
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                            <a class="dropdown-item" href="@Url.Action("UnverifiedIndex", "Designation")">Add new event</a>
+                            <button class="dropdown-item" type="button">Clear events</button>
+                            <button class="dropdown-item" type="button">View calendar</button>
+                        </div>
+                    </div>
+                    <div class="card-body" id="multiCollapseExample1">
+                        <!-- Tab panes -->
+                        <div class="box-body no-padding">
+                            <!--The calendar -->
+                            <div id="calender"></div>
+                        </div><!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="card bg-white shadow" id="timlinecard">
+                    <div class="card-header bg-white">
+                        <i class="fa fa-clock"></i> TimeLine
+                        <button class="fa fa-minus btn btn-sm badge-info float-right mr-2 " aria-hidden="true" data-toggle="collapse" href="#multiCollapseExample2" le="button" aria-expanded="false" aria-controls="multiCollapseExample2"></button>
+
+                        <button class="fa fa-bars btn  btn-sm badge-info   float-right mr-2 " data-toggle="dropdown" id="dropdownMenu"></button>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                            <a class="dropdown-item" href="@Url.Action("UnverifiedIndex", "Designation")">Action</a>
+                            <button class="dropdown-item" type="button">Another action</button>
+                            <button class="dropdown-item" type="button">Something else here</button>
+                        </div>
+                    </div>
+                    <div class="card-body" id="multiCollapseExample2">
+
+                        <ul class="timeline">
+
+                            <li class="timeline-item ">
+                                <div class="timeline-badge"><a></a></div>
+                                <div class="timeline-panel bg-white rounded shadow">
+                                    <div class="timeline-heading"><span style="font-family:'Javanese Text';font-style:italic;"> Scs PathPranali</span></div>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-badge"><a href="#"></a></div>
+                                <div class="timeline-panel bg-white rounded  shadow">
+                                    <div class="timeline-heading">
+                                        <div class="timeline-date"><i class="fa fa-clock-o"></i> <span style="font-family:'Javanese Text';font-style:italic;color:#242424;"> July 19, 2021</span></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-badge"><a href="#"></a></div>
+                                <div class="timeline-panel bg-white rounded  shadow">
+                                    <div id="services" class="timeline-heading"><span style="font-family:'Javanese Text';font-style:italic;color:#242424;"> July 19, 2021</span></div>
+                                    <div class="timeline-content">
+                                        <p>Eu pid nunc urna integer, Massa vut, habitasse, tincidunt!</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-badge"><a href="#"></a></div>
+                                <div class="timeline-panel bg-white rounded  shadow">
+                                    <div class="timeline-heading">
+                                        Minor Update
+                                        <div class="timeline-date"><i class="fa fa-clock-o"></i><span style="font-family:'Javanese Text';font-style:italic;color:#242424;"> July 19, 2021</span></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-badge"><a href="#"></a></div>
+                                <div class="timeline-panel bg-white rounded  shadow">
+                                    <div id="services" class="timeline-heading">Services Timeline</div>
+                                    <div class="timeline-content">
+                                        <p>Eu pid nunc urna,<span style="font-family:'Javanese Text';font-style:italic;color:#242424;">CBS Pathpranil </span></p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="timeline-item">
+                                <div class="timeline-badge"><a href="#"></a></div>
+                                <div class="timeline-panel bg-white rounded  shadow">
+                                    <div class="timeline-heading">
+                                        Minor Update
+
+                                        <div class="timeline-date"><i class="fa fa-clock-o"></i> <span style="font-family:'Javanese Text';font-style:italic;color:#242424;"> July 19, 2021</span></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <!-- Nav tabs -->
+                <div class="card bg-white shadow" id="timelinecrade">
+                    <div class="card-header bg-white">
+                        <i class="fas fa-chart-pie"></i> Horizontal Pie chart
+                        <button class="fa fa-minus btn btn-sm badge-info float-right mr-2 " aria-hidden="true" data-toggle="collapse" href="#multiCollapseExample3" le="button" aria-expanded="false" aria-controls="multiCollapseExample3"></button>
+
+                        <button class="fa fa-bars btn  btn-sm badge-info   float-right mr-2 " data-toggle="dropdown" id="dropdownMenu"></button>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                            <a class="dropdown-item" href="@Url.Action("UnverifiedIndex", "Designation")">Action</a>
+                            <button class="dropdown-item" type="button">Another action</button>
+                            <button class="dropdown-item" type="button">Something else here</button>
+                        </div>
+                    </div>
+
+                    <div class="card-body" id="multiCollapseExample3">
+                        <div class="tab-content" style="height:382px;">
+                            <canvas class="mt-5" id="pieChart" style="max-width: 1000px;"></canvas>
+                            @*@Html.Partial("_UnverifiedIndex", model.designationViewModels)*@
+                            @*@{Html.RenderAction("UnverifiedIndex", "Designation"); }*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-5">
+                <div class="card bg-white shadow" id="Chartbar">
+                    <div class="card-header bg-white">
+                        <i class="fa fa-chart-bar text-dark"></i> Horizontal Line chart
+
+                        <button class="fa fa-minus btn btn-sm badge-info float-right mr-2 " aria-hidden="true" data-toggle="collapse" href="#multiCollapseExample4" le="button" aria-expanded="false" aria-controls="multiCollapseExample4"></button>
+
+                        <button class="fa fa-bars btn  btn-sm badge-info   float-right mr-2 " data-toggle="dropdown" id="dropdownMenu"></button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu4">
+                            <a class="dropdown-item" href="@Url.Action("UnverifiedIndex", "Designation")">Action</a>
+                            <button class="dropdown-item" type="button">Another action</button>
+                            <button class="dropdown-item" type="button">Something else here</button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="height: 450px" id="multiCollapseExample4">
+                        <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                            <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                            </div>
+                        </div> <canvas id="chart-lines" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <!-- Nav tabs -->
+                <div class="card bg-white shadow" id="timelinecrade">
+                    <div class="card-header bg-white">
+                        <i class="fas fa-clock"></i> Doughnut Chart
+
+                        <button class="fa fa-minus btn btn-sm badge-info float-right mr-2 " aria-hidden="true" data-toggle="collapse" data-target="#multiCollapseExample5" aria-expanded="true" aria-controls="multiCollapseExample5"></button>
+                        <button class="fa fa-bars btn  btn-sm badge-info   float-right mr-2 " data-toggle="dropdown" id="dropdownMenu"></button>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                            <a class="dropdown-item" href="@Url.Action("UnverifiedIndex", "Designation")">Action</a>
+                            <button class="dropdown-item" type="button">Another action</button>
+                            <button class="dropdown-item" type="button">Something else here</button>
+                        </div>
+                    </div>
+                    <div class="card-body" id="multiCollapseExample5">
+                        <div class="tab-content" style="height:382px;">
+                            <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                </div>
+                                <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                </div>
+                            </div> <canvas id="chart-line1" width="299" height="180" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+
+                            @*<canvas class="mt-5" id="pieChart" style="max-width: 1000px;"></canvas>*@
+                            @*@Html.Partial("_UnverifiedIndex", model.designationViewModels)*@
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-5">
+                <div class="card bg-white shadow" id="Chartbar">
+                    <div class="card-header bg-white">
+                        <i class="fa fa-chart-bar text-dark"></i> Horizontal Bar chart
+                        <button class="fa fa-minus btn btn-sm badge-info float-right mr-2 " aria-hidden="true" data-toggle="collapse" href="#multiCollapseExample6" le="button" aria-expanded="false" aria-controls="multiCollapseExample6"></button>
+                        <button class="fa fa-bars btn  btn-sm badge-info   float-right mr-2 " data-toggle="dropdown" id="dropdownMenu"></button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu6">
+                            <a class="dropdown-item" href="@Url.Action("UnverifiedIndex", "Designation")">Action</a>
+                            <button class="dropdown-item" type="button">Another action</button>
+                            <button class="dropdown-item" type="button">Something else here</button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="height: 450px" id="multiCollapseExample6">
+
+                        <canvas id="chart-line" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="popUpModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><span id="eventTitle"></span></h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <button id="btnDelete" class="btn btn-primary btn-sm pull-right"><i class="fas fa-trash ml-2 icon"></i>Delete</button>
+                        <button id="btnEdit" class="btn btn-success btn-sm pull-right" style="margin-right:5px;"><i class="far fa-edit ml-2 icon"></i>Edit</button>
+                        <p id="pDetails"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="myModalSave" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Save Event</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="col-md-12 form-horizontal">
+                            <input type="hidden" id="hdEventID" value="0" />
+
+                            <div class="form-group">
+                                <label>Name Of Event Type</label>
+                                <select id="eventTypeId" class="form-control mandatory-mark" autocomplete="off" required="required">
+                                    <option value="3">Default</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Name Of Event</label>
+                                <input type="text" id="name-of-event" class="form-control mandatory-mark" placeholder="Enter Name Of Event" required="required" maxlength="100" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>कार्यक्रमाचे नाव</label>
+                                <input type="text" id="trans-name-of-event" class="form-control mandatory-mark" placeholder="कृपया कार्यक्रमाचे नाव प्रविष्ट करा" required="required" maxlength="100" autocomplete="off" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Alias Name</label>
+                                <input type="text" id="alias-name" class="form-control default-none" placeholder="Enter Alias Name" maxlength="10" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>उर्फ नाव</label>
+                                <input type="text" id="trans-alias-name" class="form-control default-none" placeholder="कृपया उर्फ नाव प्रविष्ट करा" maxlength="10" autocomplete="off" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Name On Report</label>
+                                <input type="text" id="name-on-report" class="form-control default-none" placeholder="Enter Name On Report" required="required" maxlength="100" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>अहवालासाठी नाव</label>
+                                <input type="text" id="trans-name-on-report" class="form-control default-none" placeholder="अहवालासाठी नाव प्रविष्ट करा" maxlength="100" autocomplete="off" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Event Description</label>
+                                <input type="text" id="event-description" class="form-control mandatory-mark" placeholder="Enter Event Description" maxlength="1500" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            @*<div class="form-group">
+                                    <label>इव्हेंट वर्णन</label>
+                                    <input type="text" id = "trans-event-description" class = "form-control mandatory-mark" placeholder = "इव्हेंट वर्णन प्रविष्ट करा" maxlength = "1500" autocomplete = "off" />
+                                </div>*@
+
+                            <div class="form-group">
+                                <label>Scheduled From</label>
+                                <input id="scheduled-from" class="form-control mandatory-mark" Type="date" required="required" onchange="Activationdate()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Scheduled To</label>
+                                <input id="scheduled-to" class="form-control mandatory-mark" Type="date" required="required" onchange="Activationdate()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Triggered At</label>
+                                <input id="triggered-at" class="form-control mandatory-mark" Type="date" required="required" onchange="Activationdate()" />
+                            </div>
+
+                            <div class="row form-group mt-5">
+                                <div class="col-10">
+                                    <label>Is Full Day Event</label>
+                                </div>
+                                <div class="text-right">
+                                    <label class="switch switch-left-right">
+                                        <input type="checkbox" id="is-full-day-event" class="form-control switch-input" checked="checked" />
+                                        <span class="slider round">
+                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group mt-5">
+                                <div class="col-10">
+                                    <label>Is Active</label>
+                                </div>
+                                <div class="text-right">
+                                    <label class="switch switch-left-right">
+                                        <input type="checkbox" id="is-active" class="form-control switch-input" checked="checked" />
+                                        <span class="slider round">
+                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Redirect Url</label>
+                                <input type="text" id="redirect-url" class="form-control mandatory-mark" placeholder="Enter Redirected Url" required="required" maxlength="2048" autocomplete="off" />
+                            </div>
+
+                            <div class="row form-group mt-5">
+                                <div class="col-10">
+                                    <label>Enable Reminder</label>
+                                </div>
+                                <div class="text-right">
+                                    <label class="switch switch-left-right">
+                                        <input type="checkbox" id="enable-reminder" class="form-control switch-input" checked="checked" />
+                                        <span class="slider round">
+                                            <span class="on"><b>True</b></span><span class="off"><b>False</b></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Note</label>
+                                <input type="text" id="note" class="form-control default-none" placeholder="Enter Note" maxlength="1500" autocomplete="off" onkeydown="Maketranslation()" onkeyup="ToTextCapitalize()" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>टीप</label>
+                                <input type="text" id="trans-note" class="form-control default-none" placeholder="टीप प्रविष्ट करा" maxlength="1500" autocomplete="off" />
+                            </div>
+
+                            <button type="button" id="btnSave" class="btn btn-success">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+<script>
+        var saveDataTables = '@Url.Action("Create", "EventMaster")';
+</script>
+

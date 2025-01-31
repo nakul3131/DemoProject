@@ -1,0 +1,122 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.Master.CenterTradingEntityDetailViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.PersonInformation.Master
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    CenterTradingEntityDetailViewModel model = new CenterTradingEntityDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("CTDCRT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>CenterTradingDetail - Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="col-10 offset-1">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="col-10 offset-1">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                @*Page Title- Create*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                        <h5 class="font-weight-bold mt-1">Create</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Second Row - Data Entry Page =======*@
+                                @*Two Columns For Default Application Language (i.e. English) And Other For Regional Language Translation With Equal Length*@
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        <div class="modal fade" id="add-center-trading-entity-detail" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+
+                                                        <h4 class="modal-title text-center" id="trading-entity-detail-text">Add</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        @*NameOfEntity*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Name Of Entity")
+                                                            @Html.DropDownListFor(m => m.TradingEntityId, new SelectList(model.TradingEntityDropdownList, "Value", "Text", 0), new { @id = "name-of-trading-entity", @class = "form-control mandatory-mark" })
+                                                            @Html.ValidationMessageFor(m => m.TradingEntityId)
+                                                        </div>
+
+                                                        @*Volume*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Volume")
+                                                            @Html.TextBoxFor(m => m.Volume, new { @id = "volume-text", @class = "form-control mandatory-mark", @type = "number", @min = "1", @max = "9999", @placeholder = "Enter Volume", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.Volume)
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" id="btn-add-trading-entity" class="btn btn-success ">Add</button>
+                                                        <button type="button" id="btn-update-trading-entity" class="btn btn-primary ">Update</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <table id="center-trading-entity-detail-table" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th><input type="checkbox" name="check_all" id="selectAll" style="margin-left:11px;" /></th>
+                                                        <th class="d-none">TradingEntityId</th>
+                                                        <th>Name Of Entity</th>
+                                                        <th>Volume</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="text-center"></tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Create", "SaveDataTables", "CenterTradingEntityDetail", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    var url = "@Url.Action("SaveContact", "CenterTradingEntityDetail")";
+    </script>
+    <script src="~/Scripts/Custom/TradingDetails.js"></script>
+</body>
+</html>

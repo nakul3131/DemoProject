@@ -1,0 +1,137 @@
+﻿@model DemoProject.Services.ViewModel.Enterprise.Office.BusinessOfficePasswordPolicyViewModel
+@using DemoProject.Services.ViewModel.Enterprise.Office
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+
+@{
+    OfficeDetailViewModel officeDetailViewModel = new OfficeDetailViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("BOPCRT");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>BusinessOfficePasswordPolicy - Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Create</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        <div class="modal fade" id="add-business-office-password-policy" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+
+                                                        <h4 class="modal-title text-center" id="business-office-password-policy-text">Add</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        @*NameOfPasswordPolicy*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Name Of PasswordPolicy")
+                                                            @Html.DropDownListFor(m => m.PasswordPolicyId, new SelectList(officeDetailViewModel.PasswordPolicyDropDownList, "Value", "Text", 0), "Please Select List ", new { @id = "name-of-password-policy", @class = "form-control mandatory-mark" })
+                                                            @Html.ValidationMessageFor(m => m.PasswordPolicyId)
+                                                        </div>
+
+                                                        @*ActivationDate*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Activation Date")
+                                                            @Html.TextBoxFor(m => m.ActivationDate, "{0:yyyy-MM-dd}", new { @id = "activation-date-password-policy", @class = "form-control mandatory-mark set-current-date set-current-date", @Type = "date", required = "required", onchange = "Activedate()" })
+                                                            @Html.ValidationMessageFor(m => m.ActivationDate)
+                                                        </div>
+
+                                                        @*ClosedDate*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Closed Date")
+                                                            @Html.TextBoxFor(m => m.CloseDate, "{0:yyyy-MM-dd}", new { @id = "close-date-password-policy", @class = "form-control", @Type = "date", onchange = "Closedate()" })
+                                                            @Html.ValidationMessageFor(m => m.CloseDate)
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" id="btn-add-business-office-password-policy" class="btn btn-success">Add</button>
+                                                        <button type="button" id="btn-update-business-office-password-policy" class="btn btn-primary">Update</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <table id="business-office-password-policy-table" class="table compact table-striped table-bordered text-nowrap" cellspacing="0" width="100">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th><input type="checkbox" name="check_all" id="selectAll" style="margin-left:11px;" /></th>
+                                                        <th class="d-none">PasswordPolicyId</th>
+                                                        <th>Name Of PasswordPolicy</th>
+                                                        <th>ActivationDate</th>
+                                                        <th>ClosedDate</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="text-center"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Hiddent Field For BusinessOfficePrmKey*@
+                            @Html.HiddenFor(m => m.BusinessOfficePrmKey)
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Create", "SaveDataTables", "BusinessOfficePasswordPolicy", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/Custom/BusinessOfficePasswordPolicy.js"></script>
+<script>
+    var url = "@Url.Action("SaveDataTables", "BusinessOfficePasswordPolicy")";
+</script>

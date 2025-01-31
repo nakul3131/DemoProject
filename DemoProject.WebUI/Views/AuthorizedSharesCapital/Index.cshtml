@@ -1,0 +1,104 @@
+﻿@model IEnumerable<DemoProject.Services.ViewModel.Enterprise.Establishment.AuthorizedSharesCapitalViewModel>
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("ASCIND");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Shares Capital Index </title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            @*======= First Row - For Header =======*@
+            <div class="offset-1 col-10" ">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+                                @*======= First  Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">VerifiedIndex</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Third Row - Data Entry Page =======*@
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card-body">
+                                            <table id="example" class="display table table-striped table-hover dt-responsive  cell-border">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th>SR.</th>
+                                                        <th>EffectiveDate</th>
+                                                        <th>AuthorizedDate</th>
+                                                        <th>AuthorizedShresCapitalAmount</th>
+                                                        <th>ReferenceNumber</th>
+                                                        <th>EntryDate</th>
+                                                        <th>UserName</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="text-center">
+                                                    @{
+                                                        foreach (var item in Model)
+                                                        {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>@item.EffectiveDate</td>
+                                                        <td>@item.AuthorizedDate</td>
+                                                        <td>@item.AuthorizedSharesCapitalAmount</td>
+                                                        <td>@item.ReferenceNumber</td>
+                                                        <td>@item.EntryDateTime</td>
+                                                        <td>@item.NameOfUser</td>
+                                                    </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-center mb-2">
+                                    <button type="button" class="btn btn-success ml-3" onclick="window.location.href='@Url.Action("Default", "Home")'"><h5><u>Exit</u></h5></button>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

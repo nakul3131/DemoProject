@@ -1,0 +1,222 @@
+﻿@model DemoProject.Services.ViewModel.Account.Transaction.OpeningBalanceViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Account.Transaction;
+
+@{
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("ONMDIN");
+    OpeningBalanceViewModel openingBalanceViewModel = new OpeningBalanceViewModel();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>ModifiedIndex</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+        <br />
+        @using (Html.BeginForm())
+        {
+            <div class="modal fade" id="add-modal-opening-balance" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title  text-center" id="userProfileBusinessOffice-text">Modify</h4>
+                            <button type="button" id="closeuserProfileBusinessOffice" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            @*GeneralLedger*@
+                            <div class="form-group">
+                                @Html.CustomLabel("General Ledger")
+                                @Html.DropDownListFor(m => m.GeneralLedgerId, new SelectList(openingBalanceViewModel.GeneralLedgerDropdownList, "Value", "Text", 0), "Select General Ledger", new { @id = "general-ledger-id", @class = "form-control mandatory-mark forScheme", @autocomplete = "off", required = "required" })
+                                @Html.ValidationMessageFor(m => m.GeneralLedgerId)
+                            </div>
+
+                            @*CustomerAccountName*@
+                            <div class="form-group">
+                                @Html.CustomLabel("Customer Account Name")
+                                @Html.DropDownListFor(m => m.PersonId, new List<SelectListItem>(), "Select Customer Account Name", new { @id = "customer-account-name", @class = "form-control mandatory-mark", @autocomplete = "off", required = "required" })
+                                @Html.ValidationMessageFor(m => m.PersonId)
+                            </div>
+
+                            <div id="shares" class="d-none">
+                                @*FaceValueOfShares*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Face Value Of Shares")
+                                    @Html.TextBoxFor(m => m.FaceValueOfShares, new { @id = "face-value-of-shares", @class = "form-control mandatory-mark", @placeholder = "Enter Face Value Of Shares", @type = "number", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.FaceValueOfShares)
+                                </div>
+
+                                @*TotalShares*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Total Shares")
+                                    @Html.TextBoxFor(m => m.TotalShares, new { @id = "total-shares", @class = "form-control mandatory-mark", @placeholder = "Enter Total Shares", @type = "number", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.TotalShares)
+                                </div>
+
+                                @*PreviousYearBalanceOfShares*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Previous Year Balance Of Shares")
+                                    @Html.TextBoxFor(m => m.PreviousYearBalanceOfShares, new { @id = "previous-year-balance-of-shares", @class = "form-control mandatory-mark", @placeholder = "Enter Previous Year Balance Of Shares", @type = "number", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.PreviousYearBalanceOfShares)
+                                </div>
+                            </div>
+
+                            <div id="investment" class="d-none">
+                                @*Provision Date*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Provision Date")
+                                    @Html.TextBoxFor(m => m.LastProvisionDateOfInvestment, new { @id = "last-provision-date-of-investment", @class = "form-control mandatory-mark", @placeholder = "Enter Last Provision Date Of Investment", @type = "date", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.LastProvisionDateOfInvestment)
+                                </div>
+
+                                @*ProvisionAmountOfInvestment*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Provision Amount Of Investment")
+                                    @Html.TextBoxFor(m => m.ProvisionAmountOfInvestment, new { @id = "provision-amount-of-investment", @class = "form-control mandatory-mark", @placeholder = "Enter Provision Amount Of Investment", @type = "number", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.ProvisionAmountOfInvestment)
+                                </div>
+                            </div>
+
+                            <div id="deposit" class="d-none">
+                                @*LastProvisionDateOfDeposit*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Last Provision Date Of Deposit")
+                                    @Html.TextBoxFor(m => m.LastProvisionDateOfDeposit, new { @id = "last-provision-date-of-deposit", @class = "form-control mandatory-mark", @placeholder = "Enter Last Provision Date Of Deposit", @type = "date", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.LastProvisionDateOfDeposit)
+                                </div>
+
+                                @*ProvisionAmountOfDeposit*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Provision Amount Of Deposit")
+                                    @Html.TextBoxFor(m => m.ProvisionAmountOfDeposit, new { @id = "provision-amount-of-deposit", @class = "form-control mandatory-mark", @placeholder = "Enter Provision Amount Of Deposit", @type = "number", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.ProvisionAmountOfDeposit)
+                                </div>
+
+                                @*ProductMinBalance*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Product Min. Balance")
+                                    @Html.TextBoxFor(m => m.ProductMinBalance, new { @id = "product-min-balance", @class = "form-control mandatory-mark", @placeholder = "Enter Product Min. Balance", @type = "number", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.ProductMinBalance)
+                                </div>
+                            </div>
+
+                            <div id="loan" class="d-none">
+                                @*PreviousInterestDateOfLoan*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Previous Interest Date Of Loan")
+                                    @Html.TextBoxFor(m => m.PreviousInterestDateOfLoan, new { @id = "previous-interest-date-of-loan", @class = "form-control mandatory-mark", @placeholder = "Enter Previous Interest Date Of Loan", @type = "date", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.PreviousInterestDateOfLoan)
+                                </div>
+
+                                @*PreviousInstallmentDateOfLoan*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Previous Installment Date Of Loan")
+                                    @Html.TextBoxFor(m => m.PreviousInstallmentDateOfLoan, new { @id = "previous-installment-date-of-loan", @class = "form-control mandatory-mark", @placeholder = "Enter Previous Installment Date Of Loan", @type = "date", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.PreviousInstallmentDateOfLoan)
+                                </div>
+
+                                @*LastProvisionDateOfLoan*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Last Provision Date Of Loan")
+                                    @Html.TextBoxFor(m => m.LastProvisionDateOfLoan, new { @id = "last-provision-date-of-loan", @class = "form-control mandatory-mark", @placeholder = "Enter Last Provision Date Of Loan", @type = "date", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.LastProvisionDateOfLoan)
+                                </div>
+
+                                @*ProvisionAmountOfLoan*@
+                                <div class="form-group">
+                                    @Html.CustomLabel("Provision Amount Of Loan")
+                                    @Html.TextBoxFor(m => m.ProvisionAmountOfLoan, new { @id = "provision-amount-of-loan", @class = "form-control mandatory-mark", @placeholder = "Enter Provision Amount Of Loan", @type = "number", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.ProvisionAmountOfLoan)
+                                </div>
+                            </div>
+
+                            @*Amount*@
+                            <div class="form-group">
+                                @Html.CustomLabel("Amount")
+                                @Html.TextBoxFor(m => m.Amount, new { @id = "amount", @class = "form-control mandatory-mark", @placeholder = "Enter Amount", @type = "number", @autocomplete = "off" })
+                                @Html.ValidationMessageFor(m => m.Amount)
+                            </div>
+
+
+                            @*Hiddent Field For PrmKey*@
+                            @Html.HiddenFor(m => m.OpeningBalancePrmKey, new { @id = "openingBalancePrmKey" })
+
+                            @*Hiddent Field For GeneralLedgerPrmKey*@
+                            @Html.HiddenFor(m => m.GeneralLedgerPrmKey, new { @id = "generalLedgerPrmKey" })
+
+                            @*Hiddent Field For CustomerAccountPrmKey*@
+                            @Html.HiddenFor(m => m.CustomerAccountPrmKey, new { @id = "customerAccountPrmKey" })
+
+                            @*Hiddent Field For SchemeTypePrmKey*@
+                            @Html.HiddenFor(m => m.SchemeTypePrmKey, new { @id = "schemeTypePrmKey" })
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btn-modify-opening-balance" class="btn btn-success">Modify</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            if (Model.EntryStatus == "NON")
+            {
+                @Html.Hidden("RedirectTo", Url.Action("Create", "OpeningBalance"));
+            }
+
+            else if (Model.EntryStatus == "AMN")
+            {
+                @Html.Hidden("RedirectTo", Url.Action("Verify", "OpeningBalance"));
+            }
+
+            else if (Model.EntryStatus == "REJ")
+            {
+                @Html.Hidden("RedirectTo", Url.Action("Amend", "OpeningBalance"));
+            }
+
+            else if (Model.EntryStatus == "VRF")
+            {
+                @Html.Hidden("RedirectTo", Url.Action("Modify", "OpeningBalance"));
+            }
+
+            @Html.Hidden("ModifyRecord", Url.Action("Modify", "OpeningBalance"));
+            @Html.OperationFooter("None", "Exit", "Home", "None")
+        }
+    </div>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        $("#add-modal-opening-balance").modal('show');
+    });
+
+    var getOpeningBalance = '@Url.Action("GetOpeningBalance", "OpeningBalance")';
+
+    var modelCustomerAccountUrl = '@Url.Action("GetCustomerAccount", "OpeningBalance")';
+
+    var getModifyOpeningBalance = '@Url.Action("Modify", "OpeningBalance")';
+
+    var getModifyAllOpeningBalance = '@Url.Action("ModifyDataTables", "OpeningBalance")';
+
+    var getSchemeType = '@Url.Action("GetSchemeType", "OpeningBalance")';
+    //debugger;
+    
+    
+</script>
+<script>
+        var schemeType = @TempData.Peek("SchemeType");
+   
+</script>
+<script src="~/Scripts/Custom/OpeningBalance.js"></script>

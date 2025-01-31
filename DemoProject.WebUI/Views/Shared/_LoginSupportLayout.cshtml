@@ -1,0 +1,87 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/Custom.css" rel="stylesheet" />
+    <title>Login Support</title>
+</head>
+<body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
+    <nav class="navbar navbar-dark navbar-expand-sm bg-primary fixed-top">
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- wrap the navbar content (links, etc) inside a div element followed by id matches data-target -->
+        <div class="collapse navbar-collapse" id="navbarToggler">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <!-- Safeguard's Menu -->
+                <li class="nav-item dropdown dmenu">
+                    <a class="nav-link text-white dropdown-toggle" href="javascript:void(0)" id="navbardrop" data-toggle="dropdown">
+                        Safeguard
+                    </a>
+                    <div class="dropdown-menu sm-menu">
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Authentication", "AccountServices")'">Additional Authentications</a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("GoogleReCaptcha", "AccountServices")'">Google reCaptcha</a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("DigitalCertificate", "AccountServices")'">Digital Certificate</a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Log", "AccountServices")'">Log File</a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("EVSSL", "AccountServices")'">EVSSL</a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("SecuritySolutions", "AccountServices")'">Security Solutions</a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("SecurityTeam", "AccountServices")'">Security Team</a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("SessionSecurity", "AccountServices")'">Session Security</a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("TransactionMonitor", "AccountServices")'">Unauthorized Monitoring</a>
+                    </div>
+                </li>
+                <!-- Security Tips Menu -->
+                <li class="nav-item dropdown dmenu">
+                    <a class="nav-link text-white dropdown-toggle" href="javascript:void(0)" id="navbardrop" data-toggle="dropdown">
+                        Security Tips
+                    </a>
+                    <div class="dropdown-menu sm-menu">
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("SafePassword", "AccountServices")'">Creating Safe Password</a>
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='@Url.Action("SecurityTips", "AccountServices")'">Security Tips</a>
+                    </div>
+                </li>
+                <!--Recommandations Menu-->
+                <li class="nav-item dropdown dmenu">
+                    <a class="nav-link text-white dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                        Recommandations
+                    </a>
+                    <div class="dropdown-menu sm-menu">
+                        <a class="dropdown-item" href="javascript:void(0)" onclick="window.location.href='#'">Link abc</a>
+                        <a class="dropdown-item" href="#">Link 1</a>
+                        <a class="dropdown-item" href="#">Link 2</a>
+                        <a class="dropdown-item" href="#">Link 3</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="pt-5">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        $('.navbar-dark .dmenu').hover(function () {
+            $(this).find('.sm-menu').first().stop(true, true).slideDown(150);
+        }, function () {
+            $(this).find('.sm-menu').first().stop(true, true).slideUp(105)
+        });
+    });
+</script>
+
+

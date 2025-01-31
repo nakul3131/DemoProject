@@ -1,0 +1,193 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonSocialMediaViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+
+@{
+    PersonDetailViewModel personDetailViewModel = new PersonDetailViewModel();
+    PersonSocialMediaViewModel model = new PersonSocialMediaViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PSOMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Person Social Media - Modify</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card mb-3">
+
+                    @using(Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @id = "form", autocomplete = "off" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @* ======= First Row - Mandatory Mark ======= *@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted">
+                                            <b class="mandatory-mark">&nbsp; Mandatory Field</b>
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                @* ======= Second Row - Page Title, Translation ======= *@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @{
+                                    <h5 class="ml-5 mt-4 text-left font-weight-bold">
+                                        @Model.FullName
+                                    </h5>
+                                }
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="card-body ml-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="modal fade" id="social-media-modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title text-center" id="person-social-media-text">Add</h4>
+                                                            <button type="button" class="close-social-media-modal" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @*SocialMedia*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Name Of Social Media")
+                                                                @Html.DropDownListFor(m => m.SocialMediaId, new SelectList(personDetailViewModel.SocialMediaDropdownList, "Value", "Text", 0), "--- Select Name Of Social Media ---", new { @id = "social-media-id", @class = "form-control mandatory-mark modal-input", required = "required" })
+                                                                @Html.ValidationMessageFor(m => m.SocialMediaId)
+                                                                <span id="social-media-id-error" class="error modal-input-error d-none">Please Select Name Of Social Media.</span>
+                                                            </div>
+
+                                                            @*SocialMediaLink*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Social Media Link")
+                                                                @Html.TextAreaFor(m => m.SocialMediaLink, new { @id = "social-media-link", @class = "form-control deny-multiple-space default-none modal-input", @placeholder = "Enter Social Media Link", @maxlength = 400, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.SocialMediaLink)
+                                                                <span id="social-media-link-error" class="error modal-input-error d-none">Please Select Social Media Link. </span>
+                                                            </div>
+
+                                                            @*OtherDetails*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Other Details")
+                                                                @Html.TextAreaFor(m => m.OtherDetails, new { @id = "other-details-social-media", @class = "form-control deny-multiple-space title-case default-none modal-input", @placeholder = "Enter Other Details", @maxlength = 2300 })
+                                                                @Html.ValidationMessageFor(m => m.OtherDetails)
+                                                                <span id="other-details-social-media-error" class="error modal-input-error d-none">Please Select other Details. </span>
+                                                            </div>
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Note")
+                                                                @Html.TextAreaFor(m => m.Note, new { @id = "note-social-media", @class = "form-control deny-multiple-space modal-input default-none", @placeholder = "Enter Note", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.Note)
+                                                            </div>
+
+                                                            @*ReasonForModification*@
+                                                            <div id="social-media-div" class="form-group">
+                                                                @Html.CustomLabel("Reason For Modification")
+                                                                @Html.TextAreaFor(m => m.ReasonForModification, new { @id = "reason-for-modification-social-media", @class = "form-control modal-input deny-multiple-space default-none", @placeholder = "Enter Reason For Modification", @maxlength = 1300, onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.ReasonForModification)
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" id="btn-add-social-media-modal" class="btn btn-success ">Add</button>
+                                                            <button type="button" id="btn-update-social-media-modal" class="btn btn-primary">Update</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <table id="tbl-social-media" class="table compact table-striped table-bordered" width="100">
+                                                    <thead class="text-center">
+                                                        <tr>
+                                                            <th><input type="checkbox" name="check_all" id="select-all-social-media" /></th>
+                                                            <th class="d-none">SocialMediaId</th>
+                                                            <th>NameOfSocialMedia</th>
+                                                            <th>SocialMediaLink</th>
+                                                            <th>OtherDetails</th>
+                                                            <th>Note</th>
+                                                            <th>ReasonForModification</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="text-center">
+                                                        @{
+                                                            IEnumerable<PersonSocialMediaViewModel> personSocialMediaViewModelList = (IEnumerable<PersonSocialMediaViewModel>)HttpContext.Current.Session["SocialMedia"];
+                                                            if (personSocialMediaViewModelList != null)
+                                                            {
+                                                                foreach (PersonSocialMediaViewModel viewModel in personSocialMediaViewModelList)
+                                                                {
+                                                                    <tr>
+                                                                        <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                        <td class="d-none">@viewModel.SocialMediaId</td>
+                                                                        <td>@viewModel.NameOfSocialMedia</td>
+                                                                        <td>@viewModel.SocialMediaLink</td>
+                                                                        <td>@viewModel.OtherDetails</td>
+                                                                        <td>@viewModel.Note</td>
+                                                                        <td>@viewModel.ReasonForModification</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Hiddent Field For PrmKey*@
+                                @Html.HiddenFor(m => m.PrmKey)
+
+                                @*Hiddent Field For PersonPrmKey*@
+                                @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                @*Hiddent Field For SocialMediaPrmKey*@
+                                @Html.HiddenFor(m => m.SocialMediaPrmKey)
+
+                                @*Hiddent Field For PersonId*@
+                                @Html.HiddenFor(m => m.PersonId)
+                            </div>
+
+                            // Save/Submit Button
+                            @Html.OperationFooter("Modify", "SaveSocialMediaDataTable", "PersonSocialMedia", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var saveDataTableURL = "@Url.Action("SaveSocialMediaDataTable", "PersonSocialMedia")";
+</script>
+<script src="~/Scripts/Custom/PersonSocialMedia.js"></script>

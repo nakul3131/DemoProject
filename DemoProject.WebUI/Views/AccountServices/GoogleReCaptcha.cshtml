@@ -1,0 +1,48 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LoginSupportLayout.cshtml";
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Captcha Implementation</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- First Row (<- Back Arrow and Title) -->
+        <div class="row mt-5">
+            <div class="col-1">
+                <a class="text-center" href="javascript:void(0)" onclick="window.location.href='@Url.Action("Login", "Account")'">
+                    <i class='fas fa-arrow-left btn-lg text-primary'></i>
+                </a>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center text-primary">
+                    <strong>Google reCAPTCHA</strong>
+                </h2>
+            </div>
+        </div>
+        <!-- Second Row (Page Description) -->
+        <div class="row">
+            <div class="offset-1 col-10 text-center">
+                <figure>
+                    <img class="img-fluid" src="~/Icons/Login/reCAPTCHA.png" alt="reCaptcha Image" />
+                    <figcaption>
+                        <h6 class="text-justify line-height-3">
+                            reCAPTCHA Is A Free GOOGLE Service That Protects Your Website From Spam And Abuse. reCAPTCHA Uses 
+                            An Advanced Risk Analysis Engine And Adaptive Challenges To Keep Automated Software From Engaging In 
+                            Abusive Activities On Your Site. It Does This While Letting Your Valid Users Pass Through With Ease.
+                        </h6>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+

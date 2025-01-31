@@ -1,0 +1,283 @@
+﻿@model DemoProject.Services.ViewModel.PersonInformation.PersonDeathViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.ViewModel.PersonInformation
+@using DemoProject.Services.HtmlHelpers
+@{
+    PersonDeathViewModel model = new PersonDeathViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("PDDAMN");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <title>PersonDeath - Amend</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        @* ======= First Row - For Header ======= *@
+        <div class="row">
+            <div class="offset-lg-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @* ======= Second Row - Data Entry Page ======= *@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm("Amend", "PersonDeath", FormMethod.Post, new { enctype = "multipart/form-data", id = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*======= First Row - Mandatory Mark =======*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="mb-2 text-right text-muted"><b class="mandatory-mark">&nbsp; Mandatory Field</b></h6>
+                                    </div>
+                                </div>
+
+                                @*======= Second Row - Page Title =======*@
+                                <div class="row mt-2">
+                                    @*Page Title*@
+                                    <div class="col-12">
+                                        <h5 class="font-weight-bold mt-1">Amend</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @* ======= Third Row - Data Entry Page ======= *@
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        @*MakerRemark*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("checker Remark")
+                                            @Html.TextBoxFor(m => m.CheckerRemark, new { @class = "form-control mandatory-mark read-only" })
+                                            @Html.ValidationMessageFor(m => m.CheckerRemark)
+                                        </div>
+
+                                        @*DateOfIssue*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Death Date")
+                                            @Html.TextBoxFor(m => m.DeathDate, "{0:yyyy-MM-dd}", new { @id = "death-date", @class = "form-control mandatory-mark deny-future-date", @placeholder = "Enter Death Date", required = "required", @Type = "date", @autocomplete = "off", onclick = "DenyFutureDate()" })
+                                            @Html.ValidationMessageFor(m => m.DeathDate)
+                                        </div>
+
+                                        <div class="modal fade" id="add-death-document" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="modal-new-event" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom " role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+
+                                                        <h4 class="modal-title  text-center" id="asset-text">Add</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        @*VehicleModel*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Document Type")
+                                                            @Html.DropDownListFor(m => m.DocumentTypeId, new SelectList(model.DocumentTypeDropdownList, "Value", "Text", 0), "-- Please select Vehicle Model -- ", new { @id = "document-type-id", @class = "form-control mandatory-mark", @autocomplete = "off" })
+                                                            @Html.ValidationMessageFor(m => m.DocumentTypeId)
+                                                        </div>
+
+                                                        @*NameAsPerDocument*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Name As Per Document")
+                                                            @Html.TextBoxFor(m => m.NameAsPerDocument, new { @id = "name-as-per-document", @class = "form-control mandatory-mark", @placeholder = "Enter Name As Per Document", required = "required", @maxlength = "150", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                            @Html.ValidationMessageFor(m => m.NameAsPerDocument)
+                                                        </div>
+
+                                                        @*DocumentNumber*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Document Number")
+                                                            @Html.TextBoxFor(m => m.DocumentNumber, new { @id = "document-number", @class = "form-control mandatory-mark", @placeholder = "Enter Document Number", required = "required", @maxlength = "50", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                            @Html.ValidationMessageFor(m => m.DocumentNumber)
+                                                        </div>
+
+                                                        @*SequenceNumber*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Sequence Number")
+                                                            <div>
+                                                                @Html.TextBoxFor(m => m.SequenceNumber, new { @id = "sequence-number", @class = "form-control mandatory-mark", @placeholder = "Enter Sequence Number", @type = "number", @autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(m => m.SequenceNumber)
+                                                            </div>
+                                                        </div>
+
+                                                        @*DateOfIssue*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Date Of Issue")
+                                                            @Html.TextBoxFor(m => m.DateOfIssue, "{0:yyyy-MM-dd}", new { @id = "date-of-issue", @class = "form-control mandatory-mark deny-future-date", @placeholder = "Enter Date Of Issue", required = "required", @Type = "date", @autocomplete = "off", onclick = "DenyFutureDate()" })
+                                                            @Html.ValidationMessageFor(m => m.DateOfIssue)
+                                                        </div>
+
+                                                        @*Issuing Authority*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Issuing Authority")
+                                                            <div>
+                                                                @Html.TextBoxFor(m => m.IssuingAuthority, new { @id = "issuing-authority", @class = "form-control mandatory-mark", @placeholder = "Enter Issuing Authority", required = "required", @maxlength = "100", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.IssuingAuthority)
+                                                            </div>
+                                                        </div>
+
+                                                        @*Place Of Issue*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Place Of Issue")
+                                                            <div>
+                                                                @Html.TextBoxFor(m => m.PlaceOfIssue, new { @id = "place-of-issue", @class = "form-control mandatory-mark", @placeholder = "Enter Place Of Issue", required = "required", @maxlength = "100", @autocomplete = "off", onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.PlaceOfIssue)
+                                                            </div>
+                                                        </div>
+
+                                                        @*Note*@
+                                                        <div class="form-group">
+                                                            @Html.CustomLabel("Note")
+                                                            @Html.TextAreaFor(m => m.Note, new { @id = "notedeath", @class = "form-control  default-none", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                            @Html.ValidationMessageFor(m => m.Note)
+                                                        </div>
+
+                                                        <div class="@((Model.DeathDocumentUpload == "D") ? "d-none" : "d-block")">
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("Photo")
+                                                                <div>
+                                                                    @Html.TextBoxFor(m => m.PhotoPath, new { @id = "PhotoPathDeath", @class = "form-control text-capitalize", type = "file", name = "PhotoPath", onchange = "document.getElementById('imagepreviewdeath').src = window.URL.createObjectURL(this.files[0])", @autocomplete = "off", @placeholder = "Enter Photo", required = "required" })
+                                                                    @Html.ValidationMessageFor(m => m.PhotoPath)
+                                                                </div>
+                                                            </div>
+
+                                                            <hr />
+                                                            <div><img id="imagepreviewdeath" src="" width="200" height="200" /></div>
+                                                            <hr />
+
+                                                            @*Note*@
+                                                            <div class="form-group">
+                                                                @Html.CustomLabel("FileCaption")
+                                                                @Html.TextBoxFor(m => m.FileCaption, new { @id = "file-caption", @class = "form-control text-capitalize default-none", @maxlength = "1500", @autocomplete = "off", onkeydown = "Maketranslation()", onkeyup = "ToTextCapitalize()" })
+                                                                @Html.ValidationMessageFor(m => m.FileCaption)
+                                                            </div>
+
+                                                            @*Hiddent Field For MovableAssetDocumentUpload*@
+                                                            @Html.HiddenFor(m => m.DeathDocumentUpload, new { @id = "death-document-upload" })
+
+                                                            @*Hiddent Field For EnableMovableAssetDocumentUploadInLocalStorage*@
+                                                            @Html.HiddenFor(m => m.EnableDeathDocumentUploadInLocalStorage, new { @id = "enable-death-document-upload" })
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" id="btn-add-death-document" class="btn btn-success ">Add</button>
+                                                        <button type="button" id="btn-update-death-document" class="btn btn-primary ">Update</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <table id="death-document-table" class="table compact table-striped table-bordered" width="100">
+                                                <thead class="text-center">
+                                                    <tr>
+                                                        <th><input type="checkbox" name="check_all" id="select-all-asset-document" /></th>
+                                                        <th class="d-none">DocumentTypeId</th>
+                                                        <th>NameOfDocumentType</th>
+                                                        <th>NameAsPerDocument</th>
+                                                        <th>DocumentNumber</th>
+                                                        <th>SequenceNumber</th>
+                                                        <th>DateOfIssue</th>
+                                                        <th>IssuingAuthority</th>
+                                                        <th>PlaceOfIssue</th>
+                                                        <th>Note</th>
+                                                        <th>Photopath</th>
+                                                        <th>Photo</th>
+                                                        <th>FileCaption</th>
+                                                        <th class="d-none">PrmKey</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="text-center">
+                                                    @{
+                                                        byte counter = 0;
+                                                        string photoId = "";
+                                                        string fileId = "";
+                                                        IEnumerable<PersonDeathDocumentViewModel> personMovableAssetViewModels = (IEnumerable<PersonDeathDocumentViewModel>)HttpContext.Current.Session["PersonDeathDocument"];
+
+                                                        foreach (PersonDeathDocumentViewModel viewModel in personMovableAssetViewModels)
+                                                        {
+                                                            counter += 1;
+                                                            photoId = "photo-id" + counter.ToString();
+                                                            fileId = "file-id" + counter.ToString();
+                                                            <tr>
+                                                                <td><input type="checkbox" name="check_all" class="checks" /></td>
+                                                                <td class="d-none">@viewModel.DocumentTypeId</td>
+                                                                <td>@viewModel.NameOfDocumentType</td>
+                                                                <td>@viewModel.NameAsPerDocument</td>
+                                                                <td>@viewModel.DocumentNumber</td>
+                                                                <td>@viewModel.SequenceNumber</td>
+                                                                <td>@viewModel.DateOfIssue.ToString("yyyy-MM-dd")</td>
+                                                                <td>@viewModel.IssuingAuthority</td>
+                                                                <td>@viewModel.PlaceOfIssue</td>
+                                                                <td>@viewModel.Note</td>
+                                                                <td>
+                                                                    <input type="file" id=@fileId name="DocPath" disabled />
+                                                                </td>
+                                                                <td>
+                                                                    @if (viewModel.EnableDeathDocumentUploadInLocalStorage == true)
+                                                                    {
+                                                                        <img src="~/Document/Person/@viewModel.NameOfFile" id=@photoId width="50" height="50" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        var base64 = Convert.ToBase64String(viewModel.DocumentPhotoCopy);
+                                                                        var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                                                                        <img src='@imgsrc' id=@photoId width="50" height="50" />
+                                                                        string filename = Path.GetFileName(imgsrc);
+                                                                    }
+                                                                </td>
+                                                                <td>@viewModel.FileCaption</td>
+                                                                <td class="d-none">@viewModel.PersonDeathDocumentPrmKey</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+
+                                        @*Hiddent Field For PersonPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonPrmKey)
+
+                                        @*Hiddent Field For PersonPrmKey*@
+                                        @Html.HiddenFor(m => m.PersonDeathPrmKey)
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*Save/Submit Button*@
+                            @Html.OperationFooter("Amend", "SavePersonDeathDataTables", "PersonDeath", "None")
+
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    debugger;
+    var SavePersonDeathDataTables = '@Url.Action("SavePersonDeathDataTables", "PersonDeath")';
+    var GetDocumentValidationFields = '@Url.Action("GetDocumentValidationFields", "PersonDeath")';
+    debugger;
+</script>
+<script src="~/Scripts/Custom/PersonDeath.js"></script>

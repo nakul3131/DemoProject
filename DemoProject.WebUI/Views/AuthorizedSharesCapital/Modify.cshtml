@@ -1,0 +1,99 @@
+﻿@model DemoProject.Services.ViewModel.Enterprise.Establishment.AuthorizedSharesCapitalViewModel
+@using DemoProject.Services.HtmlHelpers
+@using DemoProject.Services.ViewModel.Enterprise.Establishment
+@using DemoProject.Services.ViewModel.Configuration
+
+@{
+    AuthorizedSharesCapitalViewModel model = new AuthorizedSharesCapitalViewModel();
+    HeaderPartialModel headerPartialModel = new HeaderPartialModel("ASCMDF");
+}
+
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>AuthorizedSharesCapital - Create</title>
+</head>
+<body>
+    <div class="container-fluid">
+        @*======= First Row - For Header =======*@
+        <div class="row">
+            <div class="offset-1 col-10">
+                @Html.Partial("Header", headerPartialModel)
+            </div>
+        </div>
+
+        @*======= Second Row - Data Entry Page =======*@
+        <div class="row mt-3">
+            <div class="offset-1 col-10">
+                <div class="card d-block mb-3">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        {
+                            <div class="card-body">
+
+                                @*Page Title- Modify*@
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <h6 class="text-right text-muted"><b class="mandatory-mark"> &nbsp; Mandatory Field</b></h6>
+                                        <h5 class="font-weight-bold mt-1">Modify</h5>
+                                        <hr />
+                                    </div>
+                                </div>
+
+                                @*Submit Error*@
+                                @Html.ValidationMessage("SubmitError")
+
+                                @*======= Second Row - Data Entry Page =======*@
+                                <div class="row card-body">
+                                    <div class="col-12">
+                                        @*Effective Date*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Effective Date")
+                                            @Html.TextBoxFor(m => m.EffectiveDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark", @placeholder = "Enter Effective Date", required = "required", @Type = "date" })
+                                            @Html.ValidationMessageFor(m => m.EffectiveDate)
+                                        </div>
+
+                                        @*AuthorizedSharesCapitalAmount*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Authorized Shares Capital Amount")
+                                            @Html.TextBoxFor(m => m.AuthorizedSharesCapitalAmount, new { @class = "form-control mandatory-mark", @placeholder = "Enter Authorized Shres Capital Amount", @type = "number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.AuthorizedSharesCapitalAmount)
+                                        </div>
+
+                                        @*AuthorizedDate*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Authorized Date")
+                                            @Html.TextBoxFor(m => m.AuthorizedDate, "{0:yyyy-MM-dd}", new { @class = "form-control mandatory-mark", @placeholder = "Enter Authorized Date", required = "required", @Type = "date" })
+                                            @Html.ValidationMessageFor(m => m.AuthorizedDate)
+                                        </div>
+
+                                        @*ReferenceNumber*@
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Reference Number")
+                                            @Html.TextBoxFor(m => m.ReferenceNumber, new { @id = "rbi-reference-number", @class = "form-control mandatory-mark", @placeholder = "Enter RBI Reference Number", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.ReferenceNumber)
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.CustomLabel("Note")
+                                            @Html.TextAreaFor(m => m.Note, new { @class = "form-control text-capitalize default-none", @placeholder = "Enter Note", required = "required", @maxlength = "1500", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.Note)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            //Save/Submit Button
+                            @Html.OperationFooter("Modify", "Exit", "Home", "None")
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

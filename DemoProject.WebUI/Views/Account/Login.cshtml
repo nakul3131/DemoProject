@@ -1,0 +1,135 @@
+﻿@model DemoProject.Services.ViewModel.Security.Users.LoginViewModel
+@using DemoProject.Services.ViewModel.Configuration
+@using DemoProject.Services.HtmlHelpers;
+
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    EmergencyScreenViewModel viewModel = new EmergencyScreenViewModel();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="img/home.svg" />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <title>LOGIN</title>
+</head>
+<body>
+
+    @if (viewModel.EmergencyScreenBodyText != "None")
+    {
+        <div class="modal fade" id="myModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-zoom">
+                <div class="modal-content">
+                    @*Modal header*@
+                    <div class="modal-header">
+                        <h5 class="modal-title  float-left">@viewModel.EmergencyScreenHeaderText</h5>
+                        <button type="button" class="close" data-dismiss="modal" style="outline:none;">&times;</button>
+                    </div>
+                    @*Modal body*@
+                    <div class="modal-body">
+                        <p class="text text-center mt-2">@viewModel.EmergencyScreenBodyText</p>
+                    </div>
+                    @*Modal footer*@
+                    <div class="modal-footer justify-content-between">
+                        <h5 class="modal-title  float-left">@viewModel.EmergencyScreenFooterText</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="container-fluid ps-md-0">
+        <div class="row mr-5">
+            <div class="col-lg-6 bg-image"></div>
+            <div class="col-md-8 col-lg-6">
+                <div class="login d-flex align-items-center py-5">
+                    <div class="container">
+                        <div class="row my">
+                            <div class="col-md-9 col-lg-8 mx-auto shadow-lg p-3 mb-5 bg-white rounded">
+                                <h3 class="login-heading mb-4 font-weight-bold">LOGIN</h3>
+                                <!-- Sign In Form -->
+                                @using (Html.BeginForm())
+                                {
+                                    @Html.AntiForgeryToken()
+                                    {
+                                        @Html.ValidationMessage("InvalidAttempt")
+                                        <div class="form-floating mb-4">
+                                            <label class="float-left font-weight-bold text-dark">Username </label>
+                                            @Html.TextBoxFor(m => m.UserName, new {@id = "username", @class = "form-control form-rounded login-input", @placeholder = "Enter User Name", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.UserName)
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="form-floating mb-4">
+                                                <div class="clearfix">
+                                                    <label class="float-left font-weight-bold ml-1 text-dark ">Password</label>
+                                                </div>
+                                                @Html.PasswordFor(m => m.Password, new { @class = "form-control form-rounded login-input", @placeholder = "Enter Password" })
+                                                @Html.ValidationMessageFor(m => m.Password)
+                                                <div class="float-right p-2" id="forgot-pwd">
+                                                    @Html.CustomActionLink("Forgot Password?", "ResetPasswordViaToken", "Account", (bool?)TempData["IsUserValid"])
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-grid">
+                                            <button id="submit" type="submit" class="btn btn-sm btn-block form-rounded login-input"><h5 class="mt-2 text-white"><b>Sign in</b></h5></button>
+                                        </div>
+                                        <hr class="my-4">
+                                        <div class="social-media">
+                                            <a href="#" class="social-icon">
+                                                <i class="fas fa-fingerprint"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var status = '@TempData["TransactionStatus"]';
+
+    $(document).ready(function () {
+        var url = '@Url.Action("GetpublicIp","Home")';
+        $.getJSON("https://api.ipify.org/?format=json", function (e) {
+            var ip = e.ip;
+            $.post(url, { ip: ip }, function (data) {
+            });
+        });
+
+        // On Login Button Click Make Disable Inputs
+        $('#submit').click(function ()
+        {
+            if ($('form').valid())
+                $('.login-input').addClass('read-only');
+        });
+    })
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+<script src="https://unpkg.com/bootstrap-show-password@1.2.1/dist/bootstrap-show-password.min.js"></script>
+<script src="~/Scripts/Custom/Custometoastr.js"></script>
+<script>
+    var userName = $('#username').val();
+
+    $('#username').on('focusout', function () {
+        var userProfilePrmKey = '@Request.RequestContext.HttpContext.Session["UserProfilePrmKey"]';
+        var NewuserName = $('#username').val();
+        if (userProfilePrmKey != "") {
+            if (NewuserName != userName) {
+                $('#forgot-pwd').hide();
+            }
+        }
+    });
+</script>
