@@ -188,14 +188,14 @@ namespace DemoProject.WebUI.Controllers
         [Route("Create")]
         public ActionResult Create()
         {
-            var countInBusinessOffice = businessOfficeRepository.GetCountOfBusinessOffice();
+            //var countInBusinessOffice = businessOfficeRepository.GetCountOfBusinessOffice();
 
-            var countInAppConfig = businessOfficeRepository.GetCountOfAppConfig();
+            //var countInAppConfig = businessOfficeRepository.GetCountOfAppConfig();
 
-            if (countInBusinessOffice >= countInAppConfig)
-            {
-                throw new ExceedBoundaryLimitException();
-            }
+            //if (countInBusinessOffice >= countInAppConfig)
+            //{
+            //    throw new ExceedBoundaryLimitException();
+            //}
             return View();
         }
 
